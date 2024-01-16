@@ -439,7 +439,8 @@ paths:
           $ref: '#/components/responses/429'
         '500':
           $ref: '#/components/responses/500'
-    delete:
+  '/archiving/trash':
+    post:
       tags:
         - Posting
       summary: Delete or archive a post.
