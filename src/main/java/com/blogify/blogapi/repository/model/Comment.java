@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comment")
 @Data
 @Builder
 @AllArgsConstructor
@@ -35,5 +35,5 @@ public class Comment {
     // TODO: Add relation with post, waiting for the completion of the Post entity */
 
     @OneToMany(mappedBy = "comment")
-    private List<CommentReact> commentReacts;
+    private List<CommentReaction> commentReaction;
 }

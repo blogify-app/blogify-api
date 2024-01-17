@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import java.util.UUID;
 import javax.persistence.Column;
@@ -13,12 +13,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "comment_reacts")
+@Table(name = "comment_reaction")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentReact {
+public class CommentReaction {
     @Id
     private UUID id;
 

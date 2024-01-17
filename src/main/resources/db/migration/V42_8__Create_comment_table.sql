@@ -1,4 +1,4 @@
-create table if not exists comments
+create table if not exists comment
 (
     id UUID PRIMARY KEY,
     content TEXT,

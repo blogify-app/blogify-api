@@ -1,13 +1,13 @@
 package com.blogify.blogapi.service.event;
 
 import com.blogify.blogapi.repository.CommentRepository;
-import com.blogify.blogapi.model.Comment;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.blogify.blogapi.repository.model.Comment;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CommentService {
-    @Autowired
     private CommentRepository commentRepository;
 
     /* public List<Comment> getCommentsByPostId(Long postId) {
