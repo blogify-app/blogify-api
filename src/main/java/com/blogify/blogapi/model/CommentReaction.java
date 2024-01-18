@@ -1,4 +1,4 @@
-package com.blogify.blogapi.repository.model;
+package com.blogify.blogapi.model;
 
 import java.util.UUID;
 import javax.persistence.Column;
@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class CommentReaction {
     @Id
     private UUID id;

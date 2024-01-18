@@ -1,7 +1,7 @@
 package com.blogify.blogapi.service.event;
 
 import com.blogify.blogapi.repository.CommentRepository;
-import com.blogify.blogapi.repository.model.Comment;
+import com.blogify.blogapi.model.Comment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

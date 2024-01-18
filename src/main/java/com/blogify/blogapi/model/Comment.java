@@ -1,4 +1,4 @@
-package com.blogify.blogapi.repository.model;
+package com.blogify.blogapi.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Comment {
     @Id
     private UUID id;
