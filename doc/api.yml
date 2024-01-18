@@ -715,6 +715,11 @@ components:
     PageSize:
       type: integer
       description: Cannot exceed `500`
+    Role:
+      type: string
+      enum:
+        - CLIENT
+        - MANAGER
     Sex:
       type: string
       enum:
