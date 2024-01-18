@@ -12,10 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.blogify.blogapi.service.utils.DataFormatterUtils;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @Entity
@@ -32,6 +37,8 @@ public class User implements Serializable {
   private String mail;
   private LocalDate birthdate;
   private String role;
+  @CreationTimestamp
+  @Getter(AccessLevel.NONE)
   private Instant creationDatetime;
   private Instant lastUpdateDatetime;
   @ManyToMany
@@ -41,4 +48,13 @@ public class User implements Serializable {
       inverseJoinColumns = @JoinColumn(name = "category_id")
   )
   private List<Category> categories;
+
+  public enum Role {
+    CLIENT;
+//todo: add role enum in spec
+    public static Role fromValue(String value) {
+      return DataFormatterUtils.fromValue(Role.class, value);
+    }
+  }
+
 }
