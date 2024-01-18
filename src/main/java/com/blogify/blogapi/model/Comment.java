@@ -1,5 +1,6 @@
 package com.blogify.blogapi.model;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -23,13 +24,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class Comment {
     @Id
-    private UUID id;
+    private String id;
 
     @Column(name = "content")
     private String content;
 
     @Column(name = "creation_date_time")
-    private LocalDateTime creationDateTime;
+    private Instant creationDateTime;
 
     /* @ManyToOne
     @JoinColumn(name = "post_id")

@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class CommentReaction {
     @Id
-    private UUID id;
+    private String id;
 
     /* @ManyToOne
     @JoinColumn(name = "user_id")
