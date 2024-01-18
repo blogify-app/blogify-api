@@ -17,5 +17,4 @@ public class BoundedPageSize {
     }
     this.value = value;
   }
-
 }

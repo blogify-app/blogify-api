@@ -6,5 +6,4 @@ public class NotImplementedException extends ApiException {
   public NotImplementedException(String message) {
     super(SERVER_EXCEPTION, message);
   }
-
 }

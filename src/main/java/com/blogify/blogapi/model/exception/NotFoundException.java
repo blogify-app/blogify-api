@@ -6,5 +6,4 @@ public class NotFoundException extends ApiException {
   public NotFoundException(String message) {
     super(CLIENT_EXCEPTION, message);
   }
-
 }

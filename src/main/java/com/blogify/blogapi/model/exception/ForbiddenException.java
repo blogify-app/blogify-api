@@ -6,5 +6,4 @@ public class ForbiddenException extends ApiException {
   public ForbiddenException(String message) {
     super(CLIENT_EXCEPTION, message);
   }
-
 }

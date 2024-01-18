@@ -6,5 +6,4 @@ public class TooManyRequestException extends ApiException {
   public TooManyRequestException(String message) {
     super(SERVER_EXCEPTION, message);
   }
-
 }
