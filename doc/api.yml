@@ -444,6 +444,12 @@ paths:
         - Posting
       summary: Delete or archive a post.
       operationId: deleteArchivePost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Post to archive or delete.
         required: true
@@ -736,7 +742,6 @@ components:
       enum:
         - ARCHIVED
         - ENABLED
-        -
         ## resource model
     Category:
       properties:
