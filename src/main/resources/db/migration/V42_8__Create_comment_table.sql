@@ -1,3 +1,4 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 create table if not exists comment
 (
     id varchar primary key default uuid_generate_v4(),
