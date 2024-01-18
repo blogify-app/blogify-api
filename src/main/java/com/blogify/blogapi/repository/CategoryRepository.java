@@ -1,6 +1,6 @@
 package com.blogify.blogapi.repository;
 
-import com.blogify.blogapi.repository.model.Category;
+import com.blogify.blogapi.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

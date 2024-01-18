@@ -1,7 +1,7 @@
-package com.blogify.blogapi.service.event;
+package com.blogify.blogapi.service;
 
 import com.blogify.blogapi.repository.CategoryRepository;
-import com.blogify.blogapi.repository.model.Category;
+import com.blogify.blogapi.model.Category;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
   private final CategoryRepository categoryRepository;
 
-  public List<Category> getAll() {
+  public List<Category> findAll() {
     return categoryRepository.findAll();
   }
 }

@@ -1,7 +1,7 @@
-package com.blogify.blogapi.service.event;
+package com.blogify.blogapi.service;
 
 import com.blogify.blogapi.repository.UserRepository;
-import com.blogify.blogapi.repository.model.User;
+import com.blogify.blogapi.model.User;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
   private final UserRepository userRepository;
 
-  public List<User> getAll() {
+  public List<User> findAll() {
     return userRepository.findAll();
   }
 }
