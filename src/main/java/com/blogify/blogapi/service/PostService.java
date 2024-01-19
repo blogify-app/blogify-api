@@ -13,10 +13,10 @@ import java.util.List;
 public class PostService{
     private final PostRepository postRepository;
 
-    public List<Post> getAll(){
+    public List<Post> findAll(){
         return postRepository.findAll();
     }
-    public Post getById(String id){
+    public Post findById(String id){
         return postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post with id " + id + " not found"));
     }
