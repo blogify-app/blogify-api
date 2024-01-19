@@ -104,7 +104,7 @@ paths:
     get:
       tags:
         - Security
-      summary: Who am I? Tells you who you are.
+      summary: Tells you who you are.
       operationId: whoami
       responses:
         '200':
@@ -129,7 +129,7 @@ paths:
     get:
       tags:
         - User
-      summary: Get all users with criteria.
+      summary: Get all users.
       operationId: getUsers
       parameters:
         - name: page
@@ -150,7 +150,7 @@ paths:
             type: string
       responses:
         '200':
-          description: List of filtered users.
+          description: List of users that meet the criterias.
           content:
             application/json:
               schema:
@@ -200,8 +200,8 @@ paths:
     put:
       tags:
         - User
-      summary: Update user by identifier.
-      operationId: updateUserById
+      summary: Crupdate user by identifier.
+      operationId: crupdateUserById
       parameters:
         - name: id
           in: path
@@ -209,7 +209,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: User to update.
+        description: User to crupdate.
         required: true
         content:
           application/json:
@@ -217,7 +217,7 @@ paths:
               $ref: '#/components/schemas/User'
       responses:
         '201':
-          description: Updated user.
+          description: The crupdated user.
           content:
             application/json:
               schema:
@@ -228,8 +228,8 @@ paths:
     get:
       tags:
         - Following
-      summary: Followers of identified user.
-      operationId: getUserFollowers
+      summary: Get followers of the identified user.
+      operationId: getFollowersByUserId
       parameters:
         - name: id
           in: path
@@ -249,12 +249,12 @@ paths:
         - name: follower_name
           in: query
           required: false
-          description: Filter follower by first name or lastname.
+          description: Filters follower by first name or lastname.
           schema:
             type: string
       responses:
         '200':
-          description: List of followers from user connected.
+          description: Followers of the identified user.
           content:
             application/json:
               schema:
@@ -305,7 +305,7 @@ paths:
     post:
       tags:
         - Following
-      summary: Follow user by identifier.
+      summary: Unfollow user by identifier.
       operationId: unfollowUserById
       parameters:
         - name: user_id
@@ -315,7 +315,7 @@ paths:
             type: string
       responses:
         '201':
-          description: The followed user.
+          description: The unfollowed user.
           content:
             application/json:
               schema:
@@ -352,12 +352,12 @@ paths:
         - name: categories
           in: query
           required: false
-          description: Filter post by list of category label
+          description: Filters by coma-separated categories.
           schema:
             type: string
       responses:
         '200':
-          description: List of posts
+          description: List of posts that meet the criterias.
           content:
             application/json:
               schema:
@@ -389,7 +389,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Identified post.
+          description: The identified post.
           content:
             application/json:
               schema:
@@ -424,7 +424,7 @@ paths:
               $ref: '#/components/schemas/Post'
       responses:
         '201':
-          description: crupdated post.
+          description: The crupdated post.
           content:
             application/json:
               schema:
@@ -442,8 +442,8 @@ paths:
     delete:
       tags:
         - Posting
-      summary: Delete or archive a post.
-      operationId: deleteArchivePost
+      summary: Delete post by identifier.
+      operationId: deletePostById
       parameters:
         - name: id
           in: path
@@ -451,7 +451,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Post to archive or delete.
+        description: Post to delete.
         required: true
         content:
           application/json:
@@ -459,7 +459,7 @@ paths:
               $ref: '#/components/schemas/Post'
       responses:
         '200':
-          description: Post deleted or archived by identifier.
+          description: The deleted post.
           content:
             application/json:
               schema:
@@ -493,7 +493,7 @@ paths:
             $ref: '#/components/schemas/ReactionType'
       responses:
         '201':
-          description: Post reacted.
+          description: The post reaction.
           content:
             application/json:
               schema:
@@ -514,7 +514,7 @@ paths:
       tags:
         - Comments
       summary: React to a comment by identifier.
-      operationId: reactToComment
+      operationId: reactToCommentByid
       parameters:
         - name: id
           in: path
@@ -533,7 +533,7 @@ paths:
             $ref: '#/components/schemas/ReactionType'
       responses:
         '201':
-          description: Post reacted.
+          description: The comment reaction.
           content:
             application/json:
               schema:
@@ -554,7 +554,7 @@ paths:
     get:
       tags:
         - Comments
-      summary: Get comments of identified post.
+      summary: Get the identified post comments.
       operationId: getComments
       parameters:
         - name: page
@@ -574,7 +574,7 @@ paths:
             type: string
       responses:
         '200':
-          description: List of Comments.
+          description: The identified post comments.
           content:
             application/json:
               schema:
@@ -596,7 +596,7 @@ paths:
     put:
       tags:
         - Comments
-      summary: Create or update comment.
+      summary: Crupdate the identified post comments.
       operationId: crupdateComment
       parameters:
         - name: post_id
@@ -605,14 +605,14 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Post to archive or delete.
+        description: The crupdated comments.
         required: true
         content:
           application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Post'
+                $ref: '#/components/schemas/Comment'
       responses:
         '200':
           description: List of followers from user connected.
@@ -652,7 +652,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Comment by identifier.
+          description: The identified comment.
           content:
             application/json:
               schema:
