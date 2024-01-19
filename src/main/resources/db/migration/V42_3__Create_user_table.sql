@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS "user" (
    mail VARCHAR(50) NOT NULL,
    birthdate DATE,
    role VARCHAR(50),
+   -- sex varchar(1), TODO 1: this attribute has been forgotten, remove this comment and add a migration script to add this missing attribute
    creation_datetime TIMESTAMP DEFAULT current_timestamp,
    last_update_datetime TIMESTAMP
 );

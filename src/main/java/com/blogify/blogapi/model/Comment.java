@@ -27,7 +27,7 @@ public class Comment implements Serializable {
 
     private String content;
 
-    private Instant creationDatetime;
+    private Instant creationDatetime; // TODO: annotation, take example of User
 
     /* @ManyToOne
     @JoinColumn(name = "post_id")

@@ -20,14 +20,14 @@ public abstract class Reaction {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private ReactionType reactionType;
+    private ReactionType reactionType; //TODO 6: rename to: type
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
 
-    public enum ReactionType {
+    public enum ReactionType { // TODO 7: add static to it because it's relate tu the class not an object
         LIKE, DISLIKE
     }
 }
