@@ -1,36 +1,59 @@
 openapi: 3.0.3
 info:
   version: 'latest'
-  title: HEI Admin API
+  title: Blogify - API
   description: |
-    _Programmatically connect to a computer programming [school](https://hei.school)._
-    After [joining us](mailto:contact@hei.school),
-    you can get an identification token from
-    our [dev](https://dev-hei-admin.auth.eu-west-3.amazoncognito.com/oauth2/authorize?client_id=5s8cg50doahmu855rlc8fr6qmp&response_type=token&scope=email+openid&redirect_uri=https%3A%2F%2Fapi-dev.hei.school%2Fwhoami)
-    or [prod](https://prod-hei-admin.auth.eu-west-3.amazoncognito.com/oauth2/authorize?client_id=i8bg538jpfu6mqmqb61m26trd&response_type=token&scope=email+openid&redirect_uri=https%3A%2F%2Fapi-prod.hei.school%2Fwhoami)
-    authentication service.
-    Then, start playing with our system!
-
-    The implementation of our API is [publicly disclosed](https://github.com/hei-school/hei-admin-api).
-    You are welcome to try and compromise it. Happy hacking!
-
-servers:
-  - url: 'https://api-dev.hei.school'
-  - url: 'https://api-prod.hei.school'
-
+    Log in and blog on [Blogify-web](https://github.com/blogify-app/blogify-web) 
+    to blog and interact with other users using [Blogify-api](https://github.com/blogify-app/blogify-api) 
+    as your giveaway provider. Comment, create posts, follow new trends and react to posts as you see fit.
 security:
-  - BearerAuth: [ ]
+  - BearerAuth: []
 
 paths:
-  '/whoami':
+
+  ## Health resources
+  '/ping':
     get:
       tags:
-        - Security
-      summary: Who am I? Tells you who you are.
-      operationId: whoami
+        - Health
+      summary: ping.
+      operationId: ping
       responses:
         '200':
-          description: Who you are
+          description: pong.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  ## Security resources
+  '/signin':
+    post:
+      tags:
+        - Security
+      summary: Login user.
+      operationId: signIn
+      requestBody:
+        description: Login payload.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInUser'
+      responses:
+        '201':
+          description: Logged in payload.
           content:
             application/json:
               schema:
@@ -45,20 +68,595 @@ paths:
           $ref: '#/components/responses/429'
         '500':
           $ref: '#/components/responses/500'
-  '/ping':
+
+  '/signup':
+    post:
+      tags:
+        - Security
+      summary: Sign up user
+      operationId: signUp
+      requestBody:
+        description: Sign up payload.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+      responses:
+        '201':
+          description: Signed up user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/whoami':
     get:
       tags:
         - Security
-      summary: pong
-      operationId: ping
+      summary: Who am I? Tells you who you are.
+      operationId: whoami
       responses:
         '200':
-          description: pong
+          description: Who you are.
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: pong
+                $ref: '#/components/schemas/Whoami'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  ## Users resources
+  '/users':
+    get:
+      tags:
+        - User
+      summary: Get all users with criteria.
+      operationId: getUsers
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: user_name
+          in: query
+          required: false
+          description: Filter user by first name, lastname or username.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of filtered users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/users/{id}':
+    get:
+      tags:
+        - User
+      summary: Get user by identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: getUserById
+      responses:
+        '200':
+          description: The identified user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - User
+      summary: Update user by identifier.
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: User to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Updated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  ## Following resources
+  '/users/{id}/followers':
+    get:
+      tags:
+        - Following
+      summary: Followers of identified user.
+      operationId: getUserFollowers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: follower_name
+          in: query
+          required: false
+          description: Filter follower by first name or lastname.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of followers from user connected.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/follow/{user_id}':
+    post:
+      tags:
+        - Following
+      summary: Follow user by identifier.
+      operationId: followUserById
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The followed user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  '/unfollow/{user_id}':
+    post:
+      tags:
+        - Following
+      summary: Follow user by identifier.
+      operationId: unfollowUserById
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: The followed user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  ## Posting resources
+  '/posts':
+    get:
+      tags:
+        - Posting
+      summary: Get all posts.
+      operationId: getPosts
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: categories
+          in: query
+          required: false
+          description: Filter post by list of category label
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/posts/{id}':
+    get:
+      tags:
+        - Posting
+      summary: Get post by identifier.
+      operationId: getPostById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Identified post.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Posting
+      summary: Create or Update post by identifier.
+      operationId: crupdatePostById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Post to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '201':
+          description: crupdated post.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Posting
+      summary: Delete or archive a post.
+      operationId: deleteArchivePost
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Post to archive or delete.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: Post deleted or archived by identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  '/posts/{id}/reaction':
+    post:
+      tags:
+        - Posting
+      summary: React to a post by identifier.
+      operationId: reactToPostById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: reaction_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReactionType'
+      responses:
+        '201':
+          description: Post reacted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/post/{id}/comments/{comment_id}/reaction':
+    post:
+      tags:
+        - Comments
+      summary: React to a comment by identifier.
+      operationId: reactToComment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: comment_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: reaction_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReactionType'
+      responses:
+        '201':
+          description: Post reacted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+        ## Commenting resources
+  '/posts/{id}/comments':
+    get:
+      tags:
+        - Comments
+      summary: Get comments of identified post.
+      operationId: getComments
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Page'
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PageSize'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of Comments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/posts/{post_id}/comments':
+    put:
+      tags:
+        - Comments
+      summary: Create or update comment.
+      operationId: crupdateComment
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Post to archive or delete.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Post'
+      responses:
+        '200':
+          description: List of followers from user connected.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/posts/{post_id}/comments/{id}':
+    get:
+      tags:
+        - Comments
+      summary: Get comment by identifier.
+      operationId: getCommentById
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comment by identifier.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
         '400':
           $ref: '#/components/responses/400'
         '403':
@@ -77,6 +675,7 @@ components:
       scheme: bearer
 
   responses:
+    ## response model
     '400':
       description: Bad request
       content:
@@ -107,20 +706,166 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InternalServerException'
+
   schemas:
-    Whoami:
+    ## enum type
+    Page:
+      type: integer
+      description: Start at `1`
+    PageSize:
+      type: integer
+      description: Cannot exceed `500`
+    Role:
+      type: string
+      enum:
+        - CLIENT
+        - MANAGER
+    Sex:
+      type: string
+      enum:
+        - M
+        - F
+        - OTHER
+    ReactionType:
+      type: string
+      enum:
+        - LIKE
+        - DISLIKE
+    UserStatus:
+      type: string
+      enum:
+        - ENABLED
+        - BANISHED
+    PostStatus:
+      type: string
+      enum:
+        - ARCHIVED
+        - ENABLED
+        - DRAFT
+    CommentStatus:
+      type: string
+      enum:
+        - ARCHIVED
+        - ENABLED
+        ## resource model
+    Category:
       properties:
         id:
           type: string
-        role:
+        label:
           type: string
-          enum:
-            - STUDENT
-            - TEACHER
-            - MANAGER
+    Post:
+      properties:
+        id:
+          type: string
+        picture_url:
+          type: string
+        description:
+          type: string
+        content:
+          type: string
+        title:
+          type: string
+        creation_datetime:
+          type: string
+          format: date-time
+        reaction_count:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/PostStatus'
+    Comment:
+      properties:
+        id:
+          type: string
+        post_id:
+          type: string
+        content:
+          type: string
+        creation_datetime:
+          type: string
+          format: date-time
+        reply_to_comment_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/CommentStatus'
+    Reaction:
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/ReactionType'
+        creation_datetime:
+          type: string
+          format: date-time
+        user_id:
+          type: string
+        post_id:
+          type: string
+        comment_id:
+          type: string
+    User:
+      allOf:
+        - $ref: '#/components/schemas/UserInfo'
+      properties:
+        id:
+          type: string
+        photo_url:
+          type: string
+        bio:
+          type: string
+        profile_banner_url:
+          type: string
+        username:
+          type: string
+        about:
+          type: string
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        sex:
+          $ref: '#/components/schemas/Sex'
+        entrance_datetime:
+          type: string
+          format: date-time
+    UserInfo:
+      properties:
+        last_name:
+          type: string
+        first_name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        email:
+          type: string
+    LoginInUser:
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        userId:
+          type: string
+    SignUp:
+      allOf:
+        - $ref: '#/components/schemas/UserInfo'
+      properties:
+        password:
+          type: string
+    Whoami:
+      allOf:
+        - $ref: '#/components/schemas/UserInfo'
+      properties:
+        id:
+          type: string
         bearer:
           type: string
 
+    ## exception model
     Exception:
       type: object
       properties:
