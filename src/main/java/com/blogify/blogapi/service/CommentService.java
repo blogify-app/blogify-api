@@ -1,5 +1,6 @@
-package com.blogify.blogapi.service.event;
+package com.blogify.blogapi.service;
 
+import com.blogify.blogapi.repository.CommentReactionRepository;
 import com.blogify.blogapi.repository.CommentRepository;
 import com.blogify.blogapi.model.Comment;
 import lombok.AllArgsConstructor;
@@ -8,21 +9,49 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class CommentService {
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final CommentReactionRepository commentReactionRepository;
 
-    /* public List<Comment> getCommentsByPostId(Long postId) {
-        return commentRepository.findByPostId(postId);
+    /*public Reaction reactToComment(String postId, String commentId, ReactionType reactionType) {
+        Comment comment = commentRepository.findByIdAndPost_Id(commentId, postId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
+
+        CommentReaction commentReaction = new CommentReaction();
+        commentReaction.setComment(comment);
+        commentReaction.setReactionType(reactionType);
+        commentReactionRepository.save(commentReaction);
+
+        return new Reaction(commentReaction.getId(), reactionType);
     }*/
-    // TODO: Implement a method to retrieve a list of comments by Post ID. Waiting for the completion of the Post.
+    // TODO: React to a comment by identifier. Waiting for the completion of the Post.
 
-    /* public Comment getCommentByPostIdAndCommentId(Long postId, Long commentId) {
-        return commentRepository.findByPostIdAndId(postId, commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+    /* public List<Comment> getComments(String postId, Page page, PageSize pageSize) {
+        return commentRepository.findByPost_Id(postId);
     }*/
 
-    // TODO: Implement a method to retrieve a specific comment by Post ID and Comment ID.
+    // TODO: Get comments of identified post.
 
-    public Comment saveComment(Comment comment) {
+    /*public List<Comment> createOrUpdateComment(String postId, List<Comment> comments) {
+        // Vous devez implémenter PostRepository pour obtenir le post par ID
+        for (Comment comment : comments) {
+            comment.setPost(postRepository.findById(postId)
+                    .orElseThrow(() -> new PostNotFoundException(postId)));
+            commentRepository.save(comment);
+        }
+
+        return commentRepository.findByPost_Id(postId);
+    }*/
+
+    // TODO: Create or update comment
+
+    /*public Comment getCommentById(String postId, String commentId) {
+        return commentRepository.findByPost_IdAndId(postId, commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
+    }*/
+
+    // TODO: Get comment by identifier
+
+    public Comment save(Comment comment) {
         return commentRepository.save(comment);
     }
 }
