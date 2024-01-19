@@ -25,7 +25,7 @@ import java.util.UUID;
 @Table(name = "\"post_reaction\"")
 public class PostReaction implements Serializable {
     @Id
-    private UUID id;
+    private String id;
 
     //TODO: add relation with user
 

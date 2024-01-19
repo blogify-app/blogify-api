@@ -24,7 +24,7 @@ import java.util.UUID;
 @Table(name = "\"post\"")
 public class Post implements Serializable {
     @Id
-    private UUID id;
+    private String id;
 
     @Column(name = "title")
     private String title;

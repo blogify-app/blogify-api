@@ -1,6 +1,6 @@
 create table if not exists post_reaction
 (
-    id UUID PRIMARY KEY,
-    id_post UUID REFERENCES post(id),
+    id VARCHAR(255) PRIMARY KEY,
+    id_post VARCHAR(255) REFERENCES post(id),
     type VARCHAR(255)
     );
