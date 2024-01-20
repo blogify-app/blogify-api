@@ -1,6 +1,7 @@
 package com.blogify.blogapi.endpoint.security;
 
 import com.blogify.blogapi.model.User;
+import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class AuthFilter extends OncePerRequestFilter {
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    throw new RuntimeException("Access denied");
+    throw new ForbiddenException("Access denied");
   }
 
 
