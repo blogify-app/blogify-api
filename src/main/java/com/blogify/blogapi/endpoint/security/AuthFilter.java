@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseToken;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 
+@Slf4j
 public class AuthFilter extends AbstractAuthenticationProcessingFilter {
   private final FirebaseService firebaseService;
 
@@ -28,6 +30,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
     String token = AuthProvider.getBearer(request);
     FirebaseToken authUser = firebaseService.getUserByBearer(token);
     if (authUser != null) {
+      log.info("Authenticated user {}", authUser.getEmail());
       UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token, token);
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       return getAuthenticationManager().authenticate(authentication);
