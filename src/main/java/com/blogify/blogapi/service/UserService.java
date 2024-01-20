@@ -5,6 +5,7 @@ import com.blogify.blogapi.repository.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class UserService {
     return userRepository.findAll();
   }
 
+  @Transactional
   public User save(User toSave) {
     return userRepository.save(toSave);
   }

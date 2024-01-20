@@ -20,11 +20,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "\"user_category\"")
 public class UserCategory implements Serializable {
-  @Id
-  private String id;
+  @Id private String id;
+
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
+
   @ManyToOne
   @JoinColumn(name = "category_id", referencedColumnName = "id")
   private Category category;

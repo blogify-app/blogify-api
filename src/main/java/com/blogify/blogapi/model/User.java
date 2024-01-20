@@ -6,16 +6,18 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,19 +29,21 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Table(name = "\"user\"")
 public class User implements Serializable {
-  @Id
-  private String id;
+  @Id private String id;
   private String firstname;
   private String lastname;
   private String mail;
   private LocalDate birthdate;
+
+  @Enumerated(EnumType.STRING)
   private Role role;
+
+  @Enumerated(EnumType.STRING)
   private Sex sex;
-  @CreationTimestamp
-  @Getter(AccessLevel.NONE)
-  private Instant creationDatetime;
+
+  @CreationTimestamp private Instant creationDatetime;
   private Instant lastUpdateDatetime;
-  @OneToMany(mappedBy = "user")
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<UserCategory> userCategories;
 }
-

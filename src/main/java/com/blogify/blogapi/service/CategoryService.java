@@ -5,6 +5,7 @@ import com.blogify.blogapi.repository.CategoryRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class CategoryService {
     return categoryRepository.findAll();
   }
 
+  @Transactional
   public Category save(Category toSave) {
     return categoryRepository.save(toSave);
   }
