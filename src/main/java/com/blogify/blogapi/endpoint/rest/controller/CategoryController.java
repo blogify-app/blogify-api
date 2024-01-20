@@ -13,6 +13,7 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
+  //TODO: Should be mapped when JavaClient is correctly set
   @GetMapping(value = "/categories")
   public List<Category> send_emails() {
     return categoryService.findAll();
