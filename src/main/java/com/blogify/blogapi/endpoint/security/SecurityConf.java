@@ -1,47 +1,39 @@
 package com.blogify.blogapi.endpoint.security;
 
+import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import lombok.AllArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@Slf4j
 public class SecurityConf extends WebSecurityConfigurerAdapter {
-  private ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
+  private final HandlerExceptionResolver exceptionResolver;
 
-  public AuthFilter tokenAuthenticationFilter;
-
-  @Bean
-  public AuthenticationEntryPoint restAuthenticationEntryPoint() {
-    return (httpServletRequest, httpServletResponse, e) -> {
-      Map<String, Object> errorObject = new HashMap<>();
-      int errorCode = 401;
-      errorObject.put("message", "Unauthorized access of protected resource, invalid credentials");
-      errorObject.put("error", HttpStatus.UNAUTHORIZED);
-      errorObject.put("code", errorCode);
-      errorObject.put("timestamp", new Timestamp(new Date().getTime()));
-      httpServletResponse.setContentType("application/json;charset=UTF-8");
-      httpServletResponse.setStatus(errorCode);
-      httpServletResponse.getWriter().write(objectMapper.writeValueAsString(errorObject));
-    };
+  public SecurityConf(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver, ObjectMapper mapper) {
+    exceptionResolver = resolver;
+    objectMapper = mapper;
   }
+
 
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
@@ -49,6 +41,14 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
+  }
+
+  private Exception forbiddenWithRemoteInfo(Exception e, HttpServletRequest req) {
+    log.info(
+        String.format(
+            "Access is denied for remote caller: address=%s, host=%s, port=%s",
+            req.getRemoteAddr(), req.getRemoteHost(), req.getRemotePort()));
+    return new ForbiddenException(e.getMessage());
   }
 
 
@@ -59,13 +59,30 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .formLogin().disable()
         .httpBasic().disable()
-        .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint())
+        .exceptionHandling().authenticationEntryPoint((req, res, e) ->
+            exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
         .and()
+        .addFilterBefore(bearerFilter(new NegatedRequestMatcher(
+            new OrRequestMatcher(
+                new AntPathRequestMatcher("/ping")
+            )
+        )), AnonymousAuthenticationFilter.class)
         .authorizeRequests()
-        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        .anyRequest().authenticated()
+        .antMatchers(HttpMethod.GET, "/ping").permitAll()
+        .anyRequest().denyAll()
         .and()
-        .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  }
+
+  private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
+    AuthFilter bearerFilter = new AuthFilter(requestMatcher);
+    bearerFilter.setAuthenticationManager(authenticationManager());
+    bearerFilter.setAuthenticationSuccessHandler(
+        (httpServletRequest, httpServletResponse, authentication) -> {
+        });
+    bearerFilter.setAuthenticationFailureHandler(
+        (req, res, e) ->
+            exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));
+    return bearerFilter;
   }
 }

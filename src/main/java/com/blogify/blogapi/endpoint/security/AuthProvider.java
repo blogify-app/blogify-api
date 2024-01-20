@@ -1,5 +1,6 @@
 package com.blogify.blogapi.endpoint.security;
 
+import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.google.auth.Credentials;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContext;
@@ -29,11 +30,11 @@ public class AuthProvider {
   }
 
 
-  public String getBearer(HttpServletRequest req) {
+  public static String getBearer(HttpServletRequest req) {
     String authorization = req.getHeader("Authorization");
-    if (authorization.startsWith(BEARER_PREFIX)) {
+    if (authorization != null && authorization.startsWith(BEARER_PREFIX)) {
       return authorization.substring(7);
     }
-    return null;
+    throw new ForbiddenException("Access denied");
   }
 }
