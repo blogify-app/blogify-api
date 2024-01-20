@@ -8,9 +8,12 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -25,6 +28,11 @@ public class Post implements Serializable {
     private String title;
 
     private String content;
+
+    @OneToMany
+    @JoinColumn(name = "post_id")
+    private List<PostReaction> postReactions;
+    //TODO: remove this , just test
 
     @CreationTimestamp
     private Instant creationDatetime;
