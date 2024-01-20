@@ -1,26 +1,26 @@
 package com.blogify.blogapi.model;
 
+import com.blogify.blogapi.model.enums.Role;
+import com.blogify.blogapi.model.enums.Sex;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.blogify.blogapi.service.utils.DataFormatterUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
+@EqualsAndHashCode
 @Entity
 @Builder
 @NoArgsConstructor
@@ -39,30 +39,7 @@ public class User implements Serializable {
   @Getter(AccessLevel.NONE)
   private Instant creationDatetime;
   private Instant lastUpdateDatetime;
-  @ManyToMany
-  @JoinTable(
-      name = "user_category",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "category_id")
-  )
-  private List<Category> categories;
-
-  public enum Role {
-    MANAGER,
-    CLIENT;
-
-    public static Role fromValue(String value) {
-      return DataFormatterUtils.fromValue(Role.class, value);
-    }
-  }
-
-  public enum Sex {
-    M,
-    F;
-
-    public static Sex fromValue(String value) {
-      return DataFormatterUtils.fromValue(Sex.class, value);
-    }
-  }
-
+  @OneToMany(mappedBy = "user")
+  private List<UserCategory> userCategories;
 }
+

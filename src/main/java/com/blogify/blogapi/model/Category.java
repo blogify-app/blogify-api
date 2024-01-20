@@ -5,18 +5,19 @@ import java.time.Instant;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
+@EqualsAndHashCode
 @Entity
 @Builder
 @NoArgsConstructor
@@ -29,6 +30,6 @@ public class Category implements Serializable {
   @CreationTimestamp
   @Getter(AccessLevel.NONE)
   private Instant creationDatetime;
-  @ManyToMany(mappedBy = "categories")
-  private List<User> users;
+  @OneToMany(mappedBy = "category")
+  private List<UserCategory> userCategories;
 }
