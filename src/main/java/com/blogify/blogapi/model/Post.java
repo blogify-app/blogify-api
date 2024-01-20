@@ -30,7 +30,7 @@ public class Post implements Serializable {
     private String content;
 
     @OneToMany
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "id_post")
     private List<PostReaction> postReactions;
     //TODO: remove this , just test
 
