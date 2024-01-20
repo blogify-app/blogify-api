@@ -1,11 +1,8 @@
 package com.blogify.blogapi.endpoint.security;
 
-import com.blogify.blogapi.model.User;
 import com.blogify.blogapi.model.exception.ForbiddenException;
-import com.google.firebase.auth.FirebaseAuth;
+import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.google.firebase.auth.FirebaseToken;
-import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -18,32 +15,24 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 
 public class AuthFilter extends AbstractAuthenticationProcessingFilter {
+  private final FirebaseService firebaseService;
 
-  protected AuthFilter(RequestMatcher requestMatcher) {
+  protected AuthFilter(RequestMatcher requestMatcher, FirebaseService conf) {
     super(requestMatcher);
+    firebaseService = conf;
   }
 
   @Override
   @SneakyThrows
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
-    FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
-    if (decodedToken != null) {
-      User authUser = toUserDetails(decodedToken);
-      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser.getMail(), authUser.getId());
+    FirebaseToken authUser = firebaseService.getUserByBearer(token);
+    if (authUser != null) {
+      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token, token);
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       return getAuthenticationManager().authenticate(authentication);
     }
     throw new ForbiddenException("Access denied");
-  }
-
-
-  private User toUserDetails(FirebaseToken firebaseToken) {
-    return User.builder()
-        .id(firebaseToken.getUid())
-        .firstname(firebaseToken.getName())
-        .mail(firebaseToken.getEmail())
-        .build();
   }
 
 }
