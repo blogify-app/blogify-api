@@ -1,17 +1,20 @@
 package com.blogify.blogapi.model;
 
-import com.blogify.blogapi.model.type.PostgresqlEnum;
 import com.blogify.blogapi.model.type.ReactionTypeEnum;
-import com.blogify.blogapi.service.PostReactionService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @Entity
@@ -19,18 +22,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "\"post_reaction\"")
-@TypeDef(name = "psql_enum",typeClass = PostgresqlEnum.class)
 public class PostReaction implements Serializable {
     @Id
     private String id;
 
     //TODO: add relation with user
 
-    @ManyToOne
-    @JoinColumn(name = "id_post")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    @JsonIgnore
     private Post post;
 
-    @Type(type = "psql_enum")
     @Enumerated(EnumType.STRING)
     private ReactionTypeEnum reactionType;
 }

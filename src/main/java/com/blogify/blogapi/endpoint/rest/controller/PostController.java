@@ -1,6 +1,7 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
 import com.blogify.blogapi.model.Post;
+import com.blogify.blogapi.model.PostReaction;
 import com.blogify.blogapi.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,5 +27,10 @@ public class PostController {
             return postService.updatePost(postId,newPost);
         }else
             return postService.savePost(newPost);
+    }
+
+    @GetMapping("/posts/{postId}/reactions")
+    public List<PostReaction> getPostReaction(@PathVariable String postId){
+        return postService.findById(postId).getPostReactions();
     }
 }
