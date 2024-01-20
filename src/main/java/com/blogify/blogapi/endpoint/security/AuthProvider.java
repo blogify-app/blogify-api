@@ -4,6 +4,7 @@ import com.blogify.blogapi.model.User;
 import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.google.auth.Credentials;
+import com.google.firebase.auth.FirebaseToken;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +29,10 @@ public class AuthProvider {
     throw new ForbiddenException("Access denied");
   }
 
+  //TODO: Verify if the user is database before returning
   public User getUser() {
     Object bearer = context.getAuthentication().getPrincipal();
+    FirebaseToken firebaseUser = firebaseService.getUserByBearer((String) bearer);
     return User.builder()
         .build();
   }
