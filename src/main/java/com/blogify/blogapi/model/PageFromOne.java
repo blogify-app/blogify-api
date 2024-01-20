@@ -10,7 +10,7 @@ public class PageFromOne {
 
   public PageFromOne(int value) {
     if (value < MIN_PAGE) {
-      throw new BadRequestException("page must be >=1");
+      throw new BadRequestException("Page must be >=1");
     }
     this.value = value;
   }

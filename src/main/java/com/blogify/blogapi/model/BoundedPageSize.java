@@ -10,10 +10,10 @@ public class BoundedPageSize {
 
   public BoundedPageSize(int value) {
     if (value < 1) {
-      throw new BadRequestException("page size must be >=1");
+      throw new BadRequestException("Page size must be >=1");
     }
     if (value > MAX_SIZE) {
-      throw new BadRequestException("page size must be <" + MAX_SIZE);
+      throw new BadRequestException("Page size must be <" + MAX_SIZE);
     }
     this.value = value;
   }
