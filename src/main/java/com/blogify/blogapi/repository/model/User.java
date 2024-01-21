@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import com.blogify.blogapi.model.enums.Role;
 import com.blogify.blogapi.model.enums.Sex;
@@ -19,12 +19,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
 @EqualsAndHashCode
+@ToString
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "\"user\"")
@@ -44,6 +46,6 @@ public class User implements Serializable {
   @CreationTimestamp private Instant creationDatetime;
   private Instant lastUpdateDatetime;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<UserCategory> userCategories;
 }
