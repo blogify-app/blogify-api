@@ -24,7 +24,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Data
 @EqualsAndHashCode
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "\"user\"")

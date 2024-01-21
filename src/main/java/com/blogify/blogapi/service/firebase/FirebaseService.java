@@ -56,8 +56,8 @@ public class FirebaseService {
     request.setDisplayName(user.getFirstname()+" "+user.getLastname());
     request.setUid(user.getId());
     try {
-      auth().createUser(request);
-      return user;
+      UserRecord record = auth().createUser(request);
+      return user.toBuilder().id(record.getUid()).build();
     } catch (FirebaseAuthException e) {
       throw new ApiException(SERVER_EXCEPTION, e.getMessage());
     }
