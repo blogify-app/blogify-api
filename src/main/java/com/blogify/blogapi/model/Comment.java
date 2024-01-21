@@ -8,14 +8,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "\"comment\"")
 @Data
 @Builder
 @AllArgsConstructor
@@ -27,6 +30,8 @@ public class Comment implements Serializable {
 
     private String content;
 
+    @CreationTimestamp
+    @Getter(AccessLevel.NONE)
     private Instant creationDatetime;
 
     /* @ManyToOne

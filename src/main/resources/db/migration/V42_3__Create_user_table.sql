@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS "user" (
    creation_datetime TIMESTAMP DEFAULT current_timestamp,
    last_update_datetime TIMESTAMP
 );
+ALTER TABLE "user"
+    ADD COLUMN sex VARCHAR(1);

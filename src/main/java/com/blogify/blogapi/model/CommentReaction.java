@@ -8,10 +8,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "comment_reaction")
+@Table(name = "\"comment_reaction\"")
 @Data
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CommentReaction extends Reaction{}
+public class CommentReaction extends Reaction{
+    public void setComment(Comment comment) {
+    }
+
+    public void setReactionType(ReactionType reactionType) {
+    }
+}
 
