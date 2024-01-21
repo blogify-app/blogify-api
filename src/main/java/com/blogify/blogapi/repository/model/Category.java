@@ -28,6 +28,6 @@ public class Category implements Serializable {
   private String name;
   @CreationTimestamp private Instant creationDatetime;
 
-  @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private List<UserCategory> userCategories;
 }

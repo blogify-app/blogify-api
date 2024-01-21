@@ -1,7 +1,7 @@
 package com.blogify.blogapi.service;
 
-import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.repository.UserRepository;
+import com.blogify.blogapi.repository.model.User;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

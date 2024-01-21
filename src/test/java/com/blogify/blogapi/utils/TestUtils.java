@@ -1,11 +1,13 @@
 package com.blogify.blogapi.utils;
 
-import com.blogify.blogapi.repository.model.User;
-import java.util.List;
-
 import static com.blogify.blogapi.model.enums.Role.CLIENT;
 import static com.blogify.blogapi.model.enums.Sex.M;
 import static java.util.UUID.randomUUID;
+
+import com.blogify.blogapi.repository.model.Category;
+import com.blogify.blogapi.repository.model.User;
+import java.time.Instant;
+import java.util.List;
 
 public class TestUtils {
   public static User user() {
@@ -28,7 +30,20 @@ public class TestUtils {
 
   public static List<User> ignoreIdsAndCreationDatetime(List<User> users) {
     return users.stream()
-        .peek(user -> {user.setId(null); user.setCreationDatetime(null);}).toList();
+        .peek(
+            user -> {
+              user.setId(null);
+              user.setCreationDatetime(null);
+            })
+        .toList();
   }
 
+  public static Category category() {
+    return Category.builder()
+        .id(randomUUID().toString())
+        .name("machine learning")
+        .creationDatetime(Instant.now())
+        .userCategories(List.of())
+        .build();
+  }
 }

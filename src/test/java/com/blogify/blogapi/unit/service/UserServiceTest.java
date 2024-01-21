@@ -1,5 +1,9 @@
 package com.blogify.blogapi.unit.service;
 
+import static com.blogify.blogapi.utils.TestUtils.ignoreIdAnCreationDatetime;
+import static com.blogify.blogapi.utils.TestUtils.user;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.blogify.blogapi.conf.FacadeIT;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.UserService;
@@ -7,24 +11,18 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.blogify.blogapi.utils.TestUtils.ignoreIdAnCreationDatetime;
-import static com.blogify.blogapi.utils.TestUtils.user;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class UserServiceTest extends FacadeIT {
-  @Autowired
-  UserService subject;
-
+  @Autowired UserService subject;
 
   @Test
-  void create_user_ok(){
+  void create_user_ok() {
     User actual = subject.save(user());
 
     assertEquals(ignoreIdAnCreationDatetime(user()), ignoreIdAnCreationDatetime(actual));
   }
 
   @Test
-  void read_all_user(){
+  void read_all_user() {
     User created = subject.save(user());
     List<User> actuals = subject.findAll();
     var actual = actuals.get(0);

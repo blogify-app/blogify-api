@@ -16,14 +16,13 @@ public class SecurityController {
   private final FirebaseService firebaseService;
 
   @PostMapping("/signup")
-  public User signup(@RequestBody User toCreate){
+  public User signup(@RequestBody User toCreate) {
     var user = firebaseService.createUser(toCreate, "");
     return userService.save(user);
   }
 
   @GetMapping("/auth")
-  public String auth(){
+  public String auth() {
     return "auth";
   }
-
 }
