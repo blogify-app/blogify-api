@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-
 @Slf4j
 public class AuthFilter extends AbstractAuthenticationProcessingFilter {
   private final FirebaseService firebaseService;
@@ -26,16 +25,17 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
   @Override
   @SneakyThrows
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+  public Authentication attemptAuthentication(
+      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
     FirebaseToken authUser = firebaseService.getUserByBearer(token);
     if (authUser != null) {
       log.info("Authenticated user {}", authUser.getEmail());
-      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token, token);
+      UsernamePasswordAuthenticationToken authentication =
+          new UsernamePasswordAuthenticationToken(token, token);
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       return getAuthenticationManager().authenticate(authentication);
     }
     throw new ForbiddenException("Access denied");
   }
-
 }

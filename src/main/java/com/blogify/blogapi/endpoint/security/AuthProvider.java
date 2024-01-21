@@ -29,12 +29,11 @@ public class AuthProvider {
     throw new ForbiddenException("Access denied");
   }
 
-  //TODO: Verify if the user is database before returning
+  // TODO: Verify if the user is database before returning
   public User getUser() {
     Object bearer = context.getAuthentication().getPrincipal();
     FirebaseToken firebaseUser = firebaseService.getUserByBearer((String) bearer);
-    return User.builder()
-        .build();
+    return User.builder().build();
   }
 
   public Credentials getCredentials() {

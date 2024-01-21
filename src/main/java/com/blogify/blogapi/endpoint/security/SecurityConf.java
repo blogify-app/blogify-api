@@ -31,13 +31,14 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
   private final HandlerExceptionResolver exceptionResolver;
   private final FirebaseService firebaseService;
 
-  public SecurityConf(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
-                      ObjectMapper mapper, FirebaseService firebase) {
+  public SecurityConf(
+      @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
+      ObjectMapper mapper,
+      FirebaseService firebase) {
     exceptionResolver = resolver;
     objectMapper = mapper;
     firebaseService = firebase;
   }
-
 
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
@@ -57,35 +58,42 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     return new ForbiddenException(e.getMessage());
   }
 
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.cors().configurationSource(corsConfigurationSource())
+    http.cors()
+        .configurationSource(corsConfigurationSource())
         .and()
-        .csrf().disable()
-        .formLogin().disable()
-        .httpBasic().disable()
-        .exceptionHandling().authenticationEntryPoint((req, res, e) ->
-            exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
+        .csrf()
+        .disable()
+        .formLogin()
+        .disable()
+        .httpBasic()
+        .disable()
+        .exceptionHandling()
+        .authenticationEntryPoint(
+            (req, res, e) ->
+                exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
         .and()
-        .addFilterBefore(bearerFilter(new NegatedRequestMatcher(
-            new OrRequestMatcher(
-                new AntPathRequestMatcher("/ping")
-            )
-        )), AnonymousAuthenticationFilter.class)
+        .addFilterBefore(
+            bearerFilter(
+                new NegatedRequestMatcher(
+                    new OrRequestMatcher(new AntPathRequestMatcher("/ping")))),
+            AnonymousAuthenticationFilter.class)
         .authorizeRequests()
-        .antMatchers(HttpMethod.GET, "/ping").permitAll()
-        .anyRequest().denyAll()
+        .antMatchers(HttpMethod.GET, "/ping")
+        .permitAll()
+        .anyRequest()
+        .denyAll()
         .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
   private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
     AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService);
     bearerFilter.setAuthenticationManager(authenticationManager());
     bearerFilter.setAuthenticationSuccessHandler(
-        (httpServletRequest, httpServletResponse, authentication) -> {
-        });
+        (httpServletRequest, httpServletResponse, authentication) -> {});
     bearerFilter.setAuthenticationFailureHandler(
         (req, res, e) ->
             exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));

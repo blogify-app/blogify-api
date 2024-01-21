@@ -1,5 +1,7 @@
 package com.blogify.blogapi.service.firebase;
 
+import static com.blogify.blogapi.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
+
 import com.blogify.blogapi.model.User;
 import com.blogify.blogapi.model.exception.ApiException;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -14,9 +16,6 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.blogify.blogapi.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
-
-
 @Component
 public class FirebaseService {
   public final String privateKey;
@@ -27,9 +26,8 @@ public class FirebaseService {
 
   @SneakyThrows
   private FirebaseAuth auth() {
-    FirebaseOptions options = new FirebaseOptions.Builder()
-        .setCredentials(getCredentials())
-        .build();
+    FirebaseOptions options =
+        new FirebaseOptions.Builder().setCredentials(getCredentials()).build();
 
     var app = FirebaseApp.initializeApp(options);
     return FirebaseAuth.getInstance(app);
@@ -49,11 +47,11 @@ public class FirebaseService {
     }
   }
 
-  public User createUser(User user, String password){
+  public User createUser(User user, String password) {
     UserRecord.CreateRequest request = new UserRecord.CreateRequest();
     request.setEmail(user.getMail());
     request.setPassword(password);
-    request.setDisplayName(user.getFirstname()+" "+user.getLastname());
+    request.setDisplayName(user.getFirstname() + " " + user.getLastname());
     request.setUid(user.getId());
     try {
       UserRecord record = auth().createUser(request);
@@ -62,5 +60,4 @@ public class FirebaseService {
       throw new ApiException(SERVER_EXCEPTION, e.getMessage());
     }
   }
-
 }
