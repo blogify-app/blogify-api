@@ -25,7 +25,7 @@ public class PostReactionService {
         PostReaction postReaction = postReactionRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("reaction with id " + id + " not found"));
         if(postReaction != null){
-            postReaction.setReactionType(updatePostReaction.getReactionType());
+            postReaction.setType(updatePostReaction.getType());
             return  postReactionRepository.save(postReaction);
         }else
             return null;
