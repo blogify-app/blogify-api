@@ -1,68 +1,49 @@
 package com.blogify.blogapi.model;
 
+import com.blogify.blogapi.model.enums.Role;
+import com.blogify.blogapi.model.enums.Sex;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.blogify.blogapi.service.utils.DataFormatterUtils;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
+@EqualsAndHashCode
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "\"user\"")
 public class User implements Serializable {
-  @Id
-  private String id;
+  @Id private String id;
   private String firstname;
   private String lastname;
   private String mail;
   private LocalDate birthdate;
+
+  @Enumerated(EnumType.STRING)
   private Role role;
+
+  @Enumerated(EnumType.STRING)
   private Sex sex;
-  @CreationTimestamp
-  @Getter(AccessLevel.NONE)
-  private Instant creationDatetime;
+
+  @CreationTimestamp private Instant creationDatetime;
   private Instant lastUpdateDatetime;
-  @ManyToMany
-  @JoinTable(
-      name = "user_category",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "category_id")
-  )
-  private List<Category> categories;
 
-  public enum Role {
-    MANAGER,
-    CLIENT;
-
-    public static Role fromValue(String value) {
-      return DataFormatterUtils.fromValue(Role.class, value);
-    }
-  }
-
-  public enum Sex {
-    M,
-    F;
-
-    public static Sex fromValue(String value) {
-      return DataFormatterUtils.fromValue(Sex.class, value);
-    }
-  }
-
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<UserCategory> userCategories;
 }
