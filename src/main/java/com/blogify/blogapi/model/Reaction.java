@@ -40,5 +40,6 @@ public abstract class Reaction {
         public static ReactionType fromValue(String value) {
             return DataFormatterUtils.fromValue(ReactionType.class, value);
         }
+
     }
 }
