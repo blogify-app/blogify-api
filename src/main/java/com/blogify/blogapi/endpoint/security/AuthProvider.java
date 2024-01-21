@@ -1,6 +1,6 @@
 package com.blogify.blogapi.endpoint.security;
 
-import com.blogify.blogapi.model.User;
+import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.google.auth.Credentials;

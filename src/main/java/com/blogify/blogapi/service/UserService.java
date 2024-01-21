@@ -1,6 +1,6 @@
 package com.blogify.blogapi.service;
 
-import com.blogify.blogapi.model.User;
+import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.repository.UserRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.blogify.blogapi.service;
 
-import com.blogify.blogapi.model.Category;
+import com.blogify.blogapi.repository.model.Category;
 import com.blogify.blogapi.repository.CategoryRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;

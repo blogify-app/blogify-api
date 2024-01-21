@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -28,6 +28,6 @@ public class Category implements Serializable {
   private String name;
   @CreationTimestamp private Instant creationDatetime;
 
-  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<UserCategory> userCategories;
 }

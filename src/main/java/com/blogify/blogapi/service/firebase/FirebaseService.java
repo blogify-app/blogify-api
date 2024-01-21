@@ -2,7 +2,7 @@ package com.blogify.blogapi.service.firebase;
 
 import static com.blogify.blogapi.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 
-import com.blogify.blogapi.model.User;
+import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.model.exception.ApiException;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

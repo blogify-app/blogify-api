@@ -1,10 +1,9 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +21,9 @@ import lombok.NoArgsConstructor;
 public class UserCategory implements Serializable {
   @Id private String id;
 
-  @ManyToOne
-  @JoinColumn(name = "user_id", referencedColumnName = "id")
-  private User user;
+  @JoinColumn(referencedColumnName = "id")
+  private String userId;
 
-  @ManyToOne
-  @JoinColumn(name = "category_id", referencedColumnName = "id")
-  private Category category;
+  @JoinColumn(referencedColumnName = "id")
+  private String categoryId;
 }
