@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: 'latest'
+  version: "latest"
   title: Blogify - API
   description: |
     Log in and blog on [Blogify-web](https://github.com/blogify-app/blogify-web) 
@@ -10,66 +10,65 @@ security:
   - BearerAuth: []
 
 paths:
-
   ## Health resources
-  '/ping':
+  "/ping":
     get:
       tags:
         - Health
       summary: ping.
       operationId: ping
       responses:
-        '200':
+        "200":
           description: pong.
           content:
             text/plain:
               schema:
                 type: string
                 example: pong
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
   ## Security resources
-  '/signin':
+  "/signin":
     post:
       tags:
         - Security
       summary: Login user.
       operationId: signIn
       requestBody:
-        description: Login payload.
+        description: Login payload. set 'user_id' to null when authenticating with email and password
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInUser'
+              $ref: "#/components/schemas/AuthenticationPayload"
       responses:
-        '201':
+        "201":
           description: Logged in payload.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Whoami'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Whoami"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/signup':
+  "/signup":
     post:
       tags:
         - Security
@@ -81,51 +80,51 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignUp'
+              $ref: "#/components/schemas/SignUp"
       responses:
-        '201':
+        "201":
           description: Signed up user.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/whoami':
+  "/whoami":
     get:
       tags:
         - Security
       summary: Tells you who you are.
       operationId: whoami
       responses:
-        '200':
+        "200":
           description: Who you are.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Whoami'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Whoami"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
   ## Users resources
-  '/users':
+  "/users":
     get:
       tags:
         - User
@@ -136,39 +135,39 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/Page'
+            $ref: "#/components/schemas/Page"
         - name: page_size
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/PageSize'
-        - name: user_name
+            $ref: "#/components/schemas/PageSize"
+        - name: name
           in: query
           required: false
-          description: Filter user by first name, lastname or username.
+          description: Filter user by first name or lastname or username.
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: List of users that meet the criterias.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                  $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/users/{id}':
+  "/users/{id}":
     get:
       tags:
         - User
@@ -181,22 +180,22 @@ paths:
             type: string
       operationId: getUserById
       responses:
-        '200':
+        "200":
           description: The identified user.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
     put:
       tags:
         - User
@@ -214,22 +213,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '201':
+        "201":
           description: The crupdated user.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
 
   ## Following resources
-  '/users/{id}/followers':
+  "/users/{id}/follows":
     get:
       tags:
         - Following
-      summary: Get followers of the identified user.
-      operationId: getFollowersByUserId
+      summary: Get the users that the identified user follows
+      operationId: getFollowedByUserId
       parameters:
         - name: id
           in: path
@@ -240,39 +239,81 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/Page'
+            $ref: "#/components/schemas/Page"
         - name: page_size
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/PageSize'
-        - name: follower_name
+            $ref: "#/components/schemas/PageSize"
+        - name: name
           in: query
           required: false
           description: Filters follower by first name or lastname.
           schema:
             type: string
       responses:
-        '200':
-          description: Followers of the identified user.
+        "200":
+          description: The followed users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                  $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+  "/users/followers":
+    get:
+      tags:
+        - Following
+      summary: Get self followers
+      operationId: getSelfFollowers
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Page"
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/PageSize"
+        - name: name
+          in: query
+          required: false
+          description: Filters follower by first name or lastname or username
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Followers of the connected user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/follow/{user_id}':
+  "/follow/{user_id}":
     post:
       tags:
         - Following
@@ -285,23 +326,23 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        "201":
           description: The followed user.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
-  '/unfollow/{user_id}':
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+  "/unfollow/{user_id}":
     post:
       tags:
         - Following
@@ -314,25 +355,25 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        "201":
           description: The unfollowed user.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
   ## Posting resources
-  '/posts':
+  "/posts":
     get:
       tags:
         - Posting
@@ -343,12 +384,12 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/Page'
+            $ref: "#/components/schemas/Page"
         - name: page_size
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/PageSize'
+            $ref: "#/components/schemas/PageSize"
         - name: categories
           in: query
           required: false
@@ -356,26 +397,26 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: List of posts that meet the criterias.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Post'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                  $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/posts/{id}':
+  "/posts/{id}":
     get:
       tags:
         - Posting
@@ -388,26 +429,26 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: The identified post.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
     put:
       tags:
         - Posting
-      summary: Create or Update post by identifier.
+      summary: Crupdate post by identifier.
       operationId: crupdatePostById
       parameters:
         - name: id
@@ -416,29 +457,29 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Post to update
+        description: Post to crupdate
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: "#/components/schemas/Post"
       responses:
-        '201':
+        "201":
           description: The crupdated post.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
     delete:
       tags:
         - Posting
@@ -450,31 +491,24 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        description: Post to delete.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Post'
       responses:
-        '200':
+        "200":
           description: The deleted post.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
-  '/posts/{id}/reaction':
+                $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+  "/posts/{id}/reaction":
     post:
       tags:
         - Posting
@@ -490,26 +524,26 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/ReactionType'
+            $ref: "#/components/schemas/ReactionType"
       responses:
-        '201':
+        "201":
           description: The post reaction.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Reaction'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Reaction"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/post/{id}/comments/{comment_id}/reaction':
+  "/post/{id}/comments/{comment_id}/reaction":
     post:
       tags:
         - Comments
@@ -530,76 +564,81 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/ReactionType'
+            $ref: "#/components/schemas/ReactionType"
       responses:
-        '201':
+        "201":
           description: The comment reaction.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Reaction'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Reaction"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-        ## Commenting resources
-  '/posts/{id}/comments':
+  ## Commenting resources
+  "/posts/{id}/comments":
     get:
       tags:
         - Comments
       summary: Get the identified post comments.
-      operationId: getComments
+      operationId: getCommentsByPostId
       parameters:
         - name: page
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/Page'
+            $ref: "#/components/schemas/Page"
         - name: page_size
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/PageSize'
+            $ref: "#/components/schemas/PageSize"
         - name: id
           in: path
           required: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: The identified post comments.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                  $ref: "#/components/schemas/Comment"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
-  '/posts/{post_id}/comments':
+  "/posts/{pid}/comments/{cid}":
     put:
       tags:
         - Comments
-      summary: Crupdate the identified post comments.
-      operationId: crupdateComment
+      summary: Crupdate comment of the identified post by id
+      operationId: crupdateCommentById
       parameters:
-        - name: post_id
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cid
           in: path
           required: true
           schema:
@@ -610,63 +649,92 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Comment'
+              $ref: "#/components/schemas/Comment"
       responses:
-        '200':
+        "200":
           description: List of followers from user connected.
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
-
-  '/posts/{post_id}/comments/{id}':
+                  $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
     get:
       tags:
         - Comments
       summary: Get comment by identifier.
       operationId: getCommentById
       parameters:
-        - name: post_id
+        - name: pid
           in: path
           required: true
           schema:
             type: string
-        - name: id
+        - name: cid
           in: path
           required: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: The identified comment.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Comment'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
+                $ref: "#/components/schemas/Comment"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - Comments
+      summary: Delete comment by identifier.
+      operationId: deleteCommentById
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The deleted comment.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
 
 components:
   securitySchemes:
@@ -676,36 +744,36 @@ components:
 
   responses:
     ## response model
-    '400':
+    "400":
       description: Bad request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BadRequestException'
-    '403':
+            $ref: "#/components/schemas/BadRequestException"
+    "403":
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/NotAuthorizedException'
-    '404':
+            $ref: "#/components/schemas/NotAuthorizedException"
+    "404":
       description: Not found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ResourceNotFoundException'
-    '429':
+            $ref: "#/components/schemas/ResourceNotFoundException"
+    "429":
       description: Too many requests to the API
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TooManyRequestsException'
-    '500':
+            $ref: "#/components/schemas/TooManyRequestsException"
+    "500":
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/InternalServerException'
+            $ref: "#/components/schemas/InternalServerException"
 
   schemas:
     ## enum type
@@ -740,13 +808,8 @@ components:
       type: string
       enum:
         - ARCHIVED
-        - ENABLED
         - DRAFT
-    CommentStatus:
-      type: string
-      enum:
-        - ARCHIVED
-        - ENABLED
+        - DISABLED
         ## resource model
     Category:
       properties:
@@ -758,7 +821,7 @@ components:
       properties:
         id:
           type: string
-        picture_url:
+        thumbnail_url:
           type: string
         description:
           type: string
@@ -769,19 +832,30 @@ components:
         creation_datetime:
           type: string
           format: date-time
-        reaction_count:
-          type: integer
         updated_at:
           type: string
           format: date-time
-        user_id:
+        author_id:
           type: string
         status:
-          $ref: '#/components/schemas/PostStatus'
+          $ref: "#/components/schemas/PostStatus"
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+        reactions:
+          $ref: "#/components/schemas/ReactionStat"
+    CommentStatus:
+      type: string
+      enum:
+        - ENABLED
+        - DISABLED
     Comment:
       properties:
         id:
           type: string
+        user:
+          $ref: "#/components/schemas/User"
         post_id:
           type: string
         content:
@@ -789,16 +863,24 @@ components:
         creation_datetime:
           type: string
           format: date-time
-        reply_to_comment_id:
+        reply_to_id:
           type: string
+        reactions:
+          $ref: "#/components/schemas/ReactionStat"
         status:
-          $ref: '#/components/schemas/CommentStatus'
+          $ref: "#/components/schemas/CommentStatus"
+    ReactionStat:
+      properties:
+        likes:
+          type: number
+        dislikes:
+          type: number
     Reaction:
       properties:
         id:
           type: string
         type:
-          $ref: '#/components/schemas/ReactionType'
+          $ref: "#/components/schemas/ReactionType"
         creation_datetime:
           type: string
           format: date-time
@@ -809,10 +891,17 @@ components:
         comment_id:
           type: string
     User:
-      allOf:
-        - $ref: '#/components/schemas/UserInfo'
       properties:
         id:
+          type: string
+        last_name:
+          type: string
+        first_name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        email:
           type: string
         photo_url:
           type: string
@@ -825,40 +914,36 @@ components:
         about:
           type: string
         status:
-          $ref: '#/components/schemas/UserStatus'
+          $ref: "#/components/schemas/UserStatus"
         sex:
-          $ref: '#/components/schemas/Sex'
+          $ref: "#/components/schemas/Sex"
         entrance_datetime:
           type: string
           format: date-time
-    UserInfo:
-      properties:
-        last_name:
-          type: string
-        first_name:
-          type: string
-        birth_date:
-          type: string
-          format: date
-        email:
-          type: string
-    LoginInUser:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+        is_followed:
+          type: boolean
+    AuthenticationPayload:
       properties:
         email:
           type: string
         password:
           type: string
-        userId:
+        provider_id:
           type: string
     SignUp:
       allOf:
-        - $ref: '#/components/schemas/UserInfo'
+        - $ref: "#/components/schemas/User"
+        - $ref: "#/components/schemas/AuthenticationPayload"
       properties:
         password:
           type: string
     Whoami:
       allOf:
-        - $ref: '#/components/schemas/UserInfo'
+        - $ref: "#/components/schemas/User"
       properties:
         id:
           type: string
@@ -875,31 +960,31 @@ components:
           type: string
     BadRequestException:
       allOf:
-        - $ref: '#/components/schemas/Exception'
+        - $ref: "#/components/schemas/Exception"
       example:
         type: BadRequestException
         message: Bad request
     NotAuthorizedException:
       allOf:
-        - $ref: '#/components/schemas/Exception'
+        - $ref: "#/components/schemas/Exception"
       example:
         type: NotAuthorizedException
         message: Not authorized
     ResourceNotFoundException:
       allOf:
-        - $ref: '#/components/schemas/Exception'
+        - $ref: "#/components/schemas/Exception"
       example:
         type: ResourceNotFoundException
         message: Resource of type <T> identified by <I> not found
     TooManyRequestsException:
       allOf:
-        - $ref: '#/components/schemas/Exception'
+        - $ref: "#/components/schemas/Exception"
       example:
         type: TooManyRequestsException
         message: Too many requests
     InternalServerException:
       allOf:
-        - $ref: '#/components/schemas/Exception'
+        - $ref: "#/components/schemas/Exception"
       example:
         type: InternalServerException
         message: Unexpected error
