@@ -1,11 +1,10 @@
 package com.blogify.blogapi.service;
 
-import com.blogify.blogapi.model.PostReaction;
+import com.blogify.blogapi.repository.model.PostReaction;
 import com.blogify.blogapi.repository.PostReactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -16,7 +15,7 @@ public class PostReactionService {
     public List<PostReaction> findAll(){
         return postReactionRepository.findAll();
     }
-
+    /**
     public PostReaction savePostReaction(PostReaction postReaction){
         return postReactionRepository.save(postReaction);
     }
@@ -34,5 +33,5 @@ public class PostReactionService {
     public boolean isExists(String id){
         return postReactionRepository.existsById(id);
     }
-
+    */
 }

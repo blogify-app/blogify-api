@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

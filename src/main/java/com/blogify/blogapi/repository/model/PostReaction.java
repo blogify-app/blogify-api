@@ -1,36 +1,20 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
-import com.blogify.blogapi.model.type.PostgresqlEnum;
-import com.blogify.blogapi.model.type.ReactionTypeEnum;
-import com.blogify.blogapi.service.PostReactionService;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "\"post_reaction\"")
-@TypeDef(name = "psql_enum",typeClass = PostgresqlEnum.class)
-public class PostReaction implements Serializable {
-    @Id
-    private String id;
-
-    //TODO: add relation with user
-
-    @ManyToOne
-    @JoinColumn(name = "id_post")
-    private Post post;
-
-    @Type(type = "psql_enum")
-    @Enumerated(EnumType.STRING)
-    private ReactionTypeEnum reactionType;
+public class PostReaction extends Reaction implements Serializable {
 }

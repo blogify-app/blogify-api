@@ -1,6 +1,6 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.model.PostReaction;
+import com.blogify.blogapi.repository.model.PostReaction;
 import com.blogify.blogapi.service.PostReactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +17,7 @@ public class PostReactionController {
         return postReactionService.findAll();
     }
 
+    /**
     @PutMapping("/reactions/{reactionId}")
     public PostReaction updateReaction(@PathVariable String reactionId , @RequestBody PostReaction postReaction){
         if(postReactionService.isExists(reactionId)){
@@ -24,4 +25,5 @@ public class PostReactionController {
         }else
             return postReactionService.savePostReaction(postReaction);
     }
+     */
 }
