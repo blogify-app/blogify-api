@@ -25,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
 @ContextConfiguration(initializers = UserIt.ContextInitializer.class)
-@AutoConfigureMockMvc
+//@AutoConfigureMockMvc
 public class UserIt {
 
   @MockBean private FirebaseService firebaseServiceMock;
@@ -45,8 +45,10 @@ public class UserIt {
     UserApi api = new UserApi(student1Client);
 
     List<User> actual = api.getUsers(1, 5, null);
+
     System.out.println("--------------------------------");
     System.out.println(actual);
+
 
     assertEquals(1, 1);
   }
