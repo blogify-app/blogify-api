@@ -1,8 +1,8 @@
 package com.blogify.blogapi.endpoint.security;
 
 import com.blogify.blogapi.model.exception.ForbiddenException;
+import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,17 +27,17 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @EnableWebSecurity
 @Slf4j
 public class SecurityConf extends WebSecurityConfigurerAdapter {
-  private final ObjectMapper objectMapper;
   private final HandlerExceptionResolver exceptionResolver;
   private final FirebaseService firebaseService;
+  private final UserService userService;
 
   public SecurityConf(
       @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
-      ObjectMapper mapper,
-      FirebaseService firebase) {
+      FirebaseService firebase,
+      UserService service) {
     exceptionResolver = resolver;
-    objectMapper = mapper;
     firebaseService = firebase;
+    userService = service;
   }
 
   @Bean
@@ -93,7 +93,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
   }
 
   private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
-    AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService);
+    AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService, userService);
     bearerFilter.setAuthenticationManager(authenticationManager());
     bearerFilter.setAuthenticationSuccessHandler(
         (httpServletRequest, httpServletResponse, authentication) -> {});
