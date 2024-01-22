@@ -1,10 +1,8 @@
 package com.blogify.blogapi.service;
 
-import com.blogify.blogapi.model.CommentReaction;
-import com.blogify.blogapi.model.Reaction;
 import com.blogify.blogapi.repository.CommentReactionRepository;
 import com.blogify.blogapi.repository.CommentRepository;
-import com.blogify.blogapi.model.Comment;
+import com.blogify.blogapi.repository.model.Comment;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,8 @@ public class CommentService {
     }*/
     // TODO: React to a comment by identifier. Waiting for the completion of the Post.
 
-    public List<Comment> getComments(String postId) {
-        return commentRepository.findByPostId(postId);
+    public List<Comment> getComments() {
+        return commentRepository.findAll();
     }
 
     // TODO: Get comments of identified post.

@@ -78,12 +78,14 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             bearerFilter(
                 new NegatedRequestMatcher(
                     new OrRequestMatcher(
-                        new AntPathRequestMatcher("/ping"), new AntPathRequestMatcher("/signup")))),
+                        new AntPathRequestMatcher("/ping"), new AntPathRequestMatcher("/signup"), new AntPathRequestMatcher("/comments")))),
             AnonymousAuthenticationFilter.class)
         .authorizeRequests()
         .antMatchers(HttpMethod.GET, "/ping")
         .permitAll()
         .antMatchers(HttpMethod.POST, "/signup")
+        .permitAll()
+        .antMatchers(HttpMethod.GET, "/comments")
         .permitAll()
         .anyRequest()
         .denyAll()

@@ -1,7 +1,7 @@
-package com.blogify.blogapi.endpoint.rest.controller.health;
+package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.model.Comment;
-import com.blogify.blogapi.model.Reaction;
+import com.blogify.blogapi.repository.model.Comment;
+import com.blogify.blogapi.repository.model.Reaction;
 import com.blogify.blogapi.service.CommentService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -14,19 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/posts")
 @AllArgsConstructor
 public class CommentController {
 
     private CommentService commentService;
 
-    @GetMapping("/{id}/comments")
-    public ResponseEntity<List<Comment>> getComments(@PathVariable("id") String postId) {
-        List<Comment> comments = commentService.getComments(postId);
-        return ResponseEntity.ok(comments);
+    @GetMapping("/comments")
+    public List<Comment> getComments() {
+        return commentService.getComments();
     }
 
-    @PostMapping("/{post_id}/comments")
+    /*@PostMapping("/{post_id}/comments")
     public ResponseEntity<List<Comment>> createOrUpdateComment(@PathVariable("post_id") String postId, @RequestBody List<Comment> comments) {
         List<Comment> updatedComments = commentService.createOrUpdateComment(postId, comments);
         return ResponseEntity.ok(updatedComments);
@@ -39,6 +37,6 @@ public class CommentController {
             @RequestBody Reaction.ReactionType reactionType) {
         Reaction reaction = commentService.reactToComment(postId, commentId, reactionType);
         return ResponseEntity.ok(reaction);
-    }
+    }*/
 }
 

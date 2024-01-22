@@ -1,5 +1,7 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
+import com.blogify.blogapi.repository.model.Comment;
+import com.blogify.blogapi.repository.model.Reaction;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -12,12 +14,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class CommentReaction extends Reaction{
-    public void setComment(Comment comment) {
-    }
-
-    public void setReactionType(ReactionType reactionType) {
-    }
+public class CommentReaction extends Reaction {
 }
 

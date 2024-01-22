@@ -1,8 +1,9 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -31,7 +32,6 @@ public class Comment implements Serializable {
     private String content;
 
     @CreationTimestamp
-    @Getter(AccessLevel.NONE)
     private Instant creationDatetime;
 
     /* @ManyToOne
@@ -39,7 +39,7 @@ public class Comment implements Serializable {
     private Post post;
     // TODO: Add relation with post, waiting for the completion of the Post entity */
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "comment_id")
     private List<CommentReaction> reactions;
 }

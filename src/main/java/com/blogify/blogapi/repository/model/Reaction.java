@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model;
+package com.blogify.blogapi.repository.model;
 
 import com.blogify.blogapi.service.utils.DataFormatterUtils;
 import javax.persistence.Entity;
@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
 public abstract class Reaction {
     @Id
