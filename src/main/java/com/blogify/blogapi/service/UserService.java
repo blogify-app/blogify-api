@@ -17,9 +17,10 @@ public class UserService {
     return repository.findAll();
   }
 
-  public User getUserbyFirebaseIdAndEmail(String firebaseId, String email){
-    return repository.findByFirebaseIdAndMail(firebaseId, email)
-        .orElseThrow(()-> new NotFoundException("User.email="+email+" is not found."));
+  public User getUserbyFirebaseIdAndEmail(String firebaseId, String email) {
+    return repository
+        .findByFirebaseIdAndMail(firebaseId, email)
+        .orElseThrow(() -> new NotFoundException("User.email=" + email + " is not found."));
   }
 
   @Transactional

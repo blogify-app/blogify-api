@@ -23,6 +23,4 @@ public class SecurityController {
     var user = firebaseService.createUser(domain, toCreate.getPassword());
     return userMapper.toRest(userService.save(user));
   }
-  
-
 }
