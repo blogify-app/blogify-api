@@ -85,6 +85,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(HttpMethod.POST, "/signup")
         .permitAll()
+        .antMatchers(HttpMethod.GET, "/users")
+        .permitAll()
         .anyRequest()
         .denyAll()
         .and()
