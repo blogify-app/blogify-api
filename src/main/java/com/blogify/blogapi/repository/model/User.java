@@ -36,6 +36,7 @@ public class User implements Serializable {
   private String lastname;
   private String mail;
   private LocalDate birthdate;
+  private String firebaseId;
 
   @Enumerated(EnumType.STRING)
   private Role role;
