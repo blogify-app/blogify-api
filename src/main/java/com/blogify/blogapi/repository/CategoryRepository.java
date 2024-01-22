@@ -1,9 +1,8 @@
 package com.blogify.blogapi.repository;
 
-import com.blogify.blogapi.model.Category;
+import com.blogify.blogapi.repository.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, String> {
-}
+public interface CategoryRepository extends JpaRepository<Category, String> {}

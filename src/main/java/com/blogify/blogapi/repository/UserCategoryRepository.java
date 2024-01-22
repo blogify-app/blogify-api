@@ -1,8 +1,8 @@
 package com.blogify.blogapi.repository;
 
-import com.blogify.blogapi.repository.model.User;
+import com.blogify.blogapi.repository.model.UserCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {}
+public interface UserCategoryRepository extends JpaRepository<UserCategory, String> {}
