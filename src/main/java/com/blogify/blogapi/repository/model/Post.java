@@ -1,26 +1,27 @@
 package com.blogify.blogapi.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.List;
-
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "\"post\"")
+@Table(name = "post")
 public class Post implements Serializable {
     @Id
     private String id;
@@ -29,10 +30,12 @@ public class Post implements Serializable {
 
     private String content;
 
-    @OneToMany
-    @JoinColumn(name = "id_post")
+    @OneToMany(
+        mappedBy = "post",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<PostReaction> postReactions;
-    //TODO: remove this , just test
 
     @CreationTimestamp
     private Instant creationDatetime;

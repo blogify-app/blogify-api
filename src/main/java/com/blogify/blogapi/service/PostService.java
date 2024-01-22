@@ -1,5 +1,6 @@
 package com.blogify.blogapi.service;
 
+import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.PostRepository;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class PostService{
 
     public Post findById(String id){
         return postRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Post with id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
     }
 
     public Post savePost(Post post){

@@ -1,9 +1,13 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
 import com.blogify.blogapi.repository.model.Post;
+import com.blogify.blogapi.repository.model.PostReaction;
 import com.blogify.blogapi.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,13 +22,15 @@ public class PostController {
         return postService.findAll();
     }
 
-    /**
-     * @PutMapping("/posts/{postId}")
-     *     public Post putPost(@PathVariable String postId,@RequestBody Post newPost){
-     *         if(postService.isExists(postId)){
-     *             return postService.updatePost(postId,newPost);
-     *         }else
-     *             return postService.savePost(newPost);
-     *     }
-     */
+    @PutMapping("/posts/{postId}")
+    public Post putPost(@PathVariable String postId, @RequestBody Post newPost){
+        if(postService.isExists(postId)){
+            return postService.updatePost(postId,newPost);
+        }else
+            return postService.savePost(newPost);
+    }
+    @GetMapping("/posts/{postId}/reactions")
+    public List<PostReaction> getPostReaction(@PathVariable String postId){
+        return postService.findById(postId).getPostReactions();
+    }
 }
