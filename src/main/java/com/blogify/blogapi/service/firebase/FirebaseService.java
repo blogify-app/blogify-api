@@ -39,9 +39,12 @@ public class FirebaseService {
     return GoogleCredentials.fromStream(stream);
   }
 
-  public FirebaseToken getUserByBearer(String bearer) {
+  public FirebaseUser getUserByBearer(String bearer) {
     try {
-      return auth().verifyIdToken(bearer);
+      FirebaseToken token = auth().verifyIdToken(bearer);
+      return token == null
+          ? null
+          : FirebaseUser.builder().id(token.getUid()).email(token.getEmail()).build();
     } catch (FirebaseAuthException e) {
       throw new ApiException(SERVER_EXCEPTION, e.getMessage());
     }
