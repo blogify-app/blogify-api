@@ -1,6 +1,7 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.repository.model.Category;
+import com.blogify.blogapi.endpoint.mapper.CategoryMapper;
+import com.blogify.blogapi.endpoint.rest.model.Category;
 import com.blogify.blogapi.service.CategoryService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CategoryController {
 
-  private final CategoryService categoryService;
+  private final CategoryService service;
 
-  // TODO: Should be mapped when JavaClient is correctly set
+  private final CategoryMapper mapper;
+
   @GetMapping(value = "/categories")
-  public List<Category> send_emails() {
-    return categoryService.findAll();
+  public List<Category> getCategories() {
+    return service.findAll()
+        .stream().map(mapper::toRest)
+        .toList();
   }
 }
