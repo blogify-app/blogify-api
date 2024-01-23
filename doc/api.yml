@@ -313,14 +313,14 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  "/follow/{user_id}":
+  "/follow/{uid}":
     post:
       tags:
         - Following
       summary: Follow user by identifier.
       operationId: followUserById
       parameters:
-        - name: user_id
+        - name: uid
           in: path
           required: true
           schema:
@@ -342,14 +342,14 @@ paths:
           $ref: "#/components/responses/429"
         "500":
           $ref: "#/components/responses/500"
-  "/unfollow/{user_id}":
+  "/unfollow/{uid}":
     post:
       tags:
         - Following
       summary: Unfollow user by identifier.
       operationId: unfollowUserById
       parameters:
-        - name: user_id
+        - name: uid
           in: path
           required: true
           schema:
@@ -398,7 +398,7 @@ paths:
             type: string
       responses:
         "200":
-          description: List of posts that meet the criterias.
+          description: List of posts that meet the criteria.
           content:
             application/json:
               schema:
@@ -416,14 +416,14 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  "/posts/{id}":
+  "/posts/{pid}":
     get:
       tags:
         - Posting
       summary: Get post by identifier.
       operationId: getPostById
       parameters:
-        - name: id
+        - name: pid
           in: path
           required: true
           schema:
@@ -451,7 +451,7 @@ paths:
       summary: Crupdate post by identifier.
       operationId: crupdatePostById
       parameters:
-        - name: id
+        - name: pid
           in: path
           required: true
           schema:
@@ -486,7 +486,7 @@ paths:
       summary: Delete post by identifier.
       operationId: deletePostById
       parameters:
-        - name: id
+        - name: pid
           in: path
           required: true
           schema:
@@ -508,19 +508,19 @@ paths:
           $ref: "#/components/responses/429"
         "500":
           $ref: "#/components/responses/500"
-  "/posts/{id}/reaction":
+  "/posts/{pid}/reaction":
     post:
       tags:
         - Posting
       summary: React to a post by identifier.
       operationId: reactToPostById
       parameters:
-        - name: id
+        - name: pid
           in: path
           required: true
           schema:
             type: string
-        - name: reaction_type
+        - name: type
           in: query
           required: true
           schema:
@@ -543,24 +543,24 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  "/post/{id}/comments/{comment_id}/reaction":
+  "/post/{pid}/comments/{cid}/reaction":
     post:
       tags:
         - Comments
       summary: React to a comment by identifier.
-      operationId: reactToCommentByid
+      operationId: reactToCommentById
       parameters:
-        - name: id
+        - name: pid
           in: path
           required: true
           schema:
             type: string
-        - name: comment_id
+        - name: cid
           in: path
           required: true
           schema:
             type: string
-        - name: reaction_type
+        - name: type
           in: query
           required: true
           schema:
@@ -584,13 +584,18 @@ paths:
           $ref: "#/components/responses/500"
 
   ## Commenting resources
-  "/posts/{id}/comments":
+  "/posts/{pid}/comments":
     get:
       tags:
         - Comments
       summary: Get the identified post comments.
       operationId: getCommentsByPostId
       parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
         - name: page
           in: query
           required: true
@@ -601,11 +606,6 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/PageSize"
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         "200":
           description: The identified post comments.
@@ -630,7 +630,7 @@ paths:
     put:
       tags:
         - Comments
-      summary: Crupdate comment of the identified post by id
+      summary: Crupdate comment of the identified post by its identifier.
       operationId: crupdateCommentById
       parameters:
         - name: pid
@@ -644,7 +644,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: The crupdated comments.
+        description: The comment to crupdate.
         required: true
         content:
           application/json:
@@ -652,13 +652,11 @@ paths:
               $ref: "#/components/schemas/Comment"
       responses:
         "200":
-          description: List of followers from user connected.
+          description: The crupdated comment.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/Comment"
         "400":
           $ref: "#/components/responses/400"
         "403":
