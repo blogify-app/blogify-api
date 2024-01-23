@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.blogify.blogapi.service.firebase.FirebaseUser;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.UUID;
@@ -16,8 +15,10 @@ public class TestUtils {
   public static final String CLIENT1_TOKEN = "client1_token";
   public static final String MANAGER_TOKEN = "manger1_token";
 
-  public static final FirebaseUser firebaseUserClient1 = new FirebaseUser("test+ryan@hei.school", "client1_firebase_id");
-  public static final FirebaseUser firebaseUserManager1 = new FirebaseUser("test+vano@hei.school", "manager1_firebase_id");
+  public static final FirebaseUser firebaseUserClient1 =
+      new FirebaseUser("test+ryan@hei.school", "client1_firebase_id");
+  public static final FirebaseUser firebaseUserManager1 =
+      new FirebaseUser("test+vano@hei.school", "manager1_firebase_id");
 
   public static void setUpFirebase(FirebaseService firebaseService) {
     when(firebaseService.getUserByBearer(BAD_TOKEN)).thenReturn(null);
