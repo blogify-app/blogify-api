@@ -6,6 +6,7 @@ import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
+import com.blogify.blogapi.repository.model.UserCategory;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,8 @@ public class UserMapper {
         .about(domain.getAbout())
         .status(toRest(domain.getStatus()))
         .entranceDatetime(domain.getCreationDatetime())
-        .sex(toRest(domain.getSex()));
+        .sex(toRest(domain.getSex()))
+        .categories(domain.getUserCategories().stream().map(this::toRest).toList());
   }
 
   public com.blogify.blogapi.repository.model.User toDomain(SignUp rest) {
@@ -64,6 +66,13 @@ public class UserMapper {
             com.blogify.blogapi.model.enums.UserStatus.BANISHED, UserStatus.BANISHED));
   }
 
+
+  private com.blogify.blogapi.endpoint.rest.model.Category toRest(UserCategory userCategory){
+    return new com.blogify.blogapi.endpoint.rest.model.Category()
+        .id(userCategory.getCategory().getId())
+        .label(userCategory.getCategory().getName());
+  }
+
   private com.blogify.blogapi.model.enums.Sex toDomain(Sex sex) {
     return mapEnum(
         sex,
@@ -80,4 +89,5 @@ public class UserMapper {
             UserStatus.ENABLED, com.blogify.blogapi.model.enums.UserStatus.ENABLED,
             UserStatus.BANISHED, com.blogify.blogapi.model.enums.UserStatus.BANISHED));
   }
+
 }
