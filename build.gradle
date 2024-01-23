@@ -137,9 +137,13 @@ dependencies {
 
     implementation 'org.apache.tika:tika-core:1.18'
 
+    implementation 'com.blogify:blogify-api-gen:latest'
+
+
     implementation 'org.reflections:reflections:0.10.2'
 
     // https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'com.google.firebase:firebase-admin:9.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 

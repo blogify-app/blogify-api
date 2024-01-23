@@ -1,1 +1,1 @@
-ALTER TABLE "user" ADD COLUMN firebase_id VARCHAR;
+ALTER TABLE "user" ADD COLUMN IF NOT EXISTS  firebase_id VARCHAR;

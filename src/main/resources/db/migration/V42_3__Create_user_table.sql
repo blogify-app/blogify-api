@@ -1,13 +1,25 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+do
+$$
+begin
+        if not exists(select from pg_type where typname = 'role') then
+create type "role" as enum ('CLIENT', 'MANAGER');
+end if;
+        if not exists(select from pg_type where typname = 'sex') then
+create type sex as enum ('M', 'F', 'OTHER');
+end if;
+end
+$$;
+
 CREATE TABLE IF NOT EXISTS "user" (
    id VARCHAR PRIMARY KEY DEFAULT UUID_GENERATE_V4(),
    firstname VARCHAR(100),
    lastname VARCHAR(100),
-   mail VARCHAR(250) NOT NULL,
+   mail VARCHAR(250) UNIQUE NOT NULL,
    birthdate DATE,
-   role VARCHAR(100) NOT NULL,
-    sex VARCHAR(100),
-   creation_datetime TIMESTAMP DEFAULT current_timestamp NOT NULL,
-   last_update_datetime TIMESTAMP
+   role role NOT NULL,
+    sex sex,
+   creation_datetime TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
+   last_update_datetime TIMESTAMP WITH TIME ZONE
 );

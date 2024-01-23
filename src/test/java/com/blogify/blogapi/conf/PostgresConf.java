@@ -7,6 +7,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @PojaGenerated
 public class PostgresConf {
 
+  String flywayTestdataPath = "classpath:/db/testdata";
   private final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13.9");
 
   void start() {
@@ -21,5 +22,6 @@ public class PostgresConf {
     registry.add("spring.datasource.url", postgres::getJdbcUrl);
     registry.add("spring.datasource.username", postgres::getUsername);
     registry.add("spring.datasource.password", postgres::getPassword);
+    registry.add("spring.flyway.locations", () -> "classpath:/db/migration," + flywayTestdataPath);
   }
 }
