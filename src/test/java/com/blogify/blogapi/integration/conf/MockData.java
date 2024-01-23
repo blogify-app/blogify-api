@@ -1,16 +1,29 @@
 package com.blogify.blogapi.integration.conf;
 
+import com.blogify.blogapi.endpoint.rest.model.Category;
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 
 public class MockData {
   public static final String CLIENT1_ID = "client1_id";
   public static final String CLIENT2_ID = "client2_id";
   public static final String MANAGER1_ID = "manager1_id";
 
+
+  public static Category category1(){
+    return new Category()
+        .id("category1_id")
+        .label("mathematics");
+  }
+  public static Category category2(){
+    return new Category()
+        .id("category2_id")
+        .label("prog5");
+  }
   public static User client1() {
     return new User()
         .id(CLIENT1_ID)
@@ -26,7 +39,7 @@ public class MockData {
         .bio("bio_client1")
         .profileBannerUrl("banner_url_client1")
         .entranceDatetime(Instant.parse("2000-01-01T08:12:20.00Z"))
-        .categories(null)
+        .categories(List.of(category1(),category2()))
         .isFollowed(null);
   }
 
@@ -45,7 +58,7 @@ public class MockData {
         .bio("bio_client2")
         .profileBannerUrl("banner_url_client2")
         .entranceDatetime(Instant.parse("2002-01-01T08:12:20.00Z"))
-        .categories(null)
+        .categories(List.of(category1()))
         .isFollowed(null);
   }
 
@@ -64,7 +77,9 @@ public class MockData {
         .bio("bio_manager1")
         .profileBannerUrl("banner_url_manager1")
         .entranceDatetime(Instant.parse("2000-09-01T08:12:20.00Z"))
-        .categories(null)
+        .categories(List.of())
         .isFollowed(null);
   }
+
+
 }
