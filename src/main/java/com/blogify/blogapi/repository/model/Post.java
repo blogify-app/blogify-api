@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -44,6 +45,7 @@ public class Post implements Serializable {
 
     @CreationTimestamp
     private Instant creationDatetime;
+    @UpdateTimestamp
     private Instant lastUpdateDatetime;
 
     /**
