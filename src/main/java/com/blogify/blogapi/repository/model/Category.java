@@ -28,7 +28,7 @@ public class Category implements Serializable {
   private String name;
   @CreationTimestamp private Instant creationDatetime;
 
-  @OneToMany(mappedBy = "categoryId", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "categoryId")
   @JsonIgnore
   private List<UserCategory> userCategories;
 }

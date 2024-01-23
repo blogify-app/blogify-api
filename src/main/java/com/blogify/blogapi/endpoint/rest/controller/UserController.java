@@ -19,9 +19,9 @@ public class UserController {
   private final UserMapper userMapper;
 
   @GetMapping(value = "/users")
-  public List<User> send_emails(
-      @RequestParam int page,
-      @RequestParam("page_size") int pageSize,
+  public List<User> getUsers(
+      @RequestParam(required = false) Integer page,
+      @RequestParam(value = "page_size", required = false) Integer pageSize,
       @RequestParam(value = "name", required = false, defaultValue = "") String name) {
     PageFromOne pageFromOne = new PageFromOne(page);
     BoundedPageSize boundedPageSize = new BoundedPageSize(pageSize);
