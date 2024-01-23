@@ -6,12 +6,15 @@ import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
-import com.blogify.blogapi.repository.model.UserCategory;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class UserMapper {
+
+  private final CategoryMapper categoryMapper;
 
   public User toRest(com.blogify.blogapi.repository.model.User domain) {
     return new User()
@@ -28,7 +31,7 @@ public class UserMapper {
         .status(toRest(domain.getStatus()))
         .entranceDatetime(domain.getCreationDatetime())
         .sex(toRest(domain.getSex()))
-        .categories(domain.getUserCategories().stream().map(this::toRest).toList());
+        .categories(domain.getUserCategories().stream().map(categoryMapper::toRest).toList());
   }
 
   public com.blogify.blogapi.repository.model.User toDomain(SignUp rest) {
@@ -67,11 +70,7 @@ public class UserMapper {
   }
 
 
-  private com.blogify.blogapi.endpoint.rest.model.Category toRest(UserCategory userCategory){
-    return new com.blogify.blogapi.endpoint.rest.model.Category()
-        .id(userCategory.getCategory().getId())
-        .label(userCategory.getCategory().getName());
-  }
+
 
   private com.blogify.blogapi.model.enums.Sex toDomain(Sex sex) {
     return mapEnum(
