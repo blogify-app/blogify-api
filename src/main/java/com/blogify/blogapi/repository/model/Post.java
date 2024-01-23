@@ -4,17 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+
 
 @Data
 @Entity
@@ -26,9 +30,26 @@ public class Post implements Serializable {
     @Id
     private String id;
 
-    private String title;
+    /**
+     * @ManyToOne
+     * @JoinColumn(name = "user_id")
+     * private User user;
+     */
 
+    private String title;
     private String content;
+    private String thumbnailUrl;
+    private String description;
+    private postStatus status;
+
+    @CreationTimestamp
+    private Instant creationDatetime;
+    private Instant lastUpdateDatetime;
+
+    /**
+     * @OneToMany
+     * private List<Category> categories;
+     */
 
     @OneToMany(
         mappedBy = "post",
@@ -36,9 +57,9 @@ public class Post implements Serializable {
         cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PostReaction> postReactions;
-
-    @CreationTimestamp
-    private Instant creationDatetime;
-
-    private Instant lastUpdateDatetime;
+    public enum postStatus{
+        ARCHIVED,
+        DRAFT,
+        DISABLED;
+    }
 }
