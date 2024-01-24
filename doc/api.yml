@@ -270,6 +270,40 @@ paths:
           $ref: "#/components/responses/429"
         "500":
           $ref: "#/components/responses/500"
+
+  "/categories":
+    get:
+      tags:
+        - Category
+      summary: Get all Categories.
+      operationId: getCategories
+      parameters:
+        - name: label
+          in: query
+          required: false
+          description: Filter categories by label.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of categories that meet the criterias.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+
   "/users/followers":
     get:
       tags:
