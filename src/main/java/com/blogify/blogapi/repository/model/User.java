@@ -13,6 +13,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -63,6 +64,7 @@ public class User implements Serializable {
   @Enumerated(EnumType.STRING)
   private UserStatus status;
 
-  @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
   private List<UserCategory> userCategories;
 }
