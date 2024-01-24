@@ -18,8 +18,8 @@ public class CategoryController {
 
   @GetMapping(value = "/categories")
   public List<Category> getCategories() {
-    return service.findAll()
-        .stream().map(mapper::toRest)
-        .toList();
+    return service.findAll().stream()
+            .map(mapper::toRest)
+            .toList();
   }
 }
