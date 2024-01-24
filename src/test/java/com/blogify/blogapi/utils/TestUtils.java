@@ -43,7 +43,6 @@ public class TestUtils {
         .id(randomUUID().toString())
         .name("machine learning")
         .creationDatetime(Instant.now())
-        .userCategories(List.of())
         .build();
   }
 }
