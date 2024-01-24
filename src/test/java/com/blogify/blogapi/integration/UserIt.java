@@ -49,12 +49,11 @@ public class UserIt {
     UserApi api = new UserApi(client1Client);
 
     User actualUser = api.getUserById(CLIENT1_ID);
-    assertEquals(client1(), actualUser);
-
     List<User> actual = api.getUsers(1, 5, null);
     List<User> usersWithFilterName1 = api.getUsers(1, 5, "username");
     List<User> usersWithFilterName2 = api.getUsers(1, 5, "heRiLala");
 
+    assertEquals(client1(), actualUser);
     assertEquals(3, actual.size());
     assertTrue(actual.contains(client1()));
     assertTrue(actual.contains(client2()));
