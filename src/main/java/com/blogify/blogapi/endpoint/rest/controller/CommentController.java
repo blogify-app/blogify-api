@@ -1,6 +1,6 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.repository.model.Comment;
+import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.repository.model.Reaction;
 import com.blogify.blogapi.service.CommentService;
 import java.util.List;

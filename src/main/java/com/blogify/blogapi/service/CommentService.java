@@ -1,9 +1,11 @@
 package com.blogify.blogapi.service;
 
-import com.blogify.blogapi.repository.CommentReactionRepository;
+import com.blogify.blogapi.endpoint.mapper.CommentMapper;
+import com.blogify.blogapi.repository.ReactionStateRepository;
 import com.blogify.blogapi.repository.CommentRepository;
 import com.blogify.blogapi.repository.model.Comment;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final CommentReactionRepository commentReactionRepository;
+    private final ReactionStateRepository commentReactionRepository;
+    private CommentMapper commentMapper;
 
     /*public Reaction reactToComment(String postId, String commentId, Reaction.ReactionType reactionType) {
         Comment comment = commentRepository.findByIdAndPostId(commentId, postId)
@@ -26,8 +29,11 @@ public class CommentService {
     }*/
     // TODO: React to a comment by identifier. Waiting for the completion of the Post.
 
-    public List<Comment> getComments() {
-        return commentRepository.findAll();
+    public List<com.blogify.blogapi.endpoint.rest.model.Comment> getComments() {
+        List<com.blogify.blogapi.repository.model.Comment> repositoryComments = commentRepository.findAll();
+        return repositoryComments.stream()
+                .map(commentMapper::toRest)
+                .collect(Collectors.toList());
     }
 
     // TODO: Get comments of identified post.
@@ -51,8 +57,4 @@ public class CommentService {
     }*/
 
     // TODO: Get comment by identifier
-
-    public Comment save(Comment comment) {
-        return commentRepository.save(comment);
-    }
 }
