@@ -33,9 +33,12 @@ public class PostService{
     public Post updatePost(String id, Post updatePost){
         Post post = findById(id);
         if(post != null){
+            post.setThumbnailUrl(updatePost.getThumbnailUrl());
+            post.setDescription(updatePost.getDescription());
             post.setTitle(updatePost.getTitle());
             post.setContent(updatePost.getContent());
             post.setLastUpdateDatetime(Instant.now());
+            post.setStatus(updatePost.getStatus());
             return postRepository.save(post);
         }else
             return null;

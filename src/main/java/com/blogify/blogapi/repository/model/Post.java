@@ -1,5 +1,6 @@
 package com.blogify.blogapi.repository.model;
 
+import com.blogify.blogapi.model.enums.PostStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
@@ -15,6 +16,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.FetchType;
@@ -31,27 +34,24 @@ public class Post implements Serializable {
     @Id
     private String id;
 
-    /**
-     * @ManyToOne
-     * @JoinColumn(name = "user_id")
-     * private User user;
-     */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
     private String content;
     private String thumbnailUrl;
     private String description;
-    private postStatus status;
+    private PostStatus status;
 
     @CreationTimestamp
     private Instant creationDatetime;
     @UpdateTimestamp
     private Instant lastUpdateDatetime;
 
-    /**
-     * @OneToMany
-     * private List<Category> categories;
-     */
+     @OneToMany
+     @JoinColumn(name = "category_id")
+     private List<Category> categories;
 
     @OneToMany(
         mappedBy = "post",
@@ -59,9 +59,4 @@ public class Post implements Serializable {
         cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PostReaction> postReactions;
-    public enum postStatus{
-        ARCHIVED,
-        DRAFT,
-        DISABLED;
-    }
 }

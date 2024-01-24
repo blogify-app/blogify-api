@@ -1,9 +1,9 @@
 package com.blogify.blogapi.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -28,6 +28,7 @@ public class Category implements Serializable {
   private String name;
   @CreationTimestamp private Instant creationDatetime;
 
-  @OneToMany(mappedBy = "categoryId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "categoryId")
+  @JsonIgnore
   private List<UserCategory> userCategories;
 }

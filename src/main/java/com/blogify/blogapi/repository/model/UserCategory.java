@@ -1,5 +1,6 @@
 package com.blogify.blogapi.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,6 +23,7 @@ public class UserCategory implements Serializable {
   @Id private String id;
 
   @JoinColumn(referencedColumnName = "id")
+  @JsonIgnore
   private String userId;
 
   @JoinColumn(referencedColumnName = "id")

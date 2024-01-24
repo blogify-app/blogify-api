@@ -26,11 +26,6 @@ public abstract class Reaction {
 
     private ReactionType type;
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
     public static enum ReactionType {
         LIKE,
         DISLIKE;

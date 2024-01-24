@@ -1,6 +1,7 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.repository.model.Post;
+import com.blogify.blogapi.endpoint.mapper.PostMapper;
+import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.repository.model.PostReaction;
 import com.blogify.blogapi.service.PostService;
 import lombok.AllArgsConstructor;
@@ -16,18 +17,18 @@ import java.util.List;
 @AllArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final PostMapper postMapper;
 
     @GetMapping("/posts")
-    public List<Post> findAllPost(){
-        return postService.findAll();
+    public List<com.blogify.blogapi.endpoint.rest.model.Post> findAllPost(){
+        return postService.findAll().stream().map(postMapper::toRest).toList();
     }
-
     @PutMapping("/posts/{postId}")
-    public Post putPost(@PathVariable String postId, @RequestBody Post newPost){
+    public com.blogify.blogapi.endpoint.rest.model.Post putPost(@PathVariable String postId, @RequestBody Post post){
         if(postService.isExists(postId)){
-            return postService.updatePost(postId,newPost);
+            return postMapper.toRest(postService.updatePost(postId,postMapper.toDomain(post)));
         }else
-            return postService.savePost(newPost);
+            return postMapper.toRest(postService.savePost(postMapper.toDomain(post)));
     }
     @GetMapping("/posts/{postId}/reactions")
     public List<PostReaction> getPostReaction(@PathVariable String postId){
