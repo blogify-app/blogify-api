@@ -7,29 +7,33 @@ import java.time.Instant;
 
 public class PostMockData {
 
-    private static final String POST1_ID = "post1_id";
-    private static final String POST2_ID = "post2_id";
+    private static final String POST1_ID = "1";
+    private static final String POST2_ID = "2";
 
-    public static Post post1(){
+    public static Post post1() {
         return new Post()
                 .id(POST1_ID)
-                .thumbnailUrl("thumbnail_url_post1")
-                .description("description_post1")
-                .content("content_post1")
-                .title("post1_title")
+                .authorId("client1_id")
+                .thumbnailUrl("url_image1.jpg")
+                .description("Description du premier post")
+                .content("Contenu du premier post")
+                .title("Premier Post")
                 .status(PostStatus.DRAFT)
-                .creationDatetime(Instant.parse("2002-01-01T08:12:20.00Z"))
-                .updatedAt(null);
+                .creationDatetime(Instant.now())
+                .updatedAt(Instant.now());
     }
-    public static Post post2(){
+
+    public static Post post2() {
         return new Post()
                 .id(POST2_ID)
-                .thumbnailUrl("thumbnail_url_post2")
-                .description("description_post2")
-                .content("content_post2")
-                .title("post2_title")
+                .authorId("client2_id")
+                .thumbnailUrl("url_image2.jpg")
+                .description("Description du deuxième post")
+                .content("Contenu du deuxième post")
+                .title("Deuxième Post")
                 .status(PostStatus.DRAFT)
-                .creationDatetime(Instant.parse("2003-06-01T08:12:20.00Z"))
-                .updatedAt(null);
+                .creationDatetime(Instant.now())
+                .updatedAt(Instant.now());
     }
+
 }

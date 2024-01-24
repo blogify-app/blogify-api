@@ -2,6 +2,7 @@ package com.blogify.blogapi.endpoint.mapper;
 
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.PostStatus;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -9,7 +10,9 @@ import java.util.Map;
 import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
 
 @Component
+@AllArgsConstructor
 public class PostMapper {
+    private final CategoryMapper categoryMapper;
     public Post toRest(com.blogify.blogapi.repository.model.Post domain){
         return new  Post()
                 .id(domain.getId())
@@ -19,7 +22,8 @@ public class PostMapper {
                 .title(domain.getTitle())
                 .creationDatetime(domain.getCreationDatetime())
                 .updatedAt(domain.getLastUpdateDatetime())
-                .status(toRest(domain.getStatus()));
+                .status(toRest(domain.getStatus()))
+                .categories(null);
     }
 
     public com.blogify.blogapi.repository.model.Post toDomain(Post rest){

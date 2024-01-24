@@ -49,9 +49,9 @@ public class Post implements Serializable {
     @UpdateTimestamp
     private Instant lastUpdateDatetime;
 
-     @OneToMany
-     @JoinColumn(name = "category_id")
-     private List<Category> categories;
+     @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     @JoinColumn(name = "post_id")
+     private List<PostCategory> postCategories;
 
     @OneToMany(
         mappedBy = "post",

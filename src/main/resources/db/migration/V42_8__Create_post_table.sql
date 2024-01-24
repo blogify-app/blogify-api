@@ -7,10 +7,8 @@ create table if not exists post
     description TEXT,
     status VARCHAR,
     user_id VARCHAR not null,
-    category_id VARCHAR not null ,
     creation_datetime TIMESTAMP DEFAULT current_timestamp,
     last_update_datetime TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES "user"(id),
-    FOREIGN KEY(category_id) REFERENCES category(id)
+    FOREIGN KEY(user_id) REFERENCES "user"(id)
 );
 -- TODO : create index for user_id

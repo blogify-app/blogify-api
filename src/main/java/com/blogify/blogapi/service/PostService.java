@@ -1,9 +1,13 @@
 package com.blogify.blogapi.service;
 
+import com.blogify.blogapi.model.BoundedPageSize;
+import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.PostRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -23,7 +27,10 @@ public class PostService{
         return postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
     }
-
+    public List<Post> findAllByCategory(String categoryName, PageFromOne page, BoundedPageSize pageSize){
+        Pageable pageable = PageRequest.of(page.getValue() - 1 ,pageSize.getValue());
+        return postRepository.getPostsByCategory(categoryName, pageable);
+    }
     public Post savePost(Post post){
         post.setCreationDatetime(Instant.now());
         post.setLastUpdateDatetime(Instant.now());

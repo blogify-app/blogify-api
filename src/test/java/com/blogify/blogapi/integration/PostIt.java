@@ -17,9 +17,11 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.List;
 
 import static com.blogify.blogapi.integration.conf.PostMockData.post1;
+import static com.blogify.blogapi.integration.conf.PostMockData.post2;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -43,25 +45,20 @@ public class PostIt {
         ApiClient client1Client = apiClient(CLIENT1_TOKEN);
         PostingApi api = new PostingApi(client1Client);
 
-        List<Post> actual = api.getPosts(1,5,null);
+        List<Post> allPosts = api.getPosts(1, 5, null);
 
-        assertTrue(actual.contains(post1()));
+        List<Post> postsWithCategory1 = api.getPosts(1, 5, "category1");
+        List<Post> postsWithCategory2 = api.getPosts(1, 5, "category2");
 
-        /**
-         * List<User> actual = api.getUsers(1, 5, null);
-         *         List<User> usersWithFilterName1 = api.getUsers(1, 5, "username");
-         *         List<User> usersWithFilterName2 = api.getUsers(1, 5, "heRiLala");
-         *
-         *         assertEquals(3, actual.size());
-         *         assertTrue(actual.contains(client1()));
-         *         assertTrue(actual.contains(client2()));
-         *         assertTrue(actual.contains(manager1()));
-         *
-         *         assertEquals(3, usersWithFilterName1.size());
-         *
-         *         assertEquals(1, usersWithFilterName2.size());
-         *         assertTrue(usersWithFilterName2.contains(client2()));
-         */
+        assertEquals(2, allPosts.size());
+        assertTrue(allPosts.contains(post1()));
+        assertTrue(allPosts.contains(post2()));
+
+        assertEquals(1, postsWithCategory1.size());
+        assertTrue(postsWithCategory1.contains(post1()));
+
+        assertEquals(1, postsWithCategory2.size());
+        assertTrue(postsWithCategory2.contains(post2()));
     }
 
     static class ContextInitializer extends AbstractContextInitializer {
