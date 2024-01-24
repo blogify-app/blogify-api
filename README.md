@@ -28,7 +28,7 @@ The principle of POJA is that it deploys directly the application So you can che
 ### Upcoming Features
 - Recommandation system AI
 - Blogify posts list
-- A more structured and well designed Blogif
+- A more structured and well designed Blogify
    
 ## Known Issues
 
