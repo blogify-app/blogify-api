@@ -10,6 +10,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.util.UUID.randomUUID;
+
 public class UserMockData {
   public static final String CLIENT1_ID = "client1_id";
   public static final String CLIENT2_ID = "client2_id";
@@ -71,4 +73,14 @@ public class UserMockData {
         .categories(List.of())
         .isFollowed(null);
   }
+
+  public static com.blogify.blogapi.repository.model.Category category() {
+    return com.blogify.blogapi.repository.model.Category.builder()
+        .id(randomUUID().toString())
+        .name("machine learning")
+        .creationDatetime(Instant.now())
+        .build();
+  }
+
+
 }
