@@ -12,17 +12,20 @@ public class MockData {
   public static final String CLIENT1_ID = "client1_id";
   public static final String CLIENT2_ID = "client2_id";
   public static final String MANAGER1_ID = "manager1_id";
-
+  public static final String CATEGORY1_ID = "category1_id";
+  public static final String CATEGORY2_ID = "category2_id";
+  public static final String CATEGORY1_LABEL = "mathematics";
+  public static final String CATEGORY2_LABEL = "prog5";
 
   public static Category category1(){
     return new Category()
-        .id("category1_id")
-        .label("mathematics");
+        .id(CATEGORY1_ID)
+        .label(CATEGORY1_LABEL);
   }
   public static Category category2(){
     return new Category()
-        .id("category2_id")
-        .label("prog5");
+        .id(CATEGORY2_ID)
+        .label(CATEGORY2_LABEL);
   }
   public static User client1() {
     return new User()
