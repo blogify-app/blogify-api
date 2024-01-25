@@ -105,6 +105,15 @@ jacocoTestCoverageVerification {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    dependsOn test
+}
+
+
 dependencies {
     implementation 'com.blogify:blogify-api-gen:latest'
     implementation 'org.springframework.boot:spring-boot-starter-web'

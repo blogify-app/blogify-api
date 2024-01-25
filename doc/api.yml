@@ -222,6 +222,121 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
+  "/users/{uid}/pictures":
+    put:
+      tags:
+        - User
+      summary: Submit user picture of the type profile banner or profile picture
+      operationId: putUserPicture
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/UserPictureType"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: User picture added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+    get:
+      tags:
+        - User
+      summary: Get user picture of the type profile banner or profile picture
+      operationId: getUserPicture
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/UserPictureType"
+
+      responses:
+        '200':
+          description: User picture fetched.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags:
+        - User
+      summary: Delete user picture of the type profile banner or profile picture
+      operationId: deleteUserPicture
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/UserPictureType"
+
+      responses:
+        '200':
+          description: User picture removed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  
   ## Following resources
   "/users/{id}/follows":
     get:
@@ -577,6 +692,156 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
+  "/posts/{pid}/pictures":
+    get:
+      tags:
+        - Posting
+      summary: get all pictures of a post
+      operationId: getAllPostPictureById
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: picId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post pictures fetched.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+  "/posts/{pid}/pictures/{picId}":
+    post:
+      tags:
+        - Posting
+      summary: Upload a picture to a post.
+      operationId: uploadPostPicture
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: picId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Post picture added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+    get:
+      tags:
+        - Posting
+      summary: get one picture of a post
+      operationId: getPostPictureById
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: picId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post picture fetched.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags:
+        - Posting
+      summary: Delete one picture of a post
+      operationId: deletePostPictureById
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: picId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The deleted picture.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPicture'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+  
   "/post/{pid}/comments/{cid}/reaction":
     post:
       tags:
@@ -877,6 +1142,17 @@ components:
             $ref: "#/components/schemas/Category"
         reactions:
           $ref: "#/components/schemas/ReactionStat"
+
+    PostPicture:
+      properties:
+        id:
+          type: string
+        post_id:
+          type: string
+        placeholder:
+          type: string
+        url:
+          type: string
     CommentStatus:
       type: string
       enum:
@@ -958,6 +1234,19 @@ components:
             $ref: "#/components/schemas/Category"
         is_followed:
           type: boolean
+    UserPicture:
+      properties:
+        user_id:
+          type: string
+        type:
+          $ref: "#/components/schemas/UserPictureType"
+        url:
+          type: string
+    UserPictureType:
+        type: string
+        enum:
+         - BANNER
+         - PROFILE
     AuthenticationPayload:
       properties:
         email:
