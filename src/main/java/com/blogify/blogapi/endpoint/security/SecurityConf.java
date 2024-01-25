@@ -23,6 +23,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
+
 @Configuration
 @EnableWebSecurity
 @Slf4j
@@ -30,14 +32,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
   private final HandlerExceptionResolver exceptionResolver;
   private final FirebaseService firebaseService;
   private final UserService userService;
+  private final AuthProvider provider;
 
   public SecurityConf(
       @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
       FirebaseService firebase,
-      UserService service) {
+      UserService service,
+      AuthProvider auth) {
     exceptionResolver = resolver;
     firebaseService = firebase;
     userService = service;
+    provider = auth;
   }
 
   @Bean
@@ -67,6 +72,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .disable()
         .formLogin()
         .disable()
+        .logout()
+        .disable()
         .httpBasic()
         .disable()
         .exceptionHandling()
@@ -74,6 +81,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             (req, res, e) ->
                 exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
         .and()
+        .authenticationProvider(provider)
         .addFilterBefore(
             bearerFilter(
                 new NegatedRequestMatcher(
@@ -86,13 +94,18 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/posts"),
                         new AntPathRequestMatcher("/posts/*"),
                         new AntPathRequestMatcher("/posts/*/reaction"),
+                        new AntPathRequestMatcher("/**", OPTIONS.toString()),
                         new AntPathRequestMatcher("/users/*"),
                         new AntPathRequestMatcher("/posts/*/comments/*/reaction"),
                         new AntPathRequestMatcher("/posts/*/comments")))),
             AnonymousAuthenticationFilter.class)
+        .anonymous()
+        .and()
         .authorizeRequests()
         .antMatchers(HttpMethod.GET, "/ping")
         .permitAll()
+        .antMatchers(HttpMethod.GET, "/whoami")
+        .authenticated()
         .antMatchers(HttpMethod.POST, "/signup")
         .permitAll()
         .antMatchers(HttpMethod.GET, "/users")
