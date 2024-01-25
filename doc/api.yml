@@ -222,14 +222,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
-  "/users/{uId}/pictures":
+  "/users/{uid}/pictures":
     put:
       tags:
         - User
       summary: Submit user picture of the type profile banner or profile picture
       operationId: putUserPicture
       parameters:
-        - name: uId
+        - name: uid
           in: path
           required: true
           schema:
@@ -273,7 +273,7 @@ paths:
       summary: Get user picture of the type profile banner or profile picture
       operationId: getUserPicture
       parameters:
-        - name: uId
+        - name: uid
           in: path
           required: true
           schema:
@@ -308,7 +308,7 @@ paths:
       summary: Delete user picture of the type profile banner or profile picture
       operationId: deleteUserPicture
       parameters:
-        - name: uId
+        - name: uid
           in: path
           required: true
           schema:
@@ -337,8 +337,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  
-
   ## Following resources
   "/users/{id}/follows":
     get:
@@ -694,14 +692,14 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
-  "/posts/{pId}/pictures":
+  "/posts/{pid}/pictures":
     get:
       tags:
         - Posting
       summary: get all pictures of a post
       operationId: getAllPostPictureById
       parameters:
-        - name: pId
+        - name: pid
           in: path
           required: true
           schema:
@@ -731,14 +729,14 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  "/posts/{pId}/pictures/{picId}":
+  "/posts/{pid}/pictures/{picId}":
     post:
       tags:
         - Posting
-      summary: Add one picture to a post
-      operationId: postPostPicture
+      summary: Upload a picture to a post.
+      operationId: uploadPostPicture
       parameters:
-        - name: pId
+        - name: pid
           in: path
           required: true
           schema:
@@ -782,7 +780,7 @@ paths:
       summary: get one picture of a post
       operationId: getPostPictureById
       parameters:
-        - name: pId
+        - name: pid
           in: path
           required: true
           schema:
@@ -816,7 +814,7 @@ paths:
       summary: Delete one picture of a post
       operationId: deletePostPictureById
       parameters:
-        - name: pId
+        - name: pid
           in: path
           required: true
           schema:
@@ -828,7 +826,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Post picture deleted.
+          description: The deleted picture.
           content:
             application/json:
               schema:
@@ -844,7 +842,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-
   "/post/{pid}/comments/{cid}/reaction":
     post:
       tags:
@@ -1150,9 +1147,9 @@ components:
       properties:
         id:
           type: string
-        post:
-          $ref: "#/components/schemas/Post"
-        document_reference:
+        post_id:
+          type: string
+        placeholder:
           type: string
         url:
           type: string
@@ -1239,8 +1236,8 @@ components:
           type: boolean
     UserPicture:
       properties:
-        user:
-          $ref: "#/components/schemas/User"
+        user_id:
+          type: string
         type:
           $ref: "#/components/schemas/UserPicture"
         url:
@@ -1249,7 +1246,7 @@ components:
         type: string
         enum:
          - BANNER
-         - PHOTO
+         - PROFILE
     AuthenticationPayload:
       properties:
         email:
