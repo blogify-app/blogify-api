@@ -1,29 +1,33 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.repository.model.PostReaction;
+import com.blogify.blogapi.endpoint.mapper.ReactionMapper;
+import com.blogify.blogapi.endpoint.rest.model.Reaction;
+import com.blogify.blogapi.endpoint.rest.model.ReactionType;
+import com.blogify.blogapi.repository.model.Post;
+import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.PostReactionService;
+import com.blogify.blogapi.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
 public class PostReactionController {
 
-    private final PostReactionService postReactionService;
-    @GetMapping("/reactions")
-    public List<PostReaction> findAllReaction(){
-        return postReactionService.findAll();
-    }
+  private final PostReactionService postReactionService;
+  private final PostService postService;
+  private final ReactionMapper reactionMapper;
 
-    /**
-    @PutMapping("/reactions/{reactionId}")
-    public PostReaction updateReaction(@PathVariable String reactionId , @RequestBody PostReaction postReaction){
-        if(postReactionService.isExists(reactionId)){
-            return postReactionService.updatePostReaction(reactionId,postReaction);
-        }else
-            return postReactionService.savePostReaction(postReaction);
-    }
-     */
+  @PostMapping("/posts/{postId}/reaction")
+  public Reaction getPostReaction(
+      @PathVariable String postId,
+      @RequestParam(value = "type", required = false) ReactionType type) {
+    Post post = postService.getBYId(postId);
+    // todo: chage to user from token when it will work
+    User user = post.getUser();
+    System.out.println("/////////////////////////////////////");
+    System.out.println(user);
+    return reactionMapper.toRest(
+        postReactionService.reactAPost(post, reactionMapper.toDomain(type), user));
+  }
 }

@@ -17,10 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   private final UserRepository repository;
 
-  public List<User> findAll() {
-    return repository.findAll();
-  }
-
   public List<User> findAllByName(String name, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return repository.getUserByName(name, pageable);
@@ -30,6 +26,12 @@ public class UserService {
     return repository
         .findByFirebaseIdAndMail(firebaseId, email)
         .orElseThrow(() -> new NotFoundException("User.email=" + email + " is not found."));
+  }
+
+  public User getBYId(String id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
   }
 
   @Transactional

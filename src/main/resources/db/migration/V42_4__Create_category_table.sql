@@ -3,3 +3,5 @@ CREATE TABLE IF NOT EXISTS category (
    name VARCHAR(50),
    creation_datetime TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp
 );
+
+create index if not exists category_name_index on "category" (name);

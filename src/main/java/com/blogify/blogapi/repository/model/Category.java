@@ -23,5 +23,4 @@ public class Category implements Serializable {
   @Id private String id;
   private String name;
   @CreationTimestamp private Instant creationDatetime;
-
 }

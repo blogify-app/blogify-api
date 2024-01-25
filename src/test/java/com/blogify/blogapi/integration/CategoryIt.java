@@ -1,8 +1,7 @@
 package com.blogify.blogapi.integration;
 
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -10,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import com.blogify.blogapi.endpoint.rest.api.UserApi;
+import com.blogify.blogapi.endpoint.rest.api.CategoryApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
-import com.blogify.blogapi.endpoint.rest.model.User;
+import com.blogify.blogapi.endpoint.rest.model.Category;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -27,13 +26,12 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
-@ContextConfiguration(initializers = UserIt.ContextInitializer.class)
-public class UserIt {
-
+@ContextConfiguration(initializers = CategoryIt.ContextInitializer.class)
+public class CategoryIt {
   @MockBean private FirebaseService firebaseServiceMock;
 
-  private static ApiClient anApiClient(String token) {
-    return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
+  private static ApiClient apiClient(String token) {
+    return TestUtils.anApiClient(token, CategoryIt.ContextInitializer.SERVER_PORT);
   }
 
   @BeforeEach
@@ -43,22 +41,19 @@ public class UserIt {
 
   @Test
   void client_read_ok() throws ApiException {
-    ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
-    UserApi api = new UserApi(client1Client);
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    CategoryApi api = new CategoryApi(client1Client);
 
-    List<User> actual = api.getUsers(1, 5, null);
-    List<User> usersWithFilterName1 = api.getUsers(1, 5, "username");
-    List<User> usersWithFilterName2 = api.getUsers(1, 5, "heRiLala");
+    List<Category> actual = api.getCategories(null);
 
-    assertEquals(3, actual.size());
-    assertTrue(actual.contains(client1()));
-    assertTrue(actual.contains(client2()));
-    assertTrue(actual.contains(manager1()));
+    List<Category> actualByCriteria = api.getCategories("math");
 
-    assertEquals(3, usersWithFilterName1.size());
+    assertEquals(2, actual.size());
+    assertTrue(actual.contains(category1()));
+    assertTrue(actual.contains(category2()));
 
-    assertEquals(1, usersWithFilterName2.size());
-    assertTrue(usersWithFilterName2.contains(client2()));
+    assertEquals(1, actualByCriteria.size());
+    assertTrue(actualByCriteria.contains(category1()));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

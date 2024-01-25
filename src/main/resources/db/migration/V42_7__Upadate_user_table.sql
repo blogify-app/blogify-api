@@ -13,3 +13,5 @@ ALTER TABLE "user" ADD COLUMN IF NOT EXISTS  profile_banner_url VARCHAR;
 ALTER TABLE "user" ADD COLUMN IF NOT EXISTS  username VARCHAR;
 ALTER TABLE "user" ADD COLUMN IF NOT EXISTS  about TEXT;
 ALTER TABLE "user" ADD COLUMN IF NOT EXISTS  status user_status;
+
+create index if not exists user_username_id_index on "user" (username);

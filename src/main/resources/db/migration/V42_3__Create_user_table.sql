@@ -21,5 +21,8 @@ CREATE TABLE IF NOT EXISTS "user" (
    role role NOT NULL,
     sex sex,
    creation_datetime TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp NOT NULL,
-   last_update_datetime TIMESTAMP WITH TIME ZONE
+   last_update_datetime TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp
 );
+
+create index if not exists user_firstname_index on "user" (firstname);
+create index if not exists user_lastname_index on "user" (lastname);

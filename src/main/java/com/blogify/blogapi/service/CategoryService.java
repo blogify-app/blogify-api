@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService {
   private final CategoryRepository categoryRepository;
 
-  public List<Category> findAll() {
-    return categoryRepository.findAll();
+  public List<Category> findAllByLabel(String label) {
+    return categoryRepository.findAllByNameContainingIgnoreCase(label);
   }
 
   @Transactional

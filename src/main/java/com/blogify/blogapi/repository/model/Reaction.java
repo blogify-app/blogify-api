@@ -1,7 +1,10 @@
 package com.blogify.blogapi.repository.model;
 
-import com.blogify.blogapi.service.utils.DataFormatterUtils;
+import com.blogify.blogapi.model.enums.ReactionType;
+import java.time.Instant;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -10,6 +13,7 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity(name = "\"reaction\"")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -17,22 +21,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public abstract class Reaction {
-    @Id
-    private String id;
+  @Id private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    private ReactionType type;
+  @CreationTimestamp private Instant creationDatetime;
 
-    public static enum ReactionType {
-        LIKE,
-        DISLIKE;
-
-        public static ReactionType fromValue(String value) {
-            return DataFormatterUtils.fromValue(ReactionType.class, value);
-        }
-
-    }
+  @Enumerated(EnumType.STRING)
+  private ReactionType type;
 }
