@@ -23,17 +23,18 @@ public class PostReactionService {
         postReactionRepository.sumOfPropertyByPostAndType(pstId, ReactionType.DISLIKE);
     Long likeNumber = postReactionRepository.sumOfPropertyByPostAndType(pstId, ReactionType.LIKE);
     return ReactionStat.builder()
-        .likes(BigDecimal.valueOf(dislikeNumber))
-        .dislikes(BigDecimal.valueOf(likeNumber))
+        .likes(BigDecimal.valueOf(likeNumber))
+        .dislikes(BigDecimal.valueOf(dislikeNumber))
         .build();
   }
 
   public PostReaction reactAPost(Post post, ReactionType reactionType, User user) {
     List<PostReaction> postReactions = postReactionRepository.findAllByPost(post);
-    PostReaction postReaction =
-        new PostReaction(UUID.randomUUID().toString(), user, null, reactionType, post);
-    System.out.println("///////////////////////////");
-    System.out.println(postReaction);
+    PostReaction postReaction = new PostReaction();
+    postReaction.setPost(post);
+    postReaction.setId(UUID.randomUUID().toString());
+    postReaction.setUser(user);
+    postReaction.setType(reactionType);
     if (!postReactions.isEmpty()) {
       postReactionRepository.deleteAll(postReactions);
     }

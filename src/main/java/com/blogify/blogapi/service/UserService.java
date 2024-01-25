@@ -6,7 +6,6 @@ import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +37,9 @@ public class UserService {
   @Transactional
   public User save(User toSave) {
     return repository.save(toSave);
+  }
+
+  public User findById(String id) {
+    return repository.findById(id).orElseThrow(()->new NotFoundException("User with id "+id+" not found"));
   }
 }

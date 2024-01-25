@@ -25,8 +25,6 @@ public class PostReactionController {
     Post post = postService.getBYId(postId);
     // todo: chage to user from token when it will work
     User user = post.getUser();
-    System.out.println("/////////////////////////////////////");
-    System.out.println(user);
     return reactionMapper.toRest(
         postReactionService.reactAPost(post, reactionMapper.toDomain(type), user));
   }
