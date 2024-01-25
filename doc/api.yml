@@ -698,8 +698,8 @@ paths:
     get:
       tags:
         - Posting
-      summary: get one picture of a post
-      operationId: getPostPictureById
+      summary: get all pictures of a post
+      operationId: getAllPostPictureById
       parameters:
         - name: pId
           in: path
@@ -713,7 +713,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Post picture fetched.
+          description: Post pictures fetched.
           content:
             application/json:
               schema:
