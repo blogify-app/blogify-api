@@ -1239,7 +1239,7 @@ components:
         user_id:
           type: string
         type:
-          $ref: "#/components/schemas/UserPicture"
+          $ref: "#/components/schemas/UserPictureType"
         url:
           type: string
     UserPictureType:
