@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
-@EqualsAndHashCode
 @Entity
 @Builder
 @NoArgsConstructor

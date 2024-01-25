@@ -4,6 +4,7 @@ import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -81,6 +82,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/ping"),
                         new AntPathRequestMatcher("/signup"),
                         new AntPathRequestMatcher("/users"),
+                            new AntPathRequestMatcher("/categories/{id}"),
                         new AntPathRequestMatcher("/categories")))),
             AnonymousAuthenticationFilter.class)
         .authorizeRequests()
@@ -92,6 +94,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(HttpMethod.GET, "/categories")
         .permitAll()
+            .requestMatchers(new CategoriesOfUserMatcher(userService, HttpMethod.GET, "/categories/{id}")).permitAll()
         .anyRequest()
         .denyAll()
         .and()

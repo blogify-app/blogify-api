@@ -1,5 +1,6 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.CATEGORY2_ID;
 import static com.blogify.blogapi.integration.conf.MockData.client1;
 import static com.blogify.blogapi.integration.conf.MockData.client2;
 import static com.blogify.blogapi.integration.conf.MockData.manager1;
@@ -10,9 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import com.blogify.blogapi.endpoint.rest.api.CategoryApi;
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
+import com.blogify.blogapi.endpoint.rest.model.Category;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
@@ -60,6 +63,17 @@ public class UserIt {
 
     assertEquals(1, usersWithFilterName2.size());
     assertTrue(usersWithFilterName2.contains(client2()));
+  }
+
+  @Test
+  void client_read_his_category_ok() throws ApiException {
+    ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
+    CategoryApi api = new CategoryApi(client1Client);
+
+    List<Category> actual = api.getCategories(null);
+    Category actualById = api.getCategoryById(CATEGORY2_ID);
+
+    assertEquals(2, actual.size());
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

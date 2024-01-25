@@ -32,6 +32,12 @@ public class UserService {
         .orElseThrow(() -> new NotFoundException("User.email=" + email + " is not found."));
   }
 
+  public Boolean checkUserOfCategory(
+          String userId, String categoryId) {
+    User user = repository.getReferenceById(userId);
+    return user.getUserCategories().stream().anyMatch(userCategory -> userCategory.getCategory().getId().equals(categoryId));
+  }
+
   @Transactional
   public User save(User toSave) {
     return repository.save(toSave);

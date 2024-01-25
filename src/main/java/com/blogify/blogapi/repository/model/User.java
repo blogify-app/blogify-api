@@ -27,8 +27,6 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Data
-@EqualsAndHashCode
-@ToString
 @Entity
 @Builder(toBuilder = true)
 @NoArgsConstructor
@@ -64,7 +62,7 @@ public class User implements Serializable {
   @Enumerated(EnumType.STRING)
   private UserStatus status;
 
-  @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
   private List<UserCategory> userCategories;
 }
