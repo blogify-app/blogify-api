@@ -69,9 +69,6 @@ public class UserMapper {
             com.blogify.blogapi.model.enums.UserStatus.BANISHED, UserStatus.BANISHED));
   }
 
-
-
-
   private com.blogify.blogapi.model.enums.Sex toDomain(Sex sex) {
     return mapEnum(
         sex,
@@ -88,5 +85,4 @@ public class UserMapper {
             UserStatus.ENABLED, com.blogify.blogapi.model.enums.UserStatus.ENABLED,
             UserStatus.BANISHED, com.blogify.blogapi.model.enums.UserStatus.BANISHED));
   }
-
 }
