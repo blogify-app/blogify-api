@@ -1,6 +1,8 @@
-package com.blogify.blogapi.integration.conf;
+package com.blogify.blogapi.integration.conf.MockData;
 
-import com.blogify.blogapi.endpoint.rest.model.Category;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
+
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
@@ -8,25 +10,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-public class MockData {
+public class UserMockData {
   public static final String CLIENT1_ID = "client1_id";
   public static final String CLIENT2_ID = "client2_id";
   public static final String MANAGER1_ID = "manager1_id";
-  public static final String CATEGORY1_ID = "category1_id";
-  public static final String CATEGORY2_ID = "category2_id";
-  public static final String CATEGORY1_LABEL = "mathematics";
-  public static final String CATEGORY2_LABEL = "prog5";
 
-  public static Category category1(){
-    return new Category()
-        .id(CATEGORY1_ID)
-        .label(CATEGORY1_LABEL);
-  }
-  public static Category category2(){
-    return new Category()
-        .id(CATEGORY2_ID)
-        .label(CATEGORY2_LABEL);
-  }
   public static User client1() {
     return new User()
         .id(CLIENT1_ID)
@@ -42,7 +30,7 @@ public class MockData {
         .bio("bio_client1")
         .profileBannerUrl("banner_url_client1")
         .entranceDatetime(Instant.parse("2000-01-01T08:12:20.00Z"))
-        .categories(List.of(category1(),category2()))
+        .categories(List.of(category1(), category2()))
         .isFollowed(null);
   }
 
@@ -83,6 +71,4 @@ public class MockData {
         .categories(List.of())
         .isFollowed(null);
   }
-
-
 }
