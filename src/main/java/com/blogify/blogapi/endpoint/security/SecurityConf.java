@@ -1,5 +1,7 @@
 package com.blogify.blogapi.endpoint.security;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
+
 import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -22,8 +24,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import static org.springframework.http.HttpMethod.OPTIONS;
 
 @Configuration
 @EnableWebSecurity

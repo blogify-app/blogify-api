@@ -6,7 +6,7 @@ import com.blogify.blogapi.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.blogify.blogapi.integration.conf.MockData.category;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.category;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CategoryServiceTest extends FacadeIT {

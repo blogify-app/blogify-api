@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   private static final String BEARER_PREFIX = "Bearer ";
 
-  private static Principal getPrincipal(){
+  private static Principal getPrincipal() {
     SecurityContext context = SecurityContextHolder.getContext();
     Object principal = context.getAuthentication().getPrincipal();
     return ((Principal) principal);
@@ -40,12 +40,14 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   }
 
   @Override
-  protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-
-  }
+  protected void additionalAuthenticationChecks(
+      UserDetails userDetails, UsernamePasswordAuthenticationToken authentication)
+      throws AuthenticationException {}
 
   @Override
-  protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+  protected UserDetails retrieveUser(
+      String username, UsernamePasswordAuthenticationToken authentication)
+      throws AuthenticationException {
     User user = (User) authentication.getPrincipal();
     String token = (String) authentication.getCredentials();
     return new Principal(token, user);
