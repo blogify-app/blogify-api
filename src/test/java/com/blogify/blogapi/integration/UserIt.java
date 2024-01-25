@@ -9,7 +9,6 @@ import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
@@ -30,7 +29,8 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = UserIt.ContextInitializer.class)
 public class UserIt {
 
-  @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean
+  private FirebaseService firebaseServiceMock;
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
@@ -46,10 +46,12 @@ public class UserIt {
     ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
     UserApi api = new UserApi(client1Client);
 
+    User actualUser = api.getUserById(CLIENT1_ID);
     List<User> actual = api.getUsers(1, 5, null);
     List<User> usersWithFilterName1 = api.getUsers(1, 5, "username");
     List<User> usersWithFilterName2 = api.getUsers(1, 5, "heRiLala");
 
+    assertEquals(client1(), actualUser);
     assertEquals(3, actual.size());
     assertTrue(actual.contains(client1()));
     assertTrue(actual.contains(client2()));
