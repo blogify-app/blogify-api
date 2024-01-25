@@ -18,7 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Entity(name = "\"reaction\"")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "disc_type",length = 4)
+@DiscriminatorColumn(name = "disc_type", length = 4)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -29,8 +29,7 @@ public class Reaction {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @CreationTimestamp
-  private Instant creationDatetime;
+  @CreationTimestamp private Instant creationDatetime;
 
   @Enumerated(EnumType.STRING)
   private ReactionType type;

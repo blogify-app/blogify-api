@@ -29,7 +29,7 @@ public class PostMockData {
         .title("Premier Post")
         .status(PostStatus.DRAFT)
         .categories(List.of(category1(), category2()))
-        .reactions(new ReactionStat().dislikes(BigDecimal.ZERO).likes(BigDecimal.ZERO))
+        .reactions(new ReactionStat().likes(BigDecimal.valueOf(2)).dislikes(BigDecimal.ZERO))
         .creationDatetime(Instant.parse("2000-09-01T08:12:20.00z"))
         .updatedAt(Instant.parse("2000-09-01T08:12:20.00z"));
   }
@@ -44,7 +44,7 @@ public class PostMockData {
         .title("Deuxième Post")
         .status(PostStatus.DRAFT)
         .categories(List.of(category1()))
-        .reactions(new ReactionStat().dislikes(BigDecimal.ZERO).likes(BigDecimal.ZERO))
+        .reactions(new ReactionStat().dislikes(BigDecimal.valueOf(1)).likes(BigDecimal.ZERO))
         .creationDatetime(Instant.parse("2000-09-01T08:12:20.00z"))
         .updatedAt(Instant.parse("2000-09-01T08:12:20.00z"));
   }

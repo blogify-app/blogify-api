@@ -1,5 +1,6 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
@@ -9,6 +10,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
@@ -29,8 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = UserIt.ContextInitializer.class)
 public class UserIt {
 
-  @MockBean
-  private FirebaseService firebaseServiceMock;
+  @MockBean private FirebaseService firebaseServiceMock;
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);

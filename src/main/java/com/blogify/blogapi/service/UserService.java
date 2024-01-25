@@ -40,6 +40,8 @@ public class UserService {
   }
 
   public User findById(String id) {
-    return repository.findById(id).orElseThrow(()->new NotFoundException("User with id "+id+" not found"));
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
   }
 }

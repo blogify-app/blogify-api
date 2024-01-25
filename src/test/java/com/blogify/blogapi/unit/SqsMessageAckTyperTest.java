@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.blogify.blogapi.conf.FacadeIT;
 import com.blogify.blogapi.endpoint.event.EventConsumer;
@@ -21,12 +22,9 @@ import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest;
 
 public class SqsMessageAckTyperTest extends FacadeIT {
   public static final String UNKNOWN_TYPENAME = "unknown_typename";
-  @Autowired
-  EventConsumer.SqsMessageAckTyper subject;
-  @Autowired
-  ObjectMapper om;
-  @MockBean
-  SqsClient sqsClient;
+  @Autowired EventConsumer.SqsMessageAckTyper subject;
+  @Autowired ObjectMapper om;
+  @MockBean SqsClient sqsClient;
 
   private SQSEvent.SQSMessage sqsMessageFrom(EventConsumer.TypedEvent typedEvent)
       throws JsonProcessingException {
@@ -42,8 +40,7 @@ public class SqsMessageAckTyperTest extends FacadeIT {
 
   private EventConsumer.AcknowledgeableTypedEvent ackTypedEventfrom(
       EventConsumer.TypedEvent typedEvent) {
-    return new EventConsumer.AcknowledgeableTypedEvent(typedEvent, () -> {
-    });
+    return new EventConsumer.AcknowledgeableTypedEvent(typedEvent, () -> {});
   }
 
   @Test

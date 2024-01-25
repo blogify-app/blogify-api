@@ -29,7 +29,7 @@ public class PostReactionService {
   }
 
   public PostReaction reactAPost(Post post, ReactionType reactionType, User user) {
-    List<PostReaction> postReactions = postReactionRepository.findAllByPost(post);
+    List<PostReaction> postReactions = postReactionRepository.findAllByPostAndUser(post, user);
     PostReaction postReaction = new PostReaction();
     postReaction.setPost(post);
     postReaction.setId(UUID.randomUUID().toString());
