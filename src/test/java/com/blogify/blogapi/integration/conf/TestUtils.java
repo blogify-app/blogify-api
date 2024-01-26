@@ -3,6 +3,7 @@ package com.blogify.blogapi.integration.conf;
 import static org.mockito.Mockito.when;
 
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
+import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.blogify.blogapi.service.firebase.FirebaseUser;
@@ -53,6 +54,27 @@ public class TestUtils {
     return Objects.requireNonNull(
             posts.stream()
                 .filter(post -> Objects.equals(post.getId(), postId))
+                .findFirst()
+                .get()
+                .getReactions())
+        .getDislikes();
+  }
+
+  public static BigDecimal getLikeReactionPointInComment(List<Comment> comments, String commentId) {
+    return Objects.requireNonNull(
+            comments.stream()
+                .filter(comment -> Objects.equals(comment.getId(), commentId))
+                .findFirst()
+                .get()
+                .getReactions())
+        .getLikes();
+  }
+
+  public static BigDecimal getDislikeReactionPointInComment(
+      List<Comment> comments, String commentId) {
+    return Objects.requireNonNull(
+            comments.stream()
+                .filter(comment -> Objects.equals(comment.getId(), commentId))
                 .findFirst()
                 .get()
                 .getReactions())

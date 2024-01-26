@@ -1,42 +1,56 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
+import com.blogify.blogapi.endpoint.mapper.CommentMapper;
+import com.blogify.blogapi.endpoint.mapper.ReactionMapper;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
-import com.blogify.blogapi.repository.model.Reaction;
+import com.blogify.blogapi.endpoint.rest.model.Reaction;
+import com.blogify.blogapi.endpoint.rest.model.ReactionType;
+import com.blogify.blogapi.model.BoundedPageSize;
+import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.repository.model.User;
+import com.blogify.blogapi.service.CommentReactionService;
 import com.blogify.blogapi.service.CommentService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
 public class CommentController {
 
-    private CommentService commentService;
+  private final CommentService commentService;
+  private final CommentMapper commentMapper;
+  private final CommentReactionService commentReactionService;
+  private final ReactionMapper reactionMapper;
 
-    @GetMapping("/comments")
-    public List<Comment> getComments() {
-        return commentService.getComments();
-    }
+  @GetMapping("/posts/{postId}/comments")
+  public List<Comment> getCommentsByPostId(
+      @PathVariable String postId,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(value = "page_size", required = false) Integer pageSize) {
+    PageFromOne pageFromOne = new PageFromOne(page);
+    BoundedPageSize boundedPageSize = new BoundedPageSize(pageSize);
+    return commentService.findByPostId(postId, pageFromOne, boundedPageSize).stream()
+        .map(
+            comment ->
+                commentMapper.toRest(
+                    comment, commentReactionService.getReactionStat(comment.getId())))
+        .toList();
+  }
 
-    /*@PostMapping("/{post_id}/comments")
-    public ResponseEntity<List<Comment>> createOrUpdateComment(@PathVariable("post_id") String postId, @RequestBody List<Comment> comments) {
-        List<Comment> updatedComments = commentService.createOrUpdateComment(postId, comments);
-        return ResponseEntity.ok(updatedComments);
-    }
-
-    @PostMapping("/{post_id}/comments/{comment_id}/react")
-    public ResponseEntity<Reaction> reactToComment(
-            @PathVariable("post_id") String postId,
-            @PathVariable("comment_id") String commentId,
-            @RequestBody Reaction.ReactionType reactionType) {
-        Reaction reaction = commentService.reactToComment(postId, commentId, reactionType);
-        return ResponseEntity.ok(reaction);
-    }*/
+  @PostMapping("/posts/{postId}/comments/{commentId}/reaction")
+  public Reaction reactToCommentById(
+      @PathVariable String postId,
+      @PathVariable String commentId,
+      @RequestParam(value = "type", required = false) ReactionType type) {
+    com.blogify.blogapi.repository.model.Comment comment = commentService.getBYId(commentId);
+    // todo: change to user from token when it will work
+    User user = comment.getUser();
+    return reactionMapper.toRest(
+        commentReactionService.reactAComment(comment, reactionMapper.toDomain(type), user));
+  }
 }
-

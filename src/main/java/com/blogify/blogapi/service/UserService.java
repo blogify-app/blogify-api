@@ -6,7 +6,6 @@ import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

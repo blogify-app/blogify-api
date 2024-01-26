@@ -1,9 +1,10 @@
 package com.blogify.blogapi.integration;
 
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment1;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment2;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment3;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_ID;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -11,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import com.blogify.blogapi.endpoint.rest.api.UserApi;
+import com.blogify.blogapi.endpoint.rest.api.CommentsApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
-import com.blogify.blogapi.endpoint.rest.model.User;
+import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -28,13 +29,12 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
-@ContextConfiguration(initializers = UserIt.ContextInitializer.class)
-public class UserIt {
-
+@ContextConfiguration(initializers = CommentIt.ContextInitializer.class)
+public class CommentIt {
   @MockBean private FirebaseService firebaseServiceMock;
 
-  private static ApiClient anApiClient(String token) {
-    return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
+  private static ApiClient apiClient(String token) {
+    return TestUtils.anApiClient(token, CommentIt.ContextInitializer.SERVER_PORT);
   }
 
   @BeforeEach
@@ -44,24 +44,19 @@ public class UserIt {
 
   @Test
   void client_read_ok() throws ApiException {
-    ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
-    UserApi api = new UserApi(client1Client);
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
 
-    User actualUser = api.getUserById(CLIENT1_ID);
-    List<User> actual = api.getUsers(1, 5, null);
-    List<User> usersWithFilterName1 = api.getUsers(1, 5, "username");
-    List<User> usersWithFilterName2 = api.getUsers(1, 5, "heRiLala");
+    List<Comment> allPost1Comments = api.getCommentsByPostId(POST1_ID, 1, 10);
 
-    assertEquals(client1(), actualUser);
-    assertEquals(3, actual.size());
-    assertTrue(actual.contains(client1()));
-    assertTrue(actual.contains(client2()));
-    assertTrue(actual.contains(manager1()));
+    List<Comment> allPost2Comments = api.getCommentsByPostId(POST2_ID, 1, 10);
 
-    assertEquals(3, usersWithFilterName1.size());
+    assertEquals(3, allPost1Comments.size());
+    assertTrue(allPost1Comments.contains(comment1()));
+    assertTrue(allPost1Comments.contains(comment2()));
+    assertTrue(allPost1Comments.contains(comment3()));
 
-    assertEquals(1, usersWithFilterName2.size());
-    assertTrue(usersWithFilterName2.contains(client2()));
+    assertEquals(0, allPost2Comments.size());
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
