@@ -28,9 +28,9 @@ public class UserMapper {
         .profileBannerUrl(domain.getProfileBannerUrl())
         .username(domain.getUsername())
         .about(domain.getAbout())
-        .status(toRest(domain.getStatus()))
+        .status(convertToRest(domain.getStatus()))
         .entranceDatetime(domain.getCreationDatetime())
-        .sex(toRest(domain.getSex()))
+        .sex(convertToRest(domain.getSex()))
         .categories(domain.getUserCategories().stream().map(categoryMapper::toRest).toList());
   }
 
@@ -52,7 +52,7 @@ public class UserMapper {
         .build();
   }
 
-  private Sex toRest(com.blogify.blogapi.model.enums.Sex sex) {
+  public static Sex convertToRest(com.blogify.blogapi.model.enums.Sex sex) {
     return mapEnum(
         sex,
         Map.of(
@@ -61,7 +61,7 @@ public class UserMapper {
             com.blogify.blogapi.model.enums.Sex.OTHER, Sex.OTHER));
   }
 
-  private UserStatus toRest(com.blogify.blogapi.model.enums.UserStatus userStatus) {
+  public static UserStatus convertToRest(com.blogify.blogapi.model.enums.UserStatus userStatus) {
     return mapEnum(
         userStatus,
         Map.of(
