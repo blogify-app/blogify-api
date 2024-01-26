@@ -5,7 +5,6 @@ create table if not exists "reaction"
     creation_datetime TIMESTAMP  WITH TIME ZONE  DEFAULT current_timestamp NOT NULL,
     type varchar NOT NULL,
     disc_type VARCHAR(4) NOT NULL
-
 );
 
 create index if not exists reaction_user_id_index on "reaction" (user_id);

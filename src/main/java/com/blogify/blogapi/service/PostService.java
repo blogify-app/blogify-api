@@ -23,7 +23,7 @@ public class PostService {
   public Post getBYId(String id) {
     return postRepository
         .findById(id)
-        .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+        .orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
   }
 
   public List<Post> findAllByCategory(

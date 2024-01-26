@@ -1,5 +1,11 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT2_ID;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT3_ID;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment1;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment2;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment3;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_ID;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post1;
@@ -8,15 +14,19 @@ import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.getDislikeReactionPoint;
+import static com.blogify.blogapi.integration.conf.TestUtils.getDislikeReactionPointInComment;
 import static com.blogify.blogapi.integration.conf.TestUtils.getLikeReactionPoint;
+import static com.blogify.blogapi.integration.conf.TestUtils.getLikeReactionPointInComment;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import com.blogify.blogapi.endpoint.rest.api.CommentsApi;
 import com.blogify.blogapi.endpoint.rest.api.PostingApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
+import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
@@ -48,7 +58,7 @@ public class ReactionIt {
   }
 
   @Test
-  void client_write_ok() throws ApiException {
+  void client_recto_post_ok() throws ApiException {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1Client);
 
@@ -84,6 +94,58 @@ public class ReactionIt {
     assertEquals(BigDecimal.valueOf(1), getDislikeReactionPoint(allPosts2, POST1_ID));
     assertEquals(BigDecimal.valueOf(1), getLikeReactionPoint(allPosts2, POST2_ID));
     assertEquals(BigDecimal.valueOf(1), getDislikeReactionPoint(allPosts2, POST2_ID));
+  }
+
+  @Test
+  void client_recto_comment_ok() throws ApiException {
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
+
+    ApiClient client2Client = apiClient(CLIENT2_TOKEN);
+    CommentsApi api2 = new CommentsApi(client2Client);
+
+    List<Comment> allPost1CommentsBefore = api.getCommentsByPostId(POST1_ID, 1, 10);
+
+    Reaction post1DislikeByClient1 =
+        api.reactToCommentById(POST1_ID, COMMENT1_ID, ReactionType.LIKE);
+
+    List<Comment> allPost1Comments1 = api.getCommentsByPostId(POST1_ID, 1, 10);
+
+    Reaction post2likeByClient2 = api2.reactToCommentById(POST1_ID, COMMENT3_ID, ReactionType.LIKE);
+
+    List<Comment> allPost1Comments2 = api.getCommentsByPostId(POST1_ID, 1, 10);
+
+    assertEquals(3, allPost1CommentsBefore.size());
+    assertTrue(allPost1CommentsBefore.contains(comment1()));
+    assertTrue(allPost1CommentsBefore.contains(comment2()));
+    assertTrue(allPost1CommentsBefore.contains(comment3()));
+    assertEquals(
+        BigDecimal.valueOf(1), getLikeReactionPointInComment(allPost1CommentsBefore, COMMENT1_ID));
+    assertEquals(
+        BigDecimal.valueOf(1),
+        getDislikeReactionPointInComment(allPost1CommentsBefore, COMMENT1_ID));
+    assertEquals(
+        BigDecimal.valueOf(0), getLikeReactionPointInComment(allPost1CommentsBefore, COMMENT2_ID));
+    assertEquals(
+        BigDecimal.valueOf(1),
+        getDislikeReactionPointInComment(allPost1CommentsBefore, COMMENT2_ID));
+    assertEquals(
+        BigDecimal.valueOf(0), getLikeReactionPointInComment(allPost1CommentsBefore, COMMENT3_ID));
+    assertEquals(
+        BigDecimal.valueOf(0),
+        getDislikeReactionPointInComment(allPost1CommentsBefore, COMMENT3_ID));
+
+    assertEquals(3, allPost1Comments1.size());
+    assertEquals(
+        BigDecimal.valueOf(2), getLikeReactionPointInComment(allPost1Comments1, COMMENT1_ID));
+    assertEquals(
+        BigDecimal.valueOf(0), getDislikeReactionPointInComment(allPost1Comments1, COMMENT1_ID));
+
+    assertEquals(3, allPost1Comments2.size());
+    assertEquals(
+        BigDecimal.valueOf(1), getLikeReactionPointInComment(allPost1Comments2, COMMENT3_ID));
+    assertEquals(
+        BigDecimal.valueOf(0), getDislikeReactionPointInComment(allPost1Comments2, COMMENT3_ID));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

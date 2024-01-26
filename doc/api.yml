@@ -842,7 +842,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  "/post/{pid}/comments/{cid}/reaction":
+  "/posts/{pid}/comments/{cid}/reaction":
     post:
       tags:
         - Comments
