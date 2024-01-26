@@ -1,5 +1,5 @@
-# Blogify API 📑✨
-Welcome to Blogify, where words come to life and stories find their digital home! Blogify is more than just a blog app; it's a vibrant community of passionate writers, storytellers, and readers coming together to share, explore, and engage in the art of blogging.
+# BLOGIFY API 📑✨
+Welcome to Blogify, where words come to life and stories find their digital home! __Blogify__ is more than just a blog app; it's a vibrant community of passionate writers, storytellers, and readers coming together to share, explore, and engage in the art of blogging.
 
 ## Overview
 
@@ -23,7 +23,38 @@ The Definitions Of Done (DoD) for our project are aligned with the professor's r
 Uses the [Java](https://phoenixnap.com/kb/install-java-windows) [Spring Boot](https://spring.io/projects/spring-boot/) framework and [Postgresql](https://www.postgresql.org/) with [POJA](https://github.com/hei-school/poja-cli).
 
 #### How to use the app ?
-The principle of POJA is that it deploys directly the application So you can check in the Github Actions and search for the deployed app link.
+The principle of __POJA__ is that it deploys directly the application So you can check in the Github Actions and search for the deployed app link.
+
+#### Requirements:
+   - JDK 17 installation
+   - JAVA_HOME configuration
+   - Database creation on PostgreSQL {database}
+   - List of environment variables
+
+#### Linter and formatter:
+The linter used is Checkstyle, configured with Gradle.
+
+#### Usage:
+   - To clean previous builds:
+```shell
+    ./gradlew clean
+```
+
+   - To build:
+```shell
+    ./gradlew assemble
+```
+
+   - To run tests:
+```shell
+    ./gradlew test
+```
+
+   - To run the application:
+Set Environment variables on CLI and:
+```shell
+    ./gradlew bootRun
+```
 
 ### Upcoming Features
 - Recommandation system AI
@@ -50,4 +81,4 @@ We welcome contributions from the community! If you're interested in contributin
 
 If you have any questions or need assistance, feel free to reach out to us through the project's GitHub issues.
 
-Thank you for being a part of The Maestro Project - Blogify! 🚀
+__Thank you for being a part of The Maestro Project - Blogify!__ 🚀
