@@ -704,11 +704,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: picId
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Post pictures fetched.
