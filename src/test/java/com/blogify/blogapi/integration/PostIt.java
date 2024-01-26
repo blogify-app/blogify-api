@@ -50,12 +50,14 @@ public class PostIt {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1Client);
 
+    Post actualPost = api.getPostById(POST1_ID);
     List<Post> allPosts = api.getPosts(1, 10, null);
 
     List<Post> allPostsWithCategory1Or2 =
         api.getPosts(1, 10, CATEGORY2_LABEL + "," + CATEGORY1_LABEL);
     List<Post> allPostsWithCategory2 = api.getPosts(1, 10, CATEGORY2_LABEL);
 
+    assertEquals(post1(),actualPost);
     assertEquals(2, allPosts.size());
     assertTrue(allPosts.contains(post1()));
     assertTrue(allPosts.contains(post2()));
