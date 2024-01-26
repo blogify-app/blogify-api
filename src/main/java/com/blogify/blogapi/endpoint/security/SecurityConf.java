@@ -112,6 +112,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(HttpMethod.GET, "/users/*")
         .permitAll()
+        .antMatchers(HttpMethod.PUT, "/users/*")
+        .permitAll()
         .antMatchers(HttpMethod.GET, "/categories")
         .permitAll()
         .antMatchers(HttpMethod.GET, "/posts")

@@ -1,11 +1,12 @@
 package com.blogify.blogapi.endpoint.mapper;
 
 import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
-
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
+import com.blogify.blogapi.model.enums.Role;
+import java.time.Instant;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
   private final CategoryMapper categoryMapper;
+  private final UserCategoryMapper userCategoryMapper;
 
   public User toRest(com.blogify.blogapi.repository.model.User domain) {
     return new User()
@@ -40,7 +42,8 @@ public class UserMapper {
         .firstname(rest.getFirstName())
         .lastname(rest.getLastName())
         .birthdate(rest.getBirthDate())
-        //        .creationDatetime(rest.getEntranceDatetime())
+        .creationDatetime(rest.getEntranceDatetime())
+        .lastUpdateDatetime(Instant.now())
         .mail(rest.getEmail())
         .photoUrl(rest.getPhotoUrl())
         .bio(rest.getBio())
@@ -48,7 +51,9 @@ public class UserMapper {
         .username(rest.getUsername())
         .about(rest.getAbout())
         .status(toDomain(rest.getStatus()))
+        .role(toDomain(Role.CLIENT))
         .sex(toDomain(rest.getSex()))
+        .userCategories(userCategoryMapper.toDomain(rest.getCategories()))
         .build();
   }
 
@@ -67,6 +72,14 @@ public class UserMapper {
         Map.of(
             com.blogify.blogapi.model.enums.UserStatus.ENABLED, UserStatus.ENABLED,
             com.blogify.blogapi.model.enums.UserStatus.BANISHED, UserStatus.BANISHED));
+  }
+
+  public com.blogify.blogapi.model.enums.Role toDomain(Role role) {
+    return mapEnum(
+        role,
+        Map.of(
+            Role.MANAGER, com.blogify.blogapi.model.enums.Role.MANAGER,
+            Role.CLIENT, com.blogify.blogapi.model.enums.Role.CLIENT));
   }
 
   private com.blogify.blogapi.model.enums.Sex toDomain(Sex sex) {

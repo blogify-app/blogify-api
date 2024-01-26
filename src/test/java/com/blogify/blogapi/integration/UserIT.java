@@ -1,5 +1,18 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT3_ID;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client3;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
@@ -13,25 +26,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
-import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
-import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
-import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
 @ContextConfiguration(initializers = UserIT.ContextInitializer.class)
 public class UserIT {
 
-  @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean
+  private FirebaseService firebaseServiceMock;
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
@@ -62,6 +66,23 @@ public class UserIT {
 
     assertEquals(1, usersWithFilterName2.size());
     assertTrue(usersWithFilterName2.contains(client2()));
+  }
+
+  @Test
+  @DirtiesContext
+  void client_write_ok() throws ApiException {
+    ApiClient client3Client = anApiClient(CLIENT1_TOKEN);
+    UserApi api = new UserApi(client3Client);
+
+    List<User> usersBeforeCreate = api.getUsers(1, 5, null);
+    User actualUser = api.crupdateUserById(CLIENT3_ID, client3());
+    List<User> usersAfterCreate = api.getUsers(1, 5, null);
+
+    assertEquals(actualUser.getId(), CLIENT3_ID);
+    assertEquals(3, usersBeforeCreate.size());
+    assertEquals(4, usersAfterCreate.size());
+    assertFalse(usersBeforeCreate.contains(client3()));
+    assertTrue(usersAfterCreate.contains(client3()));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

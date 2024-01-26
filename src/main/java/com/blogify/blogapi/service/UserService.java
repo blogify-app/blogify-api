@@ -3,6 +3,7 @@ package com.blogify.blogapi.service;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
+import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class UserService {
   private final UserRepository repository;
+  private UserValidator userValidator;
 
   public List<User> findAllByName(String name, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
@@ -37,6 +39,13 @@ public class UserService {
   @Transactional
   public User save(User toSave) {
     return repository.save(toSave);
+  }
+
+  @Transactional
+  public User crupdateUser(User user, String userId) {
+    userValidator.accept(user);
+    user.setId(userId);
+    return repository.save(user);
   }
 
   public User findById(String id) {

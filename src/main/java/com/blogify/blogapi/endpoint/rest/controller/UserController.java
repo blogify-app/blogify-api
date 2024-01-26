@@ -1,6 +1,7 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
 import com.blogify.blogapi.endpoint.mapper.UserMapper;
+import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
@@ -9,6 +10,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,5 +37,14 @@ public class UserController {
   @GetMapping(value = "/users/{id}")
   public User getUserById(@PathVariable String id) {
     return userMapper.toRest(userService.findById(id));
+  }
+  @PutMapping(value = "/users/{id}")
+  public User crupdateUser(
+      @PathVariable (name = "id") String userId,
+      @RequestBody SignUp toUpdate
+      ) {
+    return userMapper.toRest(
+        userService.crupdateUser(userMapper.toDomain(toUpdate), userId)
+    );
   }
 }

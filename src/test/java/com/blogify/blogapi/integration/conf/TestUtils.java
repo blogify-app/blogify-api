@@ -1,7 +1,6 @@
 package com.blogify.blogapi.integration.conf;
 
 import static org.mockito.Mockito.when;
-
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.Post;
@@ -19,6 +18,7 @@ public class TestUtils {
   public static final String CLIENT1_TOKEN = "client1_token";
 
   public static final String CLIENT2_TOKEN = "client2_token";
+  public static final String CLIENT3_TOKEN = "client3_token";
 
   public static final String MANAGER_TOKEN = "manger1_token";
 
@@ -27,6 +27,8 @@ public class TestUtils {
 
   public static final FirebaseUser firebaseUserClient2 =
       new FirebaseUser("test+herilala@hei.school", "client2_firebase_id");
+  public static final FirebaseUser firebaseUserClient3 =
+      new FirebaseUser("test+herizo@hei.school", "client3_firebase_id");
   public static final FirebaseUser firebaseUserManager1 =
       new FirebaseUser("test+vano@hei.school", "manager1_firebase_id");
 
@@ -36,6 +38,8 @@ public class TestUtils {
     when(firebaseService.getUserByBearer(CLIENT1_TOKEN)).thenReturn(firebaseUserClient1);
 
     when(firebaseService.getUserByBearer(CLIENT2_TOKEN)).thenReturn(firebaseUserClient2);
+
+    when(firebaseService.getUserByBearer(CLIENT3_TOKEN)).thenReturn(firebaseUserClient3);
 
     when(firebaseService.getUserByBearer(MANAGER_TOKEN)).thenReturn(firebaseUserManager1);
   }

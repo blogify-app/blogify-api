@@ -17,6 +17,7 @@ import static java.util.UUID.randomUUID;
 public class UserMockData {
   public static final String CLIENT1_ID = "client1_id";
   public static final String CLIENT2_ID = "client2_id";
+  public static final String CLIENT3_ID = "client3_id";
   public static final String MANAGER1_ID = "manager1_id";
 
   public static Category category1(){
@@ -83,6 +84,24 @@ public class UserMockData {
         .profileBannerUrl("banner_url_manager1")
         .entranceDatetime(Instant.parse("2000-09-01T08:12:20.00Z"))
         .categories(List.of())
+        .isFollowed(null);
+  }
+  public static User client3() {
+    return new User()
+        .id(CLIENT3_ID)
+        .firstName("Herizo")
+        .lastName("Ran")
+        .username("username_client3")
+        .about("about_client3")
+        .email("test+herizo@hei.school")
+        .birthDate(LocalDate.parse("2003-01-01"))
+        .sex(Sex.M)
+        .status(UserStatus.ENABLED)
+        .photoUrl("photo_url_client3")
+        .bio("bio_client3")
+        .profileBannerUrl("banner_url_client2")
+        .entranceDatetime(Instant.parse("2005-01-01T08:12:20.00Z"))
+        .categories(List.of(category2()))
         .isFollowed(null);
   }
 
