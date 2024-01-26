@@ -64,7 +64,7 @@ public class User implements Serializable {
   @Enumerated(EnumType.STRING)
   private UserStatus status;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private List<UserCategory> userCategories;
 }

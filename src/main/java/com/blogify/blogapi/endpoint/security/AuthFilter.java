@@ -5,11 +5,9 @@ import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.blogify.blogapi.service.firebase.FirebaseUser;
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +28,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
   }
 
   @Override
+  @SneakyThrows
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
@@ -43,16 +42,5 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
       return getAuthenticationManager().authenticate(authentication);
     }
     throw new ForbiddenException("Access denied");
-  }
-
-  @Override
-  protected void successfulAuthentication(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      FilterChain chain,
-      Authentication authResult)
-      throws IOException, ServletException {
-    super.successfulAuthentication(request, response, chain, authResult);
-    chain.doFilter(request, response);
   }
 }
