@@ -45,7 +45,7 @@ public class PostController {
 
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
-    User author = userService.getBYId(post.getAuthorId());
+    User author = userService.findById(post.getAuthorId());
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
     return postMapper.toRest(
         postService.savePost(postMapper.toDomain(post, author), postId), reactionStat);
