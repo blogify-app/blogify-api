@@ -26,13 +26,43 @@ Uses the [Java](https://phoenixnap.com/kb/install-java-windows) [Spring Boot](ht
 The principle of __POJA__ is that it deploys directly the application So you can check in the Github Actions and search for the deployed app link.
 
 #### Requirements:
-   - JDK 17 installation
-   - JAVA_HOME configuration
-   - Database creation on PostgreSQL {database}
-   - List of environment variables
+
+##### JDK 17 installation
+Depending on the OS:
+
+[Download and install](https://docs.oracle.com/en/java/javase/17/install/overview-jdk-installation.html) (Java) JDK 17
+
+##### JAVA_HOME configuration
+
+##### Database creation on PostgreSQL {database}:
+```shell
+    CREATE DATABASE DB_NAME;
+```
+
+##### List of environment variables:
+   - aws_eventBridge_bus
+   - aws_region
+   - aws_s3_bucket
+   - aws_ses_source
+   - aws_sqs_queue_url
+   - firebase_private_key
+   - spring_datasource_password
+   - spring_datasource_url
+   - spring_datasource_username
 
 #### Linter and formatter:
-The linter used is Checkstyle, configured with Gradle.
+
+##### Coding standard
+The coding standard used is google java style guide
+
+##### Linter
+The Linter used is checkstyle, configured with gradle.
+
+##### Formatter:
+The formatter used is google-java-format, executed with the script format.sh as follows:
+```shell
+    ./format.sh
+```
 
 #### Usage:
    - To clean previous builds:
@@ -51,8 +81,8 @@ The linter used is Checkstyle, configured with Gradle.
 ```
 
    - To run the application:
-Set Environment variables on CLI and:
 ```shell
+    # Set Environment variables on CLI and then run:
     ./gradlew bootRun
 ```
 
