@@ -1,10 +1,7 @@
 package com.blogify.blogapi.integration;
 
-import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment1;
-import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment2;
-import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment3;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_ID;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -12,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-import com.blogify.blogapi.endpoint.rest.api.CommentsApi;
+import com.blogify.blogapi.endpoint.rest.api.CategoryApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
-import com.blogify.blogapi.endpoint.rest.model.Comment;
+import com.blogify.blogapi.endpoint.rest.model.Category;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -29,12 +26,12 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
-@ContextConfiguration(initializers = CommentIT.ContextInitializer.class)
-public class CommentIT {
+@ContextConfiguration(initializers = CategoryIt.ContextInitializer.class)
+public class CategoryIt {
   @MockBean private FirebaseService firebaseServiceMock;
 
   private static ApiClient apiClient(String token) {
-    return TestUtils.anApiClient(token, CommentIT.ContextInitializer.SERVER_PORT);
+    return TestUtils.anApiClient(token, CategoryIt.ContextInitializer.SERVER_PORT);
   }
 
   @BeforeEach
@@ -45,18 +42,18 @@ public class CommentIT {
   @Test
   void client_read_ok() throws ApiException {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
-    CommentsApi api = new CommentsApi(client1Client);
+    CategoryApi api = new CategoryApi(client1Client);
 
-    List<Comment> allPost1Comments = api.getCommentsByPostId(POST1_ID, 1, 10);
+    List<Category> actual = api.getCategories(null);
 
-    List<Comment> allPost2Comments = api.getCommentsByPostId(POST2_ID, 1, 10);
+    List<Category> actualByCriteria = api.getCategories("math");
 
-    assertEquals(3, allPost1Comments.size());
-    assertTrue(allPost1Comments.contains(comment1()));
-    assertTrue(allPost1Comments.contains(comment2()));
-    assertTrue(allPost1Comments.contains(comment3()));
+    assertEquals(2, actual.size());
+    assertTrue(actual.contains(category1()));
+    assertTrue(actual.contains(category2()));
 
-    assertEquals(0, allPost2Comments.size());
+    assertEquals(1, actualByCriteria.size());
+    assertTrue(actualByCriteria.contains(category1()));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

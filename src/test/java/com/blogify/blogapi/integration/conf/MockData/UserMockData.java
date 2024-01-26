@@ -1,6 +1,8 @@
 package com.blogify.blogapi.integration.conf.MockData;
 
-import com.blogify.blogapi.endpoint.rest.model.Category;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
+
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
@@ -8,27 +10,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_LABEL;
-import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_ID;
-import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_LABEL;
-import static java.util.UUID.randomUUID;
-
 public class UserMockData {
   public static final String CLIENT1_ID = "client1_id";
   public static final String CLIENT2_ID = "client2_id";
   public static final String MANAGER1_ID = "manager1_id";
 
-  public static Category category1(){
-    return new Category()
-        .id(CATEGORY1_ID)
-        .label(CATEGORY1_LABEL);
-  }
-  public static Category category2(){
-    return new Category()
-        .id(CATEGORY2_ID)
-        .label(CATEGORY2_LABEL);
-  }
   public static User client1() {
     return new User()
         .id(CLIENT1_ID)
@@ -84,13 +70,5 @@ public class UserMockData {
         .entranceDatetime(Instant.parse("2000-09-01T08:12:20.00Z"))
         .categories(List.of())
         .isFollowed(null);
-  }
-
-  public static com.blogify.blogapi.repository.model.Category category() {
-    return com.blogify.blogapi.repository.model.Category.builder()
-        .id(randomUUID().toString())
-        .name("machine learning")
-        .creationDatetime(Instant.now())
-        .build();
   }
 }

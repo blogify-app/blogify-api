@@ -1,5 +1,16 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
@@ -15,21 +26,10 @@ import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
-import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
-import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
-import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
-@ContextConfiguration(initializers = UserIT.ContextInitializer.class)
-public class UserIT {
+@ContextConfiguration(initializers = UserIt.ContextInitializer.class)
+public class UserIt {
 
   @MockBean private FirebaseService firebaseServiceMock;
 

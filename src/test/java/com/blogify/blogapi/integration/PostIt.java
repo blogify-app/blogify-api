@@ -32,12 +32,12 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
-@ContextConfiguration(initializers = PostIT.ContextInitializer.class)
-public class PostIT {
+@ContextConfiguration(initializers = PostIt.ContextInitializer.class)
+public class PostIt {
   @MockBean private FirebaseService firebaseServiceMock;
 
   private static ApiClient apiClient(String token) {
-    return TestUtils.anApiClient(token, PostIT.ContextInitializer.SERVER_PORT);
+    return TestUtils.anApiClient(token, PostIt.ContextInitializer.SERVER_PORT);
   }
 
   @BeforeEach
