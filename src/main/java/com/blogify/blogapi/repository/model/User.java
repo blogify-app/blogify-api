@@ -3,6 +3,7 @@ package com.blogify.blogapi.repository.model;
 import com.blogify.blogapi.model.enums.Role;
 import com.blogify.blogapi.model.enums.Sex;
 import com.blogify.blogapi.model.enums.UserStatus;
+import com.blogify.blogapi.repository.types.PostgresEnumType;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,9 +26,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 @Data
 @EqualsAndHashCode
+@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 @ToString
 @Entity
 @Builder(toBuilder = true)
@@ -46,9 +50,11 @@ public class User implements Serializable {
   private LocalDate birthdate;
   private String firebaseId;
 
+  @Type(type = "pgsql_enum")
   @Enumerated(EnumType.STRING)
   private Role role;
 
+  @Type(type = "pgsql_enum")
   @Enumerated(EnumType.STRING)
   private Sex sex;
 
@@ -61,6 +67,7 @@ public class User implements Serializable {
   private String username;
   private String about;
 
+  @Type(type = "pgsql_enum")
   @Enumerated(EnumType.STRING)
   private UserStatus status;
 

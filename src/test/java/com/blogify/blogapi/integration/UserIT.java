@@ -71,8 +71,8 @@ public class UserIT {
   @Test
   @DirtiesContext
   void client_write_ok() throws ApiException {
-    ApiClient client3Client = anApiClient(CLIENT1_TOKEN);
-    UserApi api = new UserApi(client3Client);
+    ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
+    UserApi api = new UserApi(client1Client);
 
     List<User> usersBeforeCreate = api.getUsers(1, 5, null);
     User actualUser = api.crupdateUserById(CLIENT3_ID, client3());
@@ -82,7 +82,7 @@ public class UserIT {
     assertEquals(3, usersBeforeCreate.size());
     assertEquals(4, usersAfterCreate.size());
     assertFalse(usersBeforeCreate.contains(client3()));
-    assertTrue(usersAfterCreate.contains(client3()));
+    assertEquals(usersAfterCreate.get(3).getId(),CLIENT3_ID);
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
