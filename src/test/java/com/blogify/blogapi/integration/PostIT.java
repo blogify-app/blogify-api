@@ -2,11 +2,7 @@ package com.blogify.blogapi.integration;
 
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_LABEL;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_LABEL;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.CREATE_POST1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post1;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post2;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.postToCreate;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.*;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -50,13 +46,14 @@ public class PostIT {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1Client);
 
+    api.deletePostById(POST2_ID);
     List<Post> allPosts = api.getPosts(1, 10, null);
 
     List<Post> allPostsWithCategory1Or2 =
         api.getPosts(1, 10, CATEGORY2_LABEL + "," + CATEGORY1_LABEL);
     List<Post> allPostsWithCategory2 = api.getPosts(1, 10, CATEGORY2_LABEL);
 
-    assertEquals(2, allPosts.size());
+    assertEquals(1, allPosts.size());
     assertTrue(allPosts.contains(post1()));
     assertTrue(allPosts.contains(post2()));
 
