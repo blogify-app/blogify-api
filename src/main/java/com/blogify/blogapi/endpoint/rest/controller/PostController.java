@@ -43,6 +43,11 @@ public class PostController {
         .toList();
   }
 
+  @GetMapping("/posts/{postId}")
+  public Post getPostById(@PathVariable String postId){
+    return postMapper.toRest(postService.getBYId(postId),postReactionService.getReactionStat(postId));
+  }
+
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
     User author = userService.getBYId(post.getAuthorId());
