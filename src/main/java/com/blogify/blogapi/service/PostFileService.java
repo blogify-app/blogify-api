@@ -28,11 +28,10 @@ public class PostFileService {
   public PostPicture uploadPicture(String pid, String picId, MultipartFile file)
       throws IOException {
     Post post = postService.getBYId(pid);
-    String bucketKey = picId+file.getContentType();
+    String bucketKey = picId + file.getContentType();
     s3Service.uploadObjectToS3Bucket(bucketKey, file.getBytes());
-    com.blogify.blogapi.repository.model.PostPicture postPicture = com.blogify.blogapi.repository.model.PostPicture.builder()
-        .post(post)
-        .build();
+    com.blogify.blogapi.repository.model.PostPicture postPicture =
+        com.blogify.blogapi.repository.model.PostPicture.builder().post(post).build();
     postPicture.setId(picId);
     postPicture.setBucketKey(bucketKey);
     repository.save(postPicture);
@@ -40,24 +39,29 @@ public class PostFileService {
   }
 
   public PostPicture getPictureById(String pid, String picId) {
-    com.blogify.blogapi.repository.model.PostPicture postPicture = repository.findByIdAndPostId(picId,pid);
-    if (postPicture == null){
-      throw new NotFoundException(notFoundByIdMessageException("Post picture",picId));
+    com.blogify.blogapi.repository.model.PostPicture postPicture =
+        repository.findByIdAndPostId(picId, pid);
+    if (postPicture == null) {
+      throw new NotFoundException(notFoundByIdMessageException("Post picture", picId));
     }
     return getPictureWithBucketKey(postPicture);
   }
 
   public List<PostPicture> getAllPictures(String pid) {
-    List<com.blogify.blogapi.repository.model.PostPicture> postPictures = repository.findAllByPostId(pid);
+    List<com.blogify.blogapi.repository.model.PostPicture> postPictures =
+        repository.findAllByPostId(pid);
     return postPictures.stream().map(this::getPictureWithBucketKey).toList();
   }
-  private PostPicture getPictureWithBucketKey(com.blogify.blogapi.repository.model.PostPicture postPicture) {
+
+  private PostPicture getPictureWithBucketKey(
+      com.blogify.blogapi.repository.model.PostPicture postPicture) {
     PostPicture picture = new PostPicture();
     picture.setId(postPicture.getId());
     picture.setPostId(postPicture.getPost().getId());
-    picture.setUrl(String.valueOf(bucketComponent.presign(postPicture.getBucketKey(), FileConstant.URL_DURATION)));
+    picture.setUrl(
+        String.valueOf(
+            bucketComponent.presign(postPicture.getBucketKey(), FileConstant.URL_DURATION)));
     picture.setPlaceholder(postPicture.getId());
     return picture;
   }
-
 }

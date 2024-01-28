@@ -13,17 +13,15 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "disc_type",length = 4)
+@DiscriminatorColumn(name = "disc_type", length = 4)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Picture {
 
-  @Id
-  private String id;
+  @Id private String id;
 
   private String bucketKey;
 
-  @CreationTimestamp
-  private Instant creationDatetime;
+  @CreationTimestamp private Instant creationDatetime;
 }

@@ -29,19 +29,16 @@ public class PostFileController {
   }
 
   @GetMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture getPostPictureById(
-      @PathVariable String pid,
-      @PathVariable String picId
+  public PostPicture getPostPictureById(@PathVariable String pid, @PathVariable String picId
       // TODO: handle missing params
       ) {
     return service.getPictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures")
-  public List<PostPicture> getAllPostPictureById(
-      @PathVariable String pid
+  public List<PostPicture> getAllPostPictureById(@PathVariable String pid
       // TODO: handle missing params
-  ) {
+      ) {
     return service.getAllPictures(pid);
   }
 }

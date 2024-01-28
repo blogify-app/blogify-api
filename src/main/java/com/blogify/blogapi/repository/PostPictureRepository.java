@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostPictureRepository extends JpaRepository<PostPicture, String> {
   List<PostPicture> findAllByPostId(String postId);
+
   PostPicture findByIdAndPostId(String id, String postId);
 }
