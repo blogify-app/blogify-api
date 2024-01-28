@@ -1,15 +1,13 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.endpoint.mapper.UserMapper;
-import com.blogify.blogapi.endpoint.rest.model.UserPicture;
-import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
-import com.blogify.blogapi.service.UserFileService;
+import com.blogify.blogapi.endpoint.rest.model.PostPicture;
+import com.blogify.blogapi.service.PostFileService;
 import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,24 +16,32 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class PostFileController {
 
-  private final UserFileService service;
-  private final UserMapper userMapper;
+  private final PostFileService service;
 
-  @PutMapping(value = "/users/{uid}/pictures")
-  public UserPicture putUserPicture(
-      @PathVariable String uid,
+  @PostMapping(value = "/posts/{pid}/pictures/{picId}")
+  public PostPicture uploadPostPicture(
+      @PathVariable String pid,
+      @PathVariable String picId,
       // TODO: handle missing params
-      @RequestParam(value = "type", required = true) UserPictureType type,
       @RequestPart(value = "file", required = true) MultipartFile file)
       throws IOException {
-    return service.uploadUserPicture(uid, type, file);
+    return service.uploadPicture(pid, picId, file);
   }
 
-  @GetMapping(value = "/users/{uid}/pictures")
-  public UserPicture getUserPicture(
-      @PathVariable String uid,
+  @GetMapping(value = "/posts/{pid}/pictures/{picId}")
+  public PostPicture getPostPictureById(
+      @PathVariable String pid,
+      @PathVariable String picId
       // TODO: handle missing params
-      @RequestParam(value = "type", required = true) UserPictureType type) {
-    return service.getUserPicture(uid, type);
+      ) {
+    return service.getPicture(pid, picId);
+  }
+
+  @GetMapping(value = "/posts/{pid}/pictures")
+  public List<PostPicture> getAllPostPictureById(
+      @PathVariable String pid
+      // TODO: handle missing params
+  ) {
+    return service.getAllPictures(pid);
   }
 }
