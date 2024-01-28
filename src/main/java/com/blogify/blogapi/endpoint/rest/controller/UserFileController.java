@@ -35,8 +35,7 @@ public class UserFileController {
   public UserPicture getUserPicture(
       @PathVariable String uid,
       // TODO: handle missing params
-      @RequestParam(value = "type", required = true) UserPictureType type)
-      throws IOException {
+      @RequestParam(value = "type", required = true) UserPictureType type) {
     return service.getUserPicture(uid, type);
   }
 }
