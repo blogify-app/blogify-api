@@ -21,8 +21,8 @@ public class PostFileController {
 
   @PostMapping(value = "/posts/{pid}/pictures/{picId}")
   public PostPicture uploadPostPicture(
-      @PathVariable String pid,
-      @PathVariable String picId,
+      @PathVariable("pid") String pid,
+      @PathVariable("picId") String picId,
       // TODO: handle missing params
       @RequestPart(value = "file", required = true) MultipartFile file)
       throws IOException {
@@ -30,19 +30,19 @@ public class PostFileController {
   }
 
   @DeleteMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture deletePostPictureById(@PathVariable String pid, @PathVariable String picId
+  public PostPicture deletePostPictureById(@PathVariable("pid") String pid, @PathVariable("picId") String picId
       ) {
     return service.deletePictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture getPostPictureById(@PathVariable String pid, @PathVariable String picId
+  public PostPicture getPostPictureById(@PathVariable("pid") String pid, @PathVariable("picId") String picId
   ) {
     return service.getPictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures")
-  public List<PostPicture> getAllPostPictureById(@PathVariable String pid
+  public List<PostPicture> getAllPostPictureById(@PathVariable("pid") String pid
       ) {
     return service.getAllPictures(pid);
   }
