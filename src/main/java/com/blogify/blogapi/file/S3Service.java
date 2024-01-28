@@ -17,32 +17,25 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RequiredArgsConstructor
 public class S3Service {
 
-
   @Value("${aws.s3.bucket}")
   private String bucketName;
 
   private final S3Client s3Client;
 
-  public String uploadObjectToS3Bucket(String key, byte[] file){
-    PutObjectRequest objectRequest = PutObjectRequest.builder()
-        .bucket(bucketName)
-        .key(key)
-        .build();
+  public String uploadObjectToS3Bucket(String key, byte[] file) {
+    PutObjectRequest objectRequest = PutObjectRequest.builder().bucket(bucketName).key(key).build();
     try {
       s3Client.putObject(objectRequest, RequestBody.fromBytes(file));
       return key;
     } catch (AwsServiceException | SdkClientException e) {
-      throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION,e.getMessage());
+      throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
     }
   }
 
-  public byte[] getObjectFromS3Bucket(String key){
-    GetObjectRequest objectRequest = GetObjectRequest.builder()
-        .bucket(bucketName)
-        .key(key).build();
+  public byte[] getObjectFromS3Bucket(String key) {
+    GetObjectRequest objectRequest = GetObjectRequest.builder().bucket(bucketName).key(key).build();
     try {
       ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(objectRequest);
-
 
       return objectBytes.asByteArray();
     } catch (AwsServiceException | SdkClientException e) {
@@ -50,10 +43,10 @@ public class S3Service {
       if (e instanceof AwsServiceException awsException) {
         statusCode = awsException.statusCode();
       }
-      if (400<=statusCode && statusCode<500){
+      if (400 <= statusCode && statusCode < 500) {
         throw new ApiException(ApiException.ExceptionType.CLIENT_EXCEPTION, e.getMessage());
-      } else{
-        throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION,e.getMessage());
+      } else {
+        throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
       }
     }
   }
