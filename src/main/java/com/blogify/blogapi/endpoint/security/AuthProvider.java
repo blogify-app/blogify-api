@@ -20,6 +20,9 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   private static Principal getPrincipal() {
     SecurityContext context = SecurityContextHolder.getContext();
     Object principal = context.getAuthentication().getPrincipal();
+    System.out.println(
+        "-------------------------------------------------------------------------------------------------");
+    System.out.println(principal);
     return ((Principal) principal);
   }
 

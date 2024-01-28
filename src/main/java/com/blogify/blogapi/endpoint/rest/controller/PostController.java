@@ -14,6 +14,7 @@ import com.blogify.blogapi.service.PostService;
 import com.blogify.blogapi.service.UserService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,13 @@ public class PostController {
         .toList();
   }
 
+  @GetMapping("/posts/{postId}")
+  public Post getPostById(@PathVariable String postId) {
+    com.blogify.blogapi.repository.model.Post post = postService.getBYId(postId);
+    ReactionStat reactionStat = postReactionService.getReactionStat(postId);
+    return postMapper.toRest(post, reactionStat);
+  }
+
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
     User author = userService.findById(post.getAuthorId());
@@ -60,5 +68,13 @@ public class PostController {
     User user = post.getUser();
     return reactionMapper.toRest(
         postReactionService.reactAPost(post, reactionMapper.toDomain(type), user));
+  }
+
+  @DeleteMapping("/posts/{postId}")
+  public Post deletePostById(@PathVariable String postId) {
+    Post post =
+        postMapper.toRest(postService.getBYId(postId), postReactionService.getReactionStat(postId));
+    postService.deletePostById(postId);
+    return post;
   }
 }
