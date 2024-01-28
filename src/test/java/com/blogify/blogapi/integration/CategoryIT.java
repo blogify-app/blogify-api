@@ -1,5 +1,14 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import com.blogify.blogapi.endpoint.rest.api.CategoryApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
@@ -14,15 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
-
-import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
-import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
-import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
-import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
-import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
