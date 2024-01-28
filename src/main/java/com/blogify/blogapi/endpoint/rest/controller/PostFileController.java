@@ -34,7 +34,7 @@ public class PostFileController {
       @PathVariable String picId
       // TODO: handle missing params
       ) {
-    return service.getPicture(pid, picId);
+    return service.getPictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures")

@@ -39,7 +39,7 @@ public class PostFileService {
     return getPictureWithBucketKey(postPicture);
   }
 
-  public PostPicture getPicture(String pid, String picId) {
+  public PostPicture getPictureById(String pid, String picId) {
     com.blogify.blogapi.repository.model.PostPicture postPicture = repository.findByIdAndPostId(picId,pid);
     if (postPicture == null){
       throw new NotFoundException(notFoundByIdMessageException("Post picture",picId));
