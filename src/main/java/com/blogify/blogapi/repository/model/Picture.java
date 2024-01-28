@@ -25,5 +25,5 @@ public class Picture {
   private String bucketKey;
 
   @CreationTimestamp
-  private Instant createDatetime;
+  private Instant creationDatetime;
 }
