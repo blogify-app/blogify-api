@@ -2,6 +2,7 @@ package com.blogify.blogapi.service;
 
 import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
 
+import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
 import com.blogify.blogapi.file.BucketComponent;
 import com.blogify.blogapi.file.S3Service;
@@ -9,7 +10,6 @@ import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.PostPictureRepository;
 import com.blogify.blogapi.repository.model.Post;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -55,7 +55,7 @@ public class PostFileService {
     PostPicture picture = new PostPicture();
     picture.setId(postPicture.getId());
     picture.setPostId(postPicture.getPost().getId());
-    picture.setUrl(String.valueOf(bucketComponent.presign(postPicture.getBucketKey(), Duration.ofMinutes(2))));
+    picture.setUrl(String.valueOf(bucketComponent.presign(postPicture.getBucketKey(), FileConstant.URL_DURATION)));
     picture.setPlaceholder(postPicture.getId());
     return picture;
   }
