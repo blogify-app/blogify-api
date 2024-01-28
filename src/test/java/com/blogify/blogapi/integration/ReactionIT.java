@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -97,6 +98,7 @@ public class ReactionIT {
   }
 
   @Test
+  @DirtiesContext
   void client_recto_comment_ok() throws ApiException {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);

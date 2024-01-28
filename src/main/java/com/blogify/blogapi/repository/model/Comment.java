@@ -19,6 +19,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "\"comment\"")
@@ -26,6 +28,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @ToString
 @Data
 @Builder
+@SQLDelete(sql = "UPDATE Comment SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment implements Serializable {
@@ -51,4 +55,6 @@ public class Comment implements Serializable {
 
   @Enumerated(EnumType.STRING)
   private CommentStatus status;
+
+  private boolean deleted = Boolean.FALSE;
 }
