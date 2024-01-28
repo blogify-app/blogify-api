@@ -5,6 +5,7 @@ import com.blogify.blogapi.service.PostFileService;
 import java.io.IOException;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +29,15 @@ public class PostFileController {
     return service.uploadPicture(pid, picId, file);
   }
 
+  @DeleteMapping(value = "/posts/{pid}/pictures/{picId}")
+  public PostPicture deletePostPictureById(@PathVariable String pid, @PathVariable String picId
+      ) {
+    return service.deletePictureById(pid, picId);
+  }
+
   @GetMapping(value = "/posts/{pid}/pictures/{picId}")
   public PostPicture getPostPictureById(@PathVariable String pid, @PathVariable String picId
-      ) {
+  ) {
     return service.getPictureById(pid, picId);
   }
 
