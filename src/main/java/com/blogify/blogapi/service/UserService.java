@@ -28,12 +28,6 @@ public class UserService {
         .orElseThrow(() -> new NotFoundException("User.email=" + email + " is not found."));
   }
 
-  public User getBYId(String id) {
-    return repository
-        .findById(id)
-        .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
-  }
-
   @Transactional
   public User save(User toSave) {
     return repository.save(toSave);
