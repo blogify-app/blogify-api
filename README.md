@@ -1,4 +1,5 @@
 # BLOGIFY API 📑✨
+
 Welcome to Blogify, where words come to life and stories find their digital home! __Blogify__ is more than just a blog app; it's a vibrant community of passionate writers, storytellers, and readers coming together to share, explore, and engage in the art of blogging.
 
 ## Overview
@@ -20,81 +21,99 @@ The Definitions Of Done (DoD) for our project are aligned with the professor's r
    - Develop a recommendation system to enhance the user experience.
 
 ### About the App
+
 Uses the [Java](https://phoenixnap.com/kb/install-java-windows) [Spring Boot](https://spring.io/projects/spring-boot/) framework and [Postgresql](https://www.postgresql.org/) with [POJA](https://github.com/hei-school/poja-cli).
 
 #### How to use the app ?
-The principle of __POJA__ is that it deploys directly the application So you can check in the Github Actions and search for the deployed app link.
 
-#### Requirements:
+The principle of __POJA__ is that it deploys the application directly. So you can check in the GitHub Actions and search for the deployed app link.
 
-##### JDK 17 installation
-Depending on the OS:
+#### Requirements
 
-[Download and install](https://docs.oracle.com/en/java/javase/17/install/overview-jdk-installation.html) (Java) JDK 17
+##### JDK installation
 
-##### JAVA_HOME configuration
+- Depending on the OS, [download and install](https://docs.oracle.com/en/java/javase/17/install/overview-jdk-installation.html) (Java) JDK 17
 
-##### Database creation on PostgreSQL {database}:
+- Configure JAVA_HOME
+
+##### PostgreSQL database creation
+
 ```shell
-    CREATE DATABASE DB_NAME;
+    # In postgreSQL CLI, run:
+    CREATE DATABASE <DB_NAME>;
+    # Then update the env variable "spring_datasource_url" value to : jdbc:postgresql://localhost:5432/{DB_NAME}
 ```
 
-##### List of environment variables:
-   - aws_eventBridge_bus
-   - aws_region
-   - aws_s3_bucket
-   - aws_ses_source
-   - aws_sqs_queue_url
-   - firebase_private_key
-   - spring_datasource_password
-   - spring_datasource_url
-   - spring_datasource_username
+##### List of environment variables
 
-#### Linter and formatter:
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- aws_eventBridge_bus
+- aws_region
+- aws_s3_bucket
+- aws_ses_source
+- aws_sqs_queue_url
+- firebase_private_key
+- spring_datasource_password
+- spring_datasource_url
+- spring_datasource_username
+
+#### Linter and formatter
 
 ##### Coding standard
-The coding standard used is google java style guide
+
+The coding standard used is Google java style guide
 
 ##### Linter
-The Linter used is checkstyle, configured with gradle.
 
-##### Formatter:
-The formatter used is google-java-format, executed with the script format.sh as follows:
+The linter used is checkstyle, configured with gradle.
+
+##### Formatter
+
+The formatter used is Google-java-format, executed with the script format.sh as follows:
+
 ```shell
     ./format.sh
 ```
 
-#### Usage:
-   - To clean previous builds:
+#### Usage
+
+- To clean previous builds:
+
 ```shell
     ./gradlew clean
 ```
 
-   - To build:
+- To build:
+
 ```shell
     ./gradlew assemble
 ```
 
-   - To run tests:
+- To run tests:
+
 ```shell
     ./gradlew test
 ```
 
-   - To run the application:
+- To run the application:
+
 ```shell
     # Set Environment variables on CLI and then run:
     ./gradlew bootRun
 ```
 
 ### Upcoming Features
-- Recommandation system AI
+
+- Recommendation system AI
 - Blogify posts list
-- A more structured and well designed Blogify
-   
+- A more structured and well-designed Blogify
+
 ## Known Issues
 
 Help us to find bugs !
 Put it in the issues :
+
 - [https://github.com/blogify-app/blogify-api/issues](https://github.com/blogify-app/blogify-api/issues)
 
 ## How to Contribute
