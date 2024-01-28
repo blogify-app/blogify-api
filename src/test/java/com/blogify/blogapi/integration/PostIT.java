@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -53,7 +54,7 @@ public class PostIT {
         api.getPosts(1, 10, CATEGORY2_LABEL + "," + CATEGORY1_LABEL);
     List<Post> allPostsWithCategory2 = api.getPosts(1, 10, CATEGORY2_LABEL);
 
-    assertEquals(post1(),actualPost);
+    assertEquals(post1(), actualPost);
     assertEquals(2, allPosts.size());
     assertTrue(allPosts.contains(post1()));
     assertTrue(allPosts.contains(post2()));
@@ -67,6 +68,28 @@ public class PostIT {
   }
 
   @Test
+  @DirtiesContext
+  void client_delete_ok() throws ApiException {
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    PostingApi api = new PostingApi(client1Client);
+
+    List<Post> allPosts = api.getPosts(1, 10, null);
+
+    api.deletePostById(POST1_ID);
+
+    List<Post> allPostsAfterDelete = api.getPosts(1, 10, null);
+
+    assertEquals(2, allPosts.size());
+    assertTrue(allPosts.contains(post1()));
+    assertTrue(allPosts.contains(post2()));
+
+    assertEquals(1, allPostsAfterDelete.size());
+    assertFalse(allPostsAfterDelete.contains(post1()));
+    assertTrue(allPostsAfterDelete.contains(post2()));
+  }
+
+  @Test
+  @DirtiesContext
   void client_write_ok() throws ApiException {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1Client);

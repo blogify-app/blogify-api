@@ -45,8 +45,10 @@ public class PostController {
   }
 
   @GetMapping("/posts/{postId}")
-  public Post getPostById(@PathVariable String postId){
-    return postMapper.toRest(postService.getBYId(postId),postReactionService.getReactionStat(postId));
+  public Post getPostById(@PathVariable String postId) {
+    com.blogify.blogapi.repository.model.Post post = postService.getBYId(postId);
+    ReactionStat reactionStat = postReactionService.getReactionStat(postId);
+    return postMapper.toRest(post, reactionStat);
   }
 
   @PutMapping("/posts/{postId}")
@@ -67,8 +69,12 @@ public class PostController {
     return reactionMapper.toRest(
         postReactionService.reactAPost(post, reactionMapper.toDomain(type), user));
   }
+
   @DeleteMapping("/posts/{postId}")
-  public void deletePostById(@PathVariable String postId){
+  public Post deletePostById(@PathVariable String postId) {
+    Post post =
+        postMapper.toRest(postService.getBYId(postId), postReactionService.getReactionStat(postId));
     postService.deletePostById(postId);
+    return post;
   }
 }
