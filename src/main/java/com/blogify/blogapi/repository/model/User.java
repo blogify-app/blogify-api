@@ -25,6 +25,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Data
 @EqualsAndHashCode
@@ -33,6 +35,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE User SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "\"user\"")
 public class User implements Serializable {
   @Id private String id;
@@ -67,4 +71,6 @@ public class User implements Serializable {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
   private List<UserCategory> userCategories;
+
+  private boolean deleted = Boolean.FALSE;
 }
