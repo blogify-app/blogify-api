@@ -29,7 +29,8 @@ public class Reaction {
   @JoinColumn(name = "user_id")
   private User user;
 
-  @CreationTimestamp private Instant creationDatetime;
+  @CreationTimestamp
+  private Instant creationDatetime;
 
   @Enumerated(EnumType.STRING)
   private ReactionType type;

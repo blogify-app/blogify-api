@@ -16,14 +16,27 @@ import org.springframework.stereotype.Service;
 public class CommentService {
   private final CommentRepository commentRepository;
 
-  public Comment getBYId(String id) {
+  public Comment getBYId(String postId, String commentId) {
     return commentRepository
-        .findById(id)
-        .orElseThrow(() -> new NotFoundException("Comment with id " + id + " not found"));
+        .findByIdAndPostId(commentId, postId)
+        .orElseThrow(() -> new NotFoundException("Comment with postId: " + postId + " and commentId: " + commentId + " not found"));
   }
 
   public List<Comment> findByPostId(String postId, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return commentRepository.findByPostIdOrderByCreationDatetimeDesc(postId, pageable);
+  }
+
+  public Comment crupdateById(String postId, String commentId, Comment updatedComment) {
+    Comment existingComment = getBYId(commentId, postId);
+    existingComment.setContent(updatedComment.getContent());
+    return commentRepository.save(existingComment);
+  }
+
+  public Comment deleteById(String postId, String commentId) {
+      Comment deleteComment = getBYId(postId, commentId);
+      commentRepository.deleteByIdAndPostId(commentId, postId);
+
+      return deleteComment;
   }
 }
