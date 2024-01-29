@@ -1,1 +1,1 @@
-FIREBASE_PRIVATE_KEY="dummy"
+FIREBASE_PRIVATE_KEY: !Sub '{{resolve:ssm:/blogify-api/${Env}/firebase/key}}'
