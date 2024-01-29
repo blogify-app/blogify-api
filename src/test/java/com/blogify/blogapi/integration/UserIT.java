@@ -31,12 +31,26 @@ import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
+import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
 @ContextConfiguration(initializers = UserIT.ContextInitializer.class)
 public class UserIT {
 
-  @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean
+  private FirebaseService firebaseServiceMock;
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
@@ -67,6 +81,27 @@ public class UserIT {
 
     assertEquals(1, usersWithFilterName2.size());
     assertTrue(usersWithFilterName2.contains(client2()));
+  }
+
+  @Test
+  void read_user_by_id_ok() throws ApiException {
+    ApiClient client = anApiClient(CLIENT1_TOKEN);
+    UserApi api = new UserApi(client);
+
+    User actual = api.getUserById(client1().getId());
+
+    assertEquals(client1(), actual);
+  }
+
+  @Test
+  void read_user_by_id_ko() {
+    ApiClient client = anApiClient(CLIENT1_TOKEN);
+    UserApi api = new UserApi(client);
+    String userId = randomUUID().toString();
+
+    assertThrowsApiException(
+        "{\"type\":\"404 NOT_FOUND\",\"message\":\"User with id "+userId+" not found\"}",
+        () -> api.getUserById(userId));
   }
 
   @Test
