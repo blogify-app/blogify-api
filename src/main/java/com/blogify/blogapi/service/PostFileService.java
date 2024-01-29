@@ -22,7 +22,6 @@ public class PostFileService {
   private final PostService postService;
   private final PostPictureRepository repository;
   private final S3Service s3Service;
-  private final BucketComponent bucketComponent;
   private final String RESOURCE_NAME = "Post picture";
 
   @Transactional
@@ -77,7 +76,7 @@ public class PostFileService {
     picture.setPostId(postPicture.getPost().getId());
     picture.setUrl(
         String.valueOf(
-            bucketComponent.presign(postPicture.getBucketKey(), FileConstant.URL_DURATION)));
+            s3Service.generatePresignedUrl(postPicture.getBucketKey(), FileConstant.URL_DURATION)));
     picture.setPlaceholder(postPicture.getId());
     return picture;
   }

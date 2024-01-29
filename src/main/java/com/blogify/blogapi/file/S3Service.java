@@ -12,15 +12,24 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.net.URL;
+import java.time.Duration;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class S3Service {
+  
+  private final BucketComponent bucketComponent;
 
   @Value("${aws.s3.bucket}")
   private String bucketName;
 
   private final S3Client s3Client;
+
+  public URL generatePresignedUrl(String bucketKey, Duration urlDuration) {
+    return bucketComponent.presign(bucketKey,urlDuration);
+  }
 
   public String uploadObjectToS3Bucket(String key, byte[] file) {
     PutObjectRequest objectRequest = PutObjectRequest.builder().bucket(bucketName).key(key).build();
@@ -67,4 +76,5 @@ public class S3Service {
       throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
     }
   }
+
 }

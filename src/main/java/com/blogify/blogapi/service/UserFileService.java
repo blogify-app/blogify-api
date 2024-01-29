@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserFileService {
   private final UserService userService;
   private final S3Service s3Service;
-  private final BucketComponent bucketComponent;
 
   public UserPicture uploadUserPicture(String uid, UserPictureType type, MultipartFile file)
       throws IOException {
@@ -32,7 +31,7 @@ public class UserFileService {
 
   private UserPicture getUserPictureWithBucketKey(
       String uid, UserPictureType type, String bucketKey) {
-    String fileURL = String.valueOf(bucketComponent.presign(bucketKey, FileConstant.URL_DURATION));
+    String fileURL = String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
     UserPicture userPicture = new UserPicture();
     userPicture.setUserId(uid);
     userPicture.setType(type);
