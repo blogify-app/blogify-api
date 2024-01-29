@@ -1,6 +1,10 @@
 package com.blogify.blogapi.endpoint.security;
 
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.UserService;
@@ -10,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -87,6 +90,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 new NegatedRequestMatcher(
                     new OrRequestMatcher(
                         new AntPathRequestMatcher("/ping"),
+                        new AntPathRequestMatcher("/health/*"),
                         new AntPathRequestMatcher("/signup"),
                         new AntPathRequestMatcher("/users"),
                         new AntPathRequestMatcher("/categories"),
@@ -96,35 +100,53 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/posts/*/reaction"),
                         new AntPathRequestMatcher("/**", OPTIONS.toString()),
                         new AntPathRequestMatcher("/users/*"),
+                        new AntPathRequestMatcher("/posts/*/pictures"),
+                        new AntPathRequestMatcher("/posts/*/pictures/*"),
                         new AntPathRequestMatcher("/posts/*/comments/*/reaction"),
                         new AntPathRequestMatcher("/posts/*/comments")))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
         .and()
         .authorizeRequests()
-        .antMatchers(HttpMethod.GET, "/ping")
+        .antMatchers(GET, "/health/*")
         .permitAll()
-        .antMatchers(HttpMethod.GET, "/whoami")
+        .antMatchers(GET, "/ping")
+        .permitAll()
+        .antMatchers(GET, "/whoami")
         .authenticated()
-        .antMatchers(HttpMethod.POST, "/signup")
+        .antMatchers(POST, "/signup")
         .permitAll()
-        .antMatchers(HttpMethod.GET, "/users")
+        .antMatchers(GET, "/users")
         .permitAll()
-        .antMatchers(HttpMethod.GET, "/users/*")
+        .antMatchers(GET, "/users/*")
         .permitAll()
-        .antMatchers(HttpMethod.PUT, "/users/*")
+        .antMatchers(GET, "/users/*/pictures")
         .permitAll()
-        .antMatchers(HttpMethod.GET, "/categories")
+        .antMatchers(PUT, "/users/*/pictures")
         .permitAll()
-        .antMatchers(HttpMethod.GET, "/posts")
+        .antMatchers(GET, "/categories")
         .permitAll()
-        .antMatchers(HttpMethod.PUT, "/posts/*")
+        .antMatchers(GET, "/posts")
         .permitAll()
-        .antMatchers(HttpMethod.POST, "/posts/*/reaction")
+        .antMatchers(PUT, "/posts/*")
         .permitAll()
-        .antMatchers(HttpMethod.POST, "/posts/*/comments/*/reaction")
+        .antMatchers(GET, "/posts/*")
         .permitAll()
-        .antMatchers(HttpMethod.GET, "/posts/*/comments")
+        .antMatchers(DELETE, "/posts/*")
+        .permitAll()
+        .antMatchers(POST, "/posts/*/reaction")
+        .permitAll()
+        .antMatchers(POST, "/posts/*/comments/*/reaction")
+        .permitAll()
+        .antMatchers(GET, "/posts/*/comments")
+        .permitAll()
+        .antMatchers(GET, "/posts/*/pictures")
+        .permitAll()
+        .antMatchers(GET, "/posts/*/pictures/*")
+        .permitAll()
+        .antMatchers(POST, "/posts/*/pictures/*")
+        .permitAll()
+        .antMatchers(DELETE, "/posts/*/pictures/*")
         .permitAll()
         .anyRequest()
         .denyAll()

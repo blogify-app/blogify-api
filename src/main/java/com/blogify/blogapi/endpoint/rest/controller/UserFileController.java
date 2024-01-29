@@ -1,6 +1,5 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
-import com.blogify.blogapi.endpoint.mapper.UserMapper;
 import com.blogify.blogapi.endpoint.rest.model.UserPicture;
 import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.service.UserFileService;
@@ -19,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserFileController {
 
   private final UserFileService service;
-  private final UserMapper userMapper;
 
   @PutMapping(value = "/users/{uid}/pictures")
   public UserPicture putUserPicture(

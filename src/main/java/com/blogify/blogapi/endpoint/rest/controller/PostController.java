@@ -46,7 +46,7 @@ public class PostController {
 
   @GetMapping("/posts/{postId}")
   public Post getPostById(@PathVariable String postId) {
-    com.blogify.blogapi.repository.model.Post post = postService.getBYId(postId);
+    com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
     return postMapper.toRest(post, reactionStat);
   }
@@ -63,7 +63,7 @@ public class PostController {
   public Reaction reactToPostById(
       @PathVariable String postId,
       @RequestParam(value = "type", required = false) ReactionType type) {
-    com.blogify.blogapi.repository.model.Post post = postService.getBYId(postId);
+    com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
     // todo: change to user from token when it will work
     User user = post.getUser();
     return reactionMapper.toRest(
@@ -73,7 +73,7 @@ public class PostController {
   @DeleteMapping("/posts/{postId}")
   public Post deletePostById(@PathVariable String postId) {
     Post post =
-        postMapper.toRest(postService.getBYId(postId), postReactionService.getReactionStat(postId));
+        postMapper.toRest(postService.getById(postId), postReactionService.getReactionStat(postId));
     postService.deletePostById(postId);
     return post;
   }
