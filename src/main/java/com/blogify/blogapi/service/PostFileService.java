@@ -28,7 +28,7 @@ public class PostFileService {
   @Transactional
   public PostPicture uploadPicture(String pid, String picId, MultipartFile file)
       throws IOException {
-    Post post = postService.getBYId(pid);
+    Post post = postService.getById(pid);
     String bucketKey = picId + file.getContentType();
     s3Service.uploadObjectToS3Bucket(bucketKey, file.getBytes());
     com.blogify.blogapi.repository.model.PostPicture postPicture =
@@ -86,5 +86,14 @@ public class PostFileService {
     if (postPicture == null) {
       throw new NotFoundException(notFoundByIdMessageException(resource, id));
     }
+  }
+
+  private String replacePlaceholders(String htmlContent, List<com.blogify.blogapi.repository.model.PostPicture> postPictures) {
+
+    for (com.blogify.blogapi.repository.model.PostPicture picture : postPictures) {
+      String placeholder = "{{"+picture.getId()+"}}";
+      htmlContent = htmlContent.replace(placeholder, picture.getBucketKey());
+    }
+    return htmlContent;
   }
 }
