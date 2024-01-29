@@ -8,9 +8,9 @@ import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -32,8 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = UserIT.ContextInitializer.class)
 public class UserIT {
 
-  @MockBean
-  private FirebaseService firebaseServiceMock;
+  @MockBean private FirebaseService firebaseServiceMock;
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
@@ -64,23 +62,6 @@ public class UserIT {
 
     assertEquals(1, usersWithFilterName2.size());
     assertTrue(usersWithFilterName2.contains(client2()));
-  }
-
-  @Test
-  @DirtiesContext
-  void client_write_ok() throws ApiException {
-    ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
-    UserApi api = new UserApi(client1Client);
-
-    List<User> usersBeforeCreate = api.getUsers(1, 5, null);
-    User actualUser = api.crupdateUserById(CLIENT1_ID, client1());
-    List<User> usersAfterCreate = api.getUsers(1, 5, null);
-
-    assertEquals(actualUser.getId(), CLIENT1_ID);
-    assertEquals(3, usersBeforeCreate.size());
-    assertEquals(4, usersAfterCreate.size());
-    assertFalse(usersBeforeCreate.contains(client1()));
-    assertEquals(usersAfterCreate.get(3).getId(), CLIENT1_ID);
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

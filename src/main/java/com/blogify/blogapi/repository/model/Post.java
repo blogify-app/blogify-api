@@ -1,7 +1,6 @@
 package com.blogify.blogapi.repository.model;
 
 import com.blogify.blogapi.model.enums.PostStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
@@ -20,13 +19,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE Post SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "post")
 public class Post implements Serializable {
   @Id private String id;
@@ -51,6 +54,7 @@ public class Post implements Serializable {
   private List<PostCategory> postCategories;
 
   @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<PostReaction> postReactions;
+
+  private boolean deleted = Boolean.FALSE;
 }

@@ -3,7 +3,6 @@ package com.blogify.blogapi.repository.model;
 import com.blogify.blogapi.model.enums.Role;
 import com.blogify.blogapi.model.enums.Sex;
 import com.blogify.blogapi.model.enums.UserStatus;
-import com.blogify.blogapi.repository.types.PostgresEnumType;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,17 +25,18 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Data
 @EqualsAndHashCode
-@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 @ToString
 @Entity
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE User SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "\"user\"")
 public class User implements Serializable {
   @Id private String id;
@@ -50,11 +50,9 @@ public class User implements Serializable {
   private LocalDate birthdate;
   private String firebaseId;
 
-  @Type(type = "pgsql_enum")
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @Type(type = "pgsql_enum")
   @Enumerated(EnumType.STRING)
   private Sex sex;
 
@@ -67,11 +65,12 @@ public class User implements Serializable {
   private String username;
   private String about;
 
-  @Type(type = "pgsql_enum")
   @Enumerated(EnumType.STRING)
   private UserStatus status;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
   private List<UserCategory> userCategories;
+
+  private boolean deleted = Boolean.FALSE;
 }
