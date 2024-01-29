@@ -90,6 +90,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 new NegatedRequestMatcher(
                     new OrRequestMatcher(
                         new AntPathRequestMatcher("/ping"),
+                        new AntPathRequestMatcher("/health/*"),
                         new AntPathRequestMatcher("/signup"),
                         new AntPathRequestMatcher("/users"),
                         new AntPathRequestMatcher("/users/*"),
@@ -108,6 +109,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .anonymous()
         .and()
         .authorizeRequests()
+        .antMatchers(GET, "/health/*")
+        .permitAll()
         .antMatchers(GET, "/ping")
         .permitAll()
         .antMatchers(GET, "/whoami")
