@@ -41,10 +41,10 @@ public class UserController {
   @PutMapping(value = "/users/{id}")
   public User crupdateUser(
       @PathVariable (name = "id") String userId,
-      @RequestBody SignUp toUpdate
+      @RequestBody User toUpdate
       ) {
     return userMapper.toRest(
-        userService.crupdateUser(userMapper.toDomain(toUpdate), userId)
+        userService.updateUser(userMapper.toDomain(toUpdate), userId)
     );
   }
 }

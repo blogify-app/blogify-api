@@ -42,9 +42,11 @@ public class UserService {
   }
 
   @Transactional
-  public User crupdateUser(User user, String userId) {
+  public User updateUser(User user, String userId) {
+    User userFromDomain = findById(userId);
     userValidator.accept(user);
-    user.setId(userId);
+    user.setCreationDatetime(userFromDomain.getCreationDatetime());
+    user.setRole(userFromDomain.getRole());
     return repository.save(user);
   }
 

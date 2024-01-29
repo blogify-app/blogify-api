@@ -1,10 +1,8 @@
 package com.blogify.blogapi.integration;
 
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT3_ID;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client3;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
@@ -75,14 +73,14 @@ public class UserIT {
     UserApi api = new UserApi(client1Client);
 
     List<User> usersBeforeCreate = api.getUsers(1, 5, null);
-    User actualUser = api.crupdateUserById(CLIENT3_ID, client3());
+    User actualUser = api.crupdateUserById(CLIENT1_ID, client1());
     List<User> usersAfterCreate = api.getUsers(1, 5, null);
 
-    assertEquals(actualUser.getId(), CLIENT3_ID);
+    assertEquals(actualUser.getId(), CLIENT1_ID);
     assertEquals(3, usersBeforeCreate.size());
     assertEquals(4, usersAfterCreate.size());
-    assertFalse(usersBeforeCreate.contains(client3()));
-    assertEquals(usersAfterCreate.get(3).getId(),CLIENT3_ID);
+    assertFalse(usersBeforeCreate.contains(client1()));
+    assertEquals(usersAfterCreate.get(3).getId(), CLIENT1_ID);
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
