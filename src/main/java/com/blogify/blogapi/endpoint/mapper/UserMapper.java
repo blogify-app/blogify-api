@@ -52,6 +52,24 @@ public class UserMapper {
         .build();
   }
 
+  public com.blogify.blogapi.repository.model.User toDomain(User rest) {
+    return com.blogify.blogapi.repository.model.User.builder()
+            .id(rest.getId())
+            .firstname(rest.getFirstName())
+            .lastname(rest.getLastName())
+            .birthdate(rest.getBirthDate())
+            //        .creationDatetime(rest.getEntranceDatetime())
+            .mail(rest.getEmail())
+            .photoUrl(rest.getPhotoUrl())
+            .bio(rest.getBio())
+            .profileBannerUrl(rest.getProfileBannerUrl())
+            .username(rest.getUsername())
+            .about(rest.getAbout())
+            .status(toDomain(rest.getStatus()))
+            .sex(toDomain(rest.getSex()))
+            .build();
+  }
+
   public static Sex convertToRest(com.blogify.blogapi.model.enums.Sex sex) {
     return mapEnum(
         sex,

@@ -6,6 +6,7 @@ import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.CommentRepository;
 import com.blogify.blogapi.repository.model.Comment;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +29,13 @@ public class CommentService {
   }
 
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {
-    Comment existingComment = getBYId(commentId, postId);
-    existingComment.setContent(updatedComment.getContent());
-    return commentRepository.save(existingComment);
+    Optional<Comment> existingComment = commentRepository.findByIdAndPostId(commentId, postId);
+    if (existingComment.isPresent()) {
+      Comment comment = existingComment.get();
+      updatedComment.setCommentReactions(comment.getCommentReactions());
+      updatedComment.setCreationDatetime(comment.getCreationDatetime());
+    }
+    return commentRepository.save(updatedComment);
   }
 
   public Comment deleteById(String postId, String commentId) {
