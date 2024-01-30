@@ -1,5 +1,7 @@
 package com.blogify.blogapi.service;
 
+import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
+
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
@@ -19,11 +21,12 @@ import org.springframework.stereotype.Service;
 public class PostService {
   private final PostRepository postRepository;
   private final PostDao postDao;
+  private final String RESOURCE_NAME = "Post";
 
-  public Post getBYId(String id) {
+  public Post getById(String id) {
     return postRepository
         .findById(id)
-        .orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
+        .orElseThrow(() -> new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME,id)));
   }
 
   public List<Post> findAllByCategory(

@@ -31,6 +31,22 @@ public class PostMapper {
         .categories(domain.getPostCategories().stream().map(categoryMapper::toRest).toList());
   }
 
+
+  public Post toRest(String content,com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
+    return new Post()
+            .id(domain.getId())
+            .authorId(domain.getUser().getId())
+            .thumbnailUrl(domain.getThumbnailUrl())
+            .description(domain.getDescription())
+            .content(content)
+            .title(domain.getTitle())
+            .creationDatetime(domain.getCreationDatetime())
+            .updatedAt(domain.getLastUpdateDatetime())
+            .status(toRest(domain.getStatus()))
+            .reactions(reactionMapper.toRest(reactionStat))
+            .categories(domain.getPostCategories().stream().map(categoryMapper::toRest).toList());
+  }
+
   public com.blogify.blogapi.repository.model.Post toDomain(Post rest, User user) {
     return com.blogify.blogapi.repository.model.Post.builder()
         .id(rest.getId())
