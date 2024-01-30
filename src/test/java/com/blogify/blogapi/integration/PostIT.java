@@ -2,10 +2,17 @@ package com.blogify.blogapi.integration;
 
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_LABEL;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_LABEL;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.*;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.CREATE_POST1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post1;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post2;
+import static com.blogify.blogapi.integration.conf.MockData.PostMockData.postToCreate;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
+import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -65,6 +72,29 @@ public class PostIT {
 
     assertEquals(1, allPostsWithCategory2.size());
     assertTrue(allPostsWithCategory2.contains(post1()));
+  }
+
+  @Test
+  void read_post_by_id_ko() {
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    PostingApi api = new PostingApi(client1Client);
+    String postId = randomUUID().toString();
+
+    assertThrowsApiException(
+        "{\"type\":\"404 NOT_FOUND\",\"message\":\"Resource of type Post identified by "
+            + postId
+            + " not found\"}",
+        () -> api.getPostById(postId));
+  }
+
+  @Test
+  void read_posts_by_user_id() throws ApiException {
+    ApiClient client = apiClient(CLIENT1_TOKEN);
+    PostingApi api = new PostingApi(client);
+
+    List<Post> actuals = api.getPostsByUserId(client1().getId(), 1, 20);
+
+    assertEquals(1, actuals.size());
   }
 
   @Test

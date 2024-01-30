@@ -1,10 +1,14 @@
 package com.blogify.blogapi.integration.conf;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
+import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.Post;
+import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import com.blogify.blogapi.service.firebase.FirebaseUser;
 import java.io.IOException;
@@ -12,6 +16,7 @@ import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.util.List;
 import java.util.Objects;
+import org.junit.jupiter.api.function.Executable;
 
 public class TestUtils {
 
@@ -19,6 +24,7 @@ public class TestUtils {
   public static final String CLIENT1_TOKEN = "client1_token";
 
   public static final String CLIENT2_TOKEN = "client2_token";
+  public static final String CLIENT3_TOKEN = "client3_token";
 
   public static final String MANAGER_TOKEN = "manger1_token";
 
@@ -89,6 +95,23 @@ public class TestUtils {
     client.setRequestInterceptor(
         httpRequestBuilder -> httpRequestBuilder.header("Authorization", "Bearer " + token));
     return client;
+  }
+
+  public static void assertThrowsApiException(String expectedBody, Executable executable) {
+    ApiException apiException = assertThrows(ApiException.class, executable);
+    assertEquals(expectedBody, apiException.getResponseBody());
+  }
+
+  public static void assertThrowsBadRequestException(String expectedBody, Executable executable) {
+    BadRequestException badRequestException = assertThrows(BadRequestException.class, executable);
+    assertEquals(expectedBody, badRequestException.getMessage());
+  }
+
+  public static void assertThrowsForbiddenException(Executable executable) {
+    ApiException apiException = assertThrows(ApiException.class, executable);
+    String responseBody = apiException.getResponseBody();
+    assertEquals(
+        "{" + "\"type\":\"403 FORBIDDEN\"," + "\"message\":\"Access is denied\"}", responseBody);
   }
 
   public static int anAvailableRandomPort() {

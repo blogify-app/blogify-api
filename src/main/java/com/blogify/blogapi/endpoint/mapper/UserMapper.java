@@ -6,6 +6,10 @@ import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
+import com.blogify.blogapi.model.enums.Role;
+import com.blogify.blogapi.repository.model.UserCategory;
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,13 +38,35 @@ public class UserMapper {
         .categories(domain.getUserCategories().stream().map(categoryMapper::toRest).toList());
   }
 
-  public com.blogify.blogapi.repository.model.User toDomain(SignUp rest) {
+  public com.blogify.blogapi.repository.model.User toDomain(
+      SignUp signUp, List<UserCategory> categories) {
+    return com.blogify.blogapi.repository.model.User.builder()
+        .id(signUp.getId())
+        .firstname(signUp.getFirstName())
+        .lastname(signUp.getLastName())
+        .birthdate(signUp.getBirthDate())
+        .lastUpdateDatetime(Instant.now())
+        .mail(signUp.getEmail())
+        .role(Role.CLIENT)
+        .photoUrl(signUp.getPhotoUrl())
+        .bio(signUp.getBio())
+        .profileBannerUrl(signUp.getProfileBannerUrl())
+        .username(signUp.getUsername())
+        .about(signUp.getAbout())
+        .status(toDomain(signUp.getStatus()))
+        .sex(toDomain(signUp.getSex()))
+        .userCategories(categories)
+        .build();
+  }
+
+  public com.blogify.blogapi.repository.model.User toDomain(
+      User rest, List<UserCategory> userCategories) {
     return com.blogify.blogapi.repository.model.User.builder()
         .id(rest.getId())
         .firstname(rest.getFirstName())
         .lastname(rest.getLastName())
         .birthdate(rest.getBirthDate())
-        //        .creationDatetime(rest.getEntranceDatetime())
+        .lastUpdateDatetime(Instant.now())
         .mail(rest.getEmail())
         .photoUrl(rest.getPhotoUrl())
         .bio(rest.getBio())
@@ -49,6 +75,7 @@ public class UserMapper {
         .about(rest.getAbout())
         .status(toDomain(rest.getStatus()))
         .sex(toDomain(rest.getSex()))
+        .userCategories(userCategories)
         .build();
   }
 

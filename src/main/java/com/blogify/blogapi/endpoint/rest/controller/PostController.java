@@ -13,7 +13,9 @@ import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
 import com.blogify.blogapi.service.UserService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 public class PostController {
   private final PostService postService;
   private final PostMapper postMapper;
@@ -44,7 +47,16 @@ public class PostController {
         .toList();
   }
 
-
+  @GetMapping("/users/{uId}/posts")
+  public List<Post> getPostByUserId(
+      @PathVariable("uId") String uId,
+      @RequestParam(value = "page", required = false) PageFromOne page,
+      @RequestParam(value = "pageSize", required = false) BoundedPageSize pageSize) {
+    var posts = postService.getPostsByUserId(uId, page, pageSize);
+    return posts.stream()
+        .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
+        .collect(Collectors.toList());
+  }
 
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {

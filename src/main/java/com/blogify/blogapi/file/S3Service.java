@@ -1,6 +1,8 @@
 package com.blogify.blogapi.file;
 
 import com.blogify.blogapi.model.exception.ApiException;
+import java.net.URL;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +14,11 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.net.URL;
-import java.time.Duration;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class S3Service {
-  
+
   private final BucketComponent bucketComponent;
 
   @Value("${aws.s3.bucket}")
@@ -28,7 +27,7 @@ public class S3Service {
   private final S3Client s3Client;
 
   public URL generatePresignedUrl(String bucketKey, Duration urlDuration) {
-    return bucketComponent.presign(bucketKey,urlDuration);
+    return bucketComponent.presign(bucketKey, urlDuration);
   }
 
   public String uploadObjectToS3Bucket(String key, byte[] file) {
@@ -42,7 +41,8 @@ public class S3Service {
   }
 
   public String deleteS3Object(String key) {
-    DeleteObjectRequest deleteObjectsRequest = DeleteObjectRequest.builder().bucket(bucketName).key(key).build();
+    DeleteObjectRequest deleteObjectsRequest =
+        DeleteObjectRequest.builder().bucket(bucketName).key(key).build();
     try {
       s3Client.deleteObject(deleteObjectsRequest);
       return key;
@@ -64,8 +64,8 @@ public class S3Service {
   }
    */
 
-  private ApiException s3ErrorHandler(Exception e){
-    log.error("S3 error:",e);
+  private ApiException s3ErrorHandler(Exception e) {
+    log.error("S3 error:", e);
     int statusCode = 500;
     if (e instanceof AwsServiceException awsException) {
       statusCode = awsException.statusCode();
@@ -76,5 +76,4 @@ public class S3Service {
       throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
     }
   }
-
 }
