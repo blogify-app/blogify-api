@@ -20,7 +20,7 @@ public class PostMapper {
     return new Post()
         .id(domain.getId())
         .authorId(domain.getUser().getId())
-        .thumbnailUrl(domain.getThumbnailUrl())
+        .thumbnailUrl(domain.getId()+"thumbnail")
         .description(domain.getDescription())
         .content(domain.getContent())
         .title(domain.getTitle())
