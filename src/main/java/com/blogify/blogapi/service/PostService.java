@@ -29,6 +29,13 @@ public class PostService {
         .orElseThrow(() -> new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME, id)));
   }
 
+  public List<Post> getPostsByUserId(String userId, PageFromOne page, BoundedPageSize pageSize) {
+    int pageValue = page != null ? page.getValue() - 1 : 0;
+    int pageSizeValue = pageSize != null ? pageSize.getValue() : 10;
+    Pageable pageable = PageRequest.of(pageValue, pageSizeValue);
+    return postRepository.findByUserId(userId, pageable).stream().toList();
+  }
+
   public List<Post> findAllByCategory(
       String categoryName, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
