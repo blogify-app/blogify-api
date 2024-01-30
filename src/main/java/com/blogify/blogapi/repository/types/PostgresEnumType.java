@@ -9,21 +9,14 @@ import org.hibernate.type.EnumType;
 
 public class PostgresEnumType extends EnumType {
 
-    @Override
-    public void nullSafeSet(
-            PreparedStatement st,
-            Object value,
-            int index,
-            SharedSessionContractImplementor session)
-            throws HibernateException, SQLException {
-        if (value == null) {
-            st.setNull(index, Types.OTHER);
-        } else {
-            st.setObject(
-                    index,
-                    value.toString(),
-                    Types.OTHER
-            );
-        }
+  @Override
+  public void nullSafeSet(
+      PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
+      throws HibernateException, SQLException {
+    if (value == null) {
+      st.setNull(index, Types.OTHER);
+    } else {
+      st.setObject(index, value.toString(), Types.OTHER);
     }
+  }
 }

@@ -11,7 +11,6 @@ import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_I
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -63,6 +62,7 @@ public class CommentIT {
 
     assertEquals(0, allPost2Comments.size());
   }
+
   @Test
   @DirtiesContext
   void client_write_ok() throws ApiException {
@@ -73,11 +73,13 @@ public class CommentIT {
 
     List<Comment> allCommentsBeforeUpdate = api.getCommentsByPostId(POST1_ID, 1, 10);
 
-    Comment updateComment1 = api.crupdateCommentById(POST1_ID, COMMENT1_ID, comment1().content(newContent));
+    Comment updateComment1 =
+        api.crupdateCommentById(POST1_ID, COMMENT1_ID, comment1().content(newContent));
 
     List<Comment> allCommentsAfterUpdate = api.getCommentsByPostId(POST1_ID, 1, 10);
 
-    Comment createdComment1 = api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, commentToCreate());
+    Comment createdComment1 =
+        api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, commentToCreate());
 
     List<Comment> allCommentsAfterCreate = api.getCommentsByPostId(POST1_ID, 1, 10);
 
@@ -93,11 +95,15 @@ public class CommentIT {
     assertTrue(allCommentsAfterUpdate.contains(comment3()));
 
     assertEquals(CREATE_COMMENT1_ID, createdComment1.getId());
-
-
+    assertEquals(commentToCreate().getId(), createdComment1.getId());
+    assertEquals(commentToCreate().getUser(), createdComment1.getUser());
+    assertEquals(commentToCreate().getPostId(), createdComment1.getPostId());
+    assertEquals(commentToCreate().getContent(), createdComment1.getContent());
+    assertEquals(commentToCreate().getReplyToId(), createdComment1.getReplyToId());
+    assertEquals(commentToCreate().getReactions(), createdComment1.getReactions());
+    assertEquals(commentToCreate().getStatus(), createdComment1.getStatus());
     assertEquals(4, allCommentsAfterCreate.size());
   }
-
 
   static class ContextInitializer extends AbstractContextInitializer {
     public static final int SERVER_PORT = anAvailableRandomPort();

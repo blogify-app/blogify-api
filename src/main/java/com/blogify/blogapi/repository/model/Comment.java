@@ -41,8 +41,7 @@ public class Comment implements Serializable {
 
   private String content;
 
-  @CreationTimestamp
-  private Instant creationDatetime;
+  @CreationTimestamp private Instant creationDatetime;
 
   @ManyToOne
   @JoinColumn(name = "user_id")

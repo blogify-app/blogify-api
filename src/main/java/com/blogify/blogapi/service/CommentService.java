@@ -17,10 +17,17 @@ import org.springframework.stereotype.Service;
 public class CommentService {
   private final CommentRepository commentRepository;
 
-  public Comment getBYId(String postId, String commentId) {
+  public Comment getBYId(String commentId, String postId) {
     return commentRepository
-        .findByIdAndPostId(commentId, postId)
-        .orElseThrow(() -> new NotFoundException("Comment with postId: " + postId + " and commentId: " + commentId + " not found"));
+        .findByIdAndPost_Id(commentId, postId)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "Comment with postId: "
+                        + postId
+                        + " and commentId: "
+                        + commentId
+                        + " not found"));
   }
 
   public List<Comment> findByPostId(String postId, PageFromOne page, BoundedPageSize pageSize) {
@@ -29,7 +36,7 @@ public class CommentService {
   }
 
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {
-    Optional<Comment> existingComment = commentRepository.findByIdAndPostId(commentId, postId);
+    Optional<Comment> existingComment = commentRepository.findByIdAndPost_Id(commentId, postId);
     if (existingComment.isPresent()) {
       Comment comment = existingComment.get();
       updatedComment.setCommentReactions(comment.getCommentReactions());
@@ -38,10 +45,11 @@ public class CommentService {
     return commentRepository.save(updatedComment);
   }
 
-  public Comment deleteById(String postId, String commentId) {
-      Comment deleteComment = getBYId(postId, commentId);
-      commentRepository.deleteByIdAndPostId(commentId, postId);
+  // todo: lock if used
+  public Comment deleteById(String commentId, String postId) {
+    Comment deleteComment = getBYId(commentId, postId);
+    commentRepository.deleteByIdAndPostId(commentId, postId);
 
-      return deleteComment;
+    return deleteComment;
   }
 }
