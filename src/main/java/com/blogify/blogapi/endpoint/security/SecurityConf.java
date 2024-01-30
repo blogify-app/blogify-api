@@ -104,7 +104,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/users/*"),
                         new AntPathRequestMatcher("/posts/*/pictures"),
                         new AntPathRequestMatcher("/posts/*/pictures/*"),
-                        new AntPathRequestMatcher("/posts/*/comments/*/reaction"),
                         new AntPathRequestMatcher("/posts/*/comments"),
                         new AntPathRequestMatcher("/posts/*/comments/*")))),
             AnonymousAuthenticationFilter.class)

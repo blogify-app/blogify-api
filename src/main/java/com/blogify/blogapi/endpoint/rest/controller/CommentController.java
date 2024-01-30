@@ -56,10 +56,9 @@ public class CommentController {
   public Reaction reactToCommentById(
       @PathVariable String postId,
       @PathVariable String commentId,
-      @RequestParam(value = "type", required = false) ReactionType type) {
+      @RequestParam(value = "type", required = false) ReactionType type) {;
     com.blogify.blogapi.repository.model.Comment comment =
         commentService.getBYId(commentId, postId);
-    // todo: change to user from token when it will work
     Whoami whoami = whoamiService.whoami();
     User user = whoami.getUser();
     return reactionMapper.toRest(
