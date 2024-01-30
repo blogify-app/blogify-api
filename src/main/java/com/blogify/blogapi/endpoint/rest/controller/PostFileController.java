@@ -5,11 +5,10 @@ import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
 import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.service.PostFileService;
-import java.io.IOException;
-import java.util.List;
-
 import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
+import java.io.IOException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,7 @@ public class PostFileController {
     com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
     String fullContent = service.getPostFullContent(post);
-    return postMapper.toRest(fullContent,post, reactionStat);
+    return postMapper.toRest(fullContent, post, reactionStat);
   }
 
   @PostMapping(value = "/posts/{pid}/pictures/{picId}")
@@ -47,20 +46,19 @@ public class PostFileController {
   }
 
   @DeleteMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture deletePostPictureById(@PathVariable("pid") String pid, @PathVariable("picId") String picId
-      ) {
+  public PostPicture deletePostPictureById(
+      @PathVariable("pid") String pid, @PathVariable("picId") String picId) {
     return service.deletePictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture getPostPictureById(@PathVariable("pid") String pid, @PathVariable("picId") String picId
-  ) {
+  public PostPicture getPostPictureById(
+      @PathVariable("pid") String pid, @PathVariable("picId") String picId) {
     return service.getPictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures")
-  public List<PostPicture> getAllPostPictureById(@PathVariable("pid") String pid
-      ) {
+  public List<PostPicture> getAllPostPictureById(@PathVariable("pid") String pid) {
     return service.getAllPicturesById(pid);
   }
 }

@@ -26,7 +26,7 @@ public class PostService {
   public Post getById(String id) {
     return postRepository
         .findById(id)
-        .orElseThrow(() -> new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME,id)));
+        .orElseThrow(() -> new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME, id)));
   }
 
   public List<Post> findAllByCategory(

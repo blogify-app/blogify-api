@@ -93,14 +93,13 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/health/*"),
                         new AntPathRequestMatcher("/signup"),
                         new AntPathRequestMatcher("/users"),
-                        new AntPathRequestMatcher("/users/*"),
-                        new AntPathRequestMatcher("/users/*/pictures"),
                         new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/posts"),
                         new AntPathRequestMatcher("/posts/*"),
                         new AntPathRequestMatcher("/posts/*/reaction"),
                         new AntPathRequestMatcher("/**", OPTIONS.toString()),
+                        new AntPathRequestMatcher("/users/*"),
                         new AntPathRequestMatcher("/posts/*/pictures"),
                         new AntPathRequestMatcher("/posts/*/pictures/*"),
                         new AntPathRequestMatcher("/posts/*/comments/*/reaction"),
@@ -120,6 +119,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(GET, "/users")
         .permitAll()
         .antMatchers(GET, "/users/*")
+        .permitAll()
+        .antMatchers(PUT, "/users/*")
         .permitAll()
         .antMatchers(GET, "/users/*/pictures")
         .permitAll()
