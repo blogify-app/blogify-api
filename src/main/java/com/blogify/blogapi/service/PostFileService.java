@@ -3,7 +3,6 @@ package com.blogify.blogapi.service;
 import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
 
 import com.blogify.blogapi.constant.FileConstant;
-import com.blogify.blogapi.endpoint.mapper.PostMapper;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.exception.NotFoundException;
@@ -90,15 +89,17 @@ public class PostFileService {
     }
   }
 
-  public String getPostFullContent(Post post){
+  public String getPostFullContent(Post post) {
     List<PostPicture> postPictures = getAllPicturesById(post.getId());
-    return replacePlaceholders(post.getContent(),postPictures);
+    return replacePlaceholders(post.getContent(), postPictures);
   }
+
   private String replacePlaceholders(String htmlContent, List<PostPicture> postPictures) {
 
     for (PostPicture picture : postPictures) {
-      String placeholder = "{{"+picture.getId()+"}}";
-      htmlContent = htmlContent.replace(placeholder, picture.getUrl()!=null? picture.getUrl() : "");
+      String placeholder = "{{" + picture.getId() + "}}";
+      htmlContent =
+          htmlContent.replace(placeholder, picture.getUrl() != null ? picture.getUrl() : "");
     }
     return htmlContent;
   }

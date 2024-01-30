@@ -44,8 +44,6 @@ public class PostController {
         .toList();
   }
 
-
-
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
     User author = userService.findById(post.getAuthorId());
