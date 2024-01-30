@@ -44,12 +44,7 @@ public class PostController {
         .toList();
   }
 
-  @GetMapping("/posts/{postId}")
-  public Post getPostById(@PathVariable String postId) {
-    com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
-    ReactionStat reactionStat = postReactionService.getReactionStat(postId);
-    return postMapper.toRest(post, reactionStat);
-  }
+
 
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {

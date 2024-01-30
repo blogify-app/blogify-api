@@ -3,6 +3,7 @@ package com.blogify.blogapi.service;
 import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
 
 import com.blogify.blogapi.constant.FileConstant;
+import com.blogify.blogapi.endpoint.mapper.PostMapper;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.exception.NotFoundException;
@@ -44,7 +45,7 @@ public class PostFileService {
     return getPictureWithBucketKey(postPicture);
   }
 
-  public List<PostPicture> getAllPictures(String pid) {
+  public List<PostPicture> getAllPicturesById(String pid) {
     List<com.blogify.blogapi.repository.model.PostPicture> postPictures =
         repository.findAllByPostId(pid);
     return postPictures.stream().map(this::getPictureWithBucketKey).toList();
@@ -89,12 +90,15 @@ public class PostFileService {
     }
   }
 
-  private String replacePlaceholders(
-      String htmlContent, List<com.blogify.blogapi.repository.model.PostPicture> postPictures) {
+  public String getPostFullContent(Post post){
+    List<PostPicture> postPictures = getAllPicturesById(post.getId());
+    return replacePlaceholders(post.getContent(),postPictures);
+  }
+  private String replacePlaceholders(String htmlContent, List<PostPicture> postPictures) {
 
-    for (com.blogify.blogapi.repository.model.PostPicture picture : postPictures) {
-      String placeholder = "{{" + picture.getId() + "}}";
-      htmlContent = htmlContent.replace(placeholder, picture.getBucketKey());
+    for (PostPicture picture : postPictures) {
+      String placeholder = "{{"+picture.getId()+"}}";
+      htmlContent = htmlContent.replace(placeholder, picture.getUrl()!=null? picture.getUrl() : "");
     }
     return htmlContent;
   }
