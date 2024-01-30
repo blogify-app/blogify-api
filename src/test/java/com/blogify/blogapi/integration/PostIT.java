@@ -1,21 +1,5 @@
 package com.blogify.blogapi.integration;
 
-import com.blogify.blogapi.endpoint.rest.api.PostingApi;
-import com.blogify.blogapi.endpoint.rest.client.ApiClient;
-import com.blogify.blogapi.endpoint.rest.client.ApiException;
-import com.blogify.blogapi.endpoint.rest.model.Post;
-import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
-import com.blogify.blogapi.integration.conf.TestUtils;
-import com.blogify.blogapi.service.firebase.FirebaseService;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestComponent;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_LABEL;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_LABEL;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.CREATE_POST1_ID;
@@ -33,6 +17,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+import com.blogify.blogapi.endpoint.rest.api.PostingApi;
+import com.blogify.blogapi.endpoint.rest.client.ApiClient;
+import com.blogify.blogapi.endpoint.rest.client.ApiException;
+import com.blogify.blogapi.endpoint.rest.model.Post;
+import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
+import com.blogify.blogapi.integration.conf.TestUtils;
+import com.blogify.blogapi.service.firebase.FirebaseService;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestComponent
@@ -75,13 +75,15 @@ public class PostIT {
   }
 
   @Test
-  void read_post_by_id_ko(){
+  void read_post_by_id_ko() {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1Client);
     String postId = randomUUID().toString();
 
     assertThrowsApiException(
-        "{\"type\":\"404 NOT_FOUND\",\"message\":\"Resource of type Post identified by "+postId+" not found\"}",
+        "{\"type\":\"404 NOT_FOUND\",\"message\":\"Resource of type Post identified by "
+            + postId
+            + " not found\"}",
         () -> api.getPostById(postId));
   }
 

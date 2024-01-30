@@ -1,5 +1,9 @@
 package com.blogify.blogapi.integration.conf;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
@@ -13,10 +17,6 @@ import java.net.ServerSocket;
 import java.util.List;
 import java.util.Objects;
 import org.junit.jupiter.api.function.Executable;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 public class TestUtils {
 
@@ -96,7 +96,6 @@ public class TestUtils {
         httpRequestBuilder -> httpRequestBuilder.header("Authorization", "Bearer " + token));
     return client;
   }
-
 
   public static void assertThrowsApiException(String expectedBody, Executable executable) {
     ApiException apiException = assertThrows(ApiException.class, executable);

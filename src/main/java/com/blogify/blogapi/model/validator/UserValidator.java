@@ -22,7 +22,8 @@ public class UserValidator implements Consumer<User> {
 
   @Override
   public void accept(User user) {
-    //todo: VALIDATOR u start to create e set of string "messages validator", and every time u have wrong validasion u push message error in this
+    // todo: VALIDATOR u start to create e set of string "messages validator", and every time u have
+    // wrong validasion u push message error in this
     Set<ConstraintViolation<User>> violations = validator.validate(user);
     if (user.getId() == null) {
       throw new BadRequestException("User_id is mandatory");
