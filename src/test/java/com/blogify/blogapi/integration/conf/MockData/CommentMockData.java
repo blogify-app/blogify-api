@@ -54,7 +54,7 @@ public class CommentMockData {
         .status(CommentStatus.ENABLED);
   }
 
-  public static Comment postToCreate() {
+  public static Comment commentToCreate() {
     return new Comment()
         .id(CREATE_COMMENT1_ID)
         .user(client2())
