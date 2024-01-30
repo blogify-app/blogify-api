@@ -64,7 +64,7 @@ public class CommentController {
           @PathVariable String commentId,
           @RequestBody Comment updatedComment
   ) {
-    Post post = postService.getBYId(postId);
+    Post post = postService.getById(postId);
     com.blogify.blogapi.repository.model.Comment crupdatedComment = commentService.crupdateById(postId,
             commentId, commentMapper.toDomain(updatedComment, post));
     return commentMapper.toRest(

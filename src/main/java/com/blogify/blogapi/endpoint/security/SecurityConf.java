@@ -151,7 +151,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(DELETE, "/posts/*/pictures/*")
         .permitAll()
-        .antMatchers(HttpMethod.PUT, "/posts/*/comments/*")
+        .antMatchers(PUT, "/posts/*/comments/*")
         .permitAll()
         .anyRequest()
         .denyAll()
