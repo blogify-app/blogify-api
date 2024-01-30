@@ -28,8 +28,6 @@ public class TestUtils {
 
   public static final FirebaseUser firebaseUserClient2 =
       new FirebaseUser("test+herilala@hei.school", "client2_firebase_id");
-  public static final FirebaseUser firebaseUserClient3 =
-      new FirebaseUser("test+herizo@hei.school", "client3_firebase_id");
   public static final FirebaseUser firebaseUserManager1 =
       new FirebaseUser("test+vano@hei.school", "manager1_firebase_id");
 
@@ -39,8 +37,6 @@ public class TestUtils {
     when(firebaseService.getUserByBearer(CLIENT1_TOKEN)).thenReturn(firebaseUserClient1);
 
     when(firebaseService.getUserByBearer(CLIENT2_TOKEN)).thenReturn(firebaseUserClient2);
-
-    when(firebaseService.getUserByBearer(CLIENT3_TOKEN)).thenReturn(firebaseUserClient3);
 
     when(firebaseService.getUserByBearer(MANAGER_TOKEN)).thenReturn(firebaseUserManager1);
   }
