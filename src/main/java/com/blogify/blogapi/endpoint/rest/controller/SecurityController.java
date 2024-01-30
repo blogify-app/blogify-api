@@ -8,12 +8,14 @@ import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import java.util.ArrayList;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 public class SecurityController {
   private final UserService userService;
   private final FirebaseService firebaseService;
