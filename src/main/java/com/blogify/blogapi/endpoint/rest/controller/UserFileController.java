@@ -5,6 +5,7 @@ import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.service.UserFileService;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 public class UserFileController {
 
   private final UserFileService service;
