@@ -2,6 +2,7 @@ package com.blogify.blogapi.endpoint.rest;
 
 import com.blogify.blogapi.endpoint.rest.model.Exception;
 import com.blogify.blogapi.model.exception.BadRequestException;
+import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.model.exception.TooManyRequestException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,12 @@ public class InternalToRestExceptionHandler {
   ResponseEntity<Exception> handleBadRequest(BadRequestException e) {
     log.info("Bad request", e);
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = {ForbiddenException.class})
+  ResponseEntity<Exception> handleForbidden(ForbiddenException e) {
+    log.info("Forbidden request", e);
+    return new ResponseEntity<>(toRest(e, HttpStatus.FORBIDDEN), HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler(value = {TooManyRequestException.class})
