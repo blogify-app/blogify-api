@@ -54,6 +54,7 @@ public class CommentIT {
     List<Comment> allPost2Comments = api.getCommentsByPostId(POST2_ID, 1, 10);
 
     assertEquals("this in the content2",commentByPostId.getContent());
+    assertEquals("post1_id",commentByPostId.getPostId());
     assertEquals(3, allPost1Comments.size());
     assertTrue(allPost1Comments.contains(comment1()));
     assertTrue(allPost1Comments.contains(comment2()));
