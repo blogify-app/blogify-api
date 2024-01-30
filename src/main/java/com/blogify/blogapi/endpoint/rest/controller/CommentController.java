@@ -7,6 +7,7 @@ import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.CommentReactionService;
 import com.blogify.blogapi.service.CommentService;
@@ -52,5 +53,13 @@ public class CommentController {
     User user = comment.getUser();
     return reactionMapper.toRest(
         commentReactionService.reactAComment(comment, reactionMapper.toDomain(type), user));
+  }
+  @GetMapping("/posts/{postId}/comments/{commentId}")
+  public Comment getCommentById(
+          @PathVariable String postId,
+          @PathVariable String commentId){
+    com.blogify.blogapi.repository.model.Comment comment = commentService.findByPostId(postId,commentId);
+    ReactionStat reactionStat = commentReactionService.getReactionStat(commentId);
+    return commentMapper.toRest(comment,reactionStat);
   }
 }

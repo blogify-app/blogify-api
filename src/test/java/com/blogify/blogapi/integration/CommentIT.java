@@ -1,5 +1,6 @@
 package com.blogify.blogapi.integration;
 
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT2_ID;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment1;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment2;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment3;
@@ -47,10 +48,12 @@ public class CommentIT {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
 
+    Comment commentByPostId = api.getCommentById(POST1_ID,COMMENT2_ID);
     List<Comment> allPost1Comments = api.getCommentsByPostId(POST1_ID, 1, 10);
 
     List<Comment> allPost2Comments = api.getCommentsByPostId(POST2_ID, 1, 10);
 
+    assertEquals("this in the content2",commentByPostId.getContent());
     assertEquals(3, allPost1Comments.size());
     assertTrue(allPost1Comments.contains(comment1()));
     assertTrue(allPost1Comments.contains(comment2()));

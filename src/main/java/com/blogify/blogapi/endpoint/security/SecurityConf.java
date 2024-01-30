@@ -98,7 +98,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/posts/*/reaction"),
                         new AntPathRequestMatcher("/**", OPTIONS.toString()),
                         new AntPathRequestMatcher("/posts/*/comments/*/reaction"),
-                        new AntPathRequestMatcher("/posts/*/comments")))),
+                        new AntPathRequestMatcher("/posts/*/comments"),
+                        new AntPathRequestMatcher("/posts/*/comments/*")))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
         .and()
@@ -132,6 +133,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.POST, "/posts/*/comments/*/reaction")
         .permitAll()
         .antMatchers(HttpMethod.GET, "/posts/*/comments")
+        .permitAll()
+        .antMatchers(HttpMethod.GET, "/posts/*/comments/*")
         .permitAll()
         .anyRequest()
         .denyAll()
