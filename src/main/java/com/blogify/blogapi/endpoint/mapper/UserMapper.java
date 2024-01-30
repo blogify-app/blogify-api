@@ -5,6 +5,7 @@ import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
+import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
 import com.blogify.blogapi.model.enums.Role;
 import com.blogify.blogapi.repository.model.UserCategory;
@@ -48,9 +49,9 @@ public class UserMapper {
         .lastUpdateDatetime(Instant.now())
         .mail(signUp.getEmail())
         .role(Role.CLIENT)
-        .photoUrl(signUp.getPhotoUrl())
+        .photoUrl(signUp.getId()+UserPictureType.PROFILE)
         .bio(signUp.getBio())
-        .profileBannerUrl(signUp.getProfileBannerUrl())
+        .profileBannerUrl(signUp.getId()+UserPictureType.BANNER)
         .username(signUp.getUsername())
         .about(signUp.getAbout())
         .status(toDomain(signUp.getStatus()))
