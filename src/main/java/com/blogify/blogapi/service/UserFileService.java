@@ -3,7 +3,6 @@ package com.blogify.blogapi.service;
 import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.UserPicture;
 import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
-import com.blogify.blogapi.file.BucketComponent;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.repository.model.User;
 import java.io.IOException;
@@ -31,7 +30,8 @@ public class UserFileService {
 
   private UserPicture getUserPictureWithBucketKey(
       String uid, UserPictureType type, String bucketKey) {
-    String fileURL = String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
+    String fileURL =
+        String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
     UserPicture userPicture = new UserPicture();
     userPicture.setUserId(uid);
     userPicture.setType(type);

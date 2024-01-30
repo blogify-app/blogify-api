@@ -30,20 +30,19 @@ public class PostFileController {
   }
 
   @DeleteMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture deletePostPictureById(@PathVariable("pid") String pid, @PathVariable("picId") String picId
-      ) {
+  public PostPicture deletePostPictureById(
+      @PathVariable("pid") String pid, @PathVariable("picId") String picId) {
     return service.deletePictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures/{picId}")
-  public PostPicture getPostPictureById(@PathVariable("pid") String pid, @PathVariable("picId") String picId
-  ) {
+  public PostPicture getPostPictureById(
+      @PathVariable("pid") String pid, @PathVariable("picId") String picId) {
     return service.getPictureById(pid, picId);
   }
 
   @GetMapping(value = "/posts/{pid}/pictures")
-  public List<PostPicture> getAllPostPictureById(@PathVariable("pid") String pid
-      ) {
+  public List<PostPicture> getAllPostPictureById(@PathVariable("pid") String pid) {
     return service.getAllPictures(pid);
   }
 }

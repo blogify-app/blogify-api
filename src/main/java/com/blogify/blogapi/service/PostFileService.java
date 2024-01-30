@@ -4,7 +4,6 @@ import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.not
 
 import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
-import com.blogify.blogapi.file.BucketComponent;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.PostPictureRepository;
@@ -41,7 +40,7 @@ public class PostFileService {
   public PostPicture getPictureById(String pid, String picId) {
     com.blogify.blogapi.repository.model.PostPicture postPicture =
         repository.findByIdAndPostId(picId, pid);
-    checkIfPostPictureExist(postPicture,RESOURCE_NAME,picId);
+    checkIfPostPictureExist(postPicture, RESOURCE_NAME, picId);
     return getPictureWithBucketKey(postPicture);
   }
 
@@ -55,11 +54,12 @@ public class PostFileService {
   public PostPicture deletePictureById(String pid, String picId) {
     com.blogify.blogapi.repository.model.PostPicture postPicture =
         repository.findByIdAndPostId(picId, pid);
-    checkIfPostPictureExist(postPicture,RESOURCE_NAME,picId);
+    checkIfPostPictureExist(postPicture, RESOURCE_NAME, picId);
     PostPicture picture = deletePictureWithBucketKey(postPicture);
     repository.delete(postPicture);
-   return picture;
+    return picture;
   }
+
   private PostPicture deletePictureWithBucketKey(
       com.blogify.blogapi.repository.model.PostPicture postPicture) {
     s3Service.deleteS3Object(postPicture.getBucketKey());
@@ -69,6 +69,7 @@ public class PostFileService {
     picture.setPlaceholder(postPicture.getId());
     return picture;
   }
+
   private PostPicture getPictureWithBucketKey(
       com.blogify.blogapi.repository.model.PostPicture postPicture) {
     PostPicture picture = new PostPicture();
@@ -81,16 +82,18 @@ public class PostFileService {
     return picture;
   }
 
-  private void checkIfPostPictureExist(com.blogify.blogapi.repository.model.PostPicture postPicture, String resource, String id){
+  private void checkIfPostPictureExist(
+      com.blogify.blogapi.repository.model.PostPicture postPicture, String resource, String id) {
     if (postPicture == null) {
       throw new NotFoundException(notFoundByIdMessageException(resource, id));
     }
   }
 
-  private String replacePlaceholders(String htmlContent, List<com.blogify.blogapi.repository.model.PostPicture> postPictures) {
+  private String replacePlaceholders(
+      String htmlContent, List<com.blogify.blogapi.repository.model.PostPicture> postPictures) {
 
     for (com.blogify.blogapi.repository.model.PostPicture picture : postPictures) {
-      String placeholder = "{{"+picture.getId()+"}}";
+      String placeholder = "{{" + picture.getId() + "}}";
       htmlContent = htmlContent.replace(placeholder, picture.getBucketKey());
     }
     return htmlContent;

@@ -1,7 +1,7 @@
 package com.blogify.blogapi.model.validator;
 
-import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.model.exception.BadRequestException;
+import com.blogify.blogapi.repository.model.User;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;

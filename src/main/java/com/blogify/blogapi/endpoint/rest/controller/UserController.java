@@ -1,11 +1,13 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
+import com.blogify.blogapi.endpoint.mapper.UserCategoryMapper;
 import com.blogify.blogapi.endpoint.mapper.UserMapper;
-import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.repository.model.UserCategory;
 import com.blogify.blogapi.service.UserService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ public class UserController {
 
   private final UserService userService;
   private final UserMapper userMapper;
+  private final UserCategoryMapper userCategoryMapper;
 
   @GetMapping(value = "/users")
   public List<User> getUsers(
@@ -38,13 +41,13 @@ public class UserController {
   public User getUserById(@PathVariable String id) {
     return userMapper.toRest(userService.findById(id));
   }
+
   @PutMapping(value = "/users/{id}")
-  public User crupdateUser(
-      @PathVariable (name = "id") String userId,
-      @RequestBody User toUpdate
-      ) {
+  public User crupdateUser(@PathVariable(name = "id") String userId, @RequestBody User toUpdate) {
+    List<UserCategory> userCategories =
+        userCategoryMapper.toCategoryToUserCategory(
+            toUpdate, userMapper.toDomain(toUpdate, new ArrayList<>()));
     return userMapper.toRest(
-        userService.updateUser(userMapper.toDomain(toUpdate), userId)
-    );
+        userService.updateUser(userMapper.toDomain(toUpdate, userCategories), userId));
   }
 }

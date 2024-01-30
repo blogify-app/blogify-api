@@ -1,6 +1,7 @@
 package com.blogify.blogapi.integration.conf;
 
 import static org.mockito.Mockito.when;
+
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.Post;

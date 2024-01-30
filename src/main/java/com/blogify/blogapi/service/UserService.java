@@ -7,6 +7,7 @@ import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,10 +38,13 @@ public class UserService {
 
   @Transactional
   public User updateUser(User user, String userId) {
-    User userFromDomain = findById(userId);
-    userValidator.accept(user);
-    user.setCreationDatetime(userFromDomain.getCreationDatetime());
-    user.setRole(userFromDomain.getRole());
+    Optional<User> userOptional = repository.findById(userId);
+    if (userOptional.isPresent()) {
+      User userFromDomain = userOptional.get();
+      userValidator.accept(user);
+      user.setCreationDatetime(userFromDomain.getCreationDatetime());
+      user.setRole(userFromDomain.getRole());
+    }
     return repository.save(user);
   }
 

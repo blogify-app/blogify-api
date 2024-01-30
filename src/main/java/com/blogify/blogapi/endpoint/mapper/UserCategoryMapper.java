@@ -1,31 +1,31 @@
 package com.blogify.blogapi.endpoint.mapper;
 
 import com.blogify.blogapi.endpoint.rest.model.Category;
-import com.blogify.blogapi.repository.UserCategoryRepository;
+import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.repository.model.UserCategory;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-
 
 @Component
 @AllArgsConstructor
 public class UserCategoryMapper {
-  private final UserCategoryRepository userCategoryRepository;
-  public List<UserCategory> toDomain(List<Category> toCreate) {
-    return toCreate.stream()
-        .map(this::toDomain)
-        .collect(Collectors.toList());
+  private final CategoryMapper categoryMapper;
+
+  public List<UserCategory> toCategoryToUserCategory(
+      com.blogify.blogapi.endpoint.rest.model.User user, User modelUser) {
+    return user.getCategories().stream()
+        .map(category -> toCategoryToUserCategory(category, modelUser))
+        .toList();
   }
 
-  public com.blogify.blogapi.repository.model.UserCategory toDomain(Category restCategory) {
+  public com.blogify.blogapi.repository.model.UserCategory toCategoryToUserCategory(
+      Category category, User user) {
     return UserCategory.builder()
-        .id((userCategoryRepository.findUserCategoryByCategoryId(restCategory.getId())).getId())
-        .category(com.blogify.blogapi.repository.model.Category.builder()
-            .id(restCategory.getId())
-            .name(restCategory.getLabel())
-            .build())
+        .id(UUID.randomUUID().toString())
+        .user(user)
+        .category(categoryMapper.toDomain(category))
         .build();
   }
 }

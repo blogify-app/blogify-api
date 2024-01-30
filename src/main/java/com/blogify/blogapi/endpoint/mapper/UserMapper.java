@@ -1,11 +1,15 @@
 package com.blogify.blogapi.endpoint.mapper;
 
 import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
+
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
+import com.blogify.blogapi.model.enums.Role;
+import com.blogify.blogapi.repository.model.UserCategory;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,7 +19,6 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
   private final CategoryMapper categoryMapper;
-  private final UserCategoryMapper userCategoryMapper;
 
   public User toRest(com.blogify.blogapi.repository.model.User domain) {
     return new User()
@@ -34,7 +37,9 @@ public class UserMapper {
         .sex(convertToRest(domain.getSex()))
         .categories(domain.getUserCategories().stream().map(categoryMapper::toRest).toList());
   }
-  public com.blogify.blogapi.repository.model.User toDomain(SignUp signUp) {
+
+  public com.blogify.blogapi.repository.model.User toDomain(
+      SignUp signUp, List<UserCategory> categories) {
     return com.blogify.blogapi.repository.model.User.builder()
         .id(signUp.getId())
         .firstname(signUp.getFirstName())
@@ -42,6 +47,7 @@ public class UserMapper {
         .birthdate(signUp.getBirthDate())
         .lastUpdateDatetime(Instant.now())
         .mail(signUp.getEmail())
+        .role(Role.CLIENT)
         .photoUrl(signUp.getPhotoUrl())
         .bio(signUp.getBio())
         .profileBannerUrl(signUp.getProfileBannerUrl())
@@ -49,11 +55,12 @@ public class UserMapper {
         .about(signUp.getAbout())
         .status(toDomain(signUp.getStatus()))
         .sex(toDomain(signUp.getSex()))
-        .userCategories(userCategoryMapper.toDomain(signUp.getCategories()))
+        .userCategories(categories)
         .build();
   }
 
-  public com.blogify.blogapi.repository.model.User toDomain(User rest) {
+  public com.blogify.blogapi.repository.model.User toDomain(
+      User rest, List<UserCategory> userCategories) {
     return com.blogify.blogapi.repository.model.User.builder()
         .id(rest.getId())
         .firstname(rest.getFirstName())
@@ -68,9 +75,10 @@ public class UserMapper {
         .about(rest.getAbout())
         .status(toDomain(rest.getStatus()))
         .sex(toDomain(rest.getSex()))
-        .userCategories(userCategoryMapper.toDomain(rest.getCategories()))
+        .userCategories(userCategories)
         .build();
   }
+
   public static Sex convertToRest(com.blogify.blogapi.model.enums.Sex sex) {
     return mapEnum(
         sex,
