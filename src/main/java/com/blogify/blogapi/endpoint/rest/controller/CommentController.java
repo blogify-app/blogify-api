@@ -56,12 +56,12 @@ public class CommentController {
     return reactionMapper.toRest(
         commentReactionService.reactAComment(comment, reactionMapper.toDomain(type), user));
   }
+
   @GetMapping("/posts/{postId}/comments/{commentId}")
-  public Comment getCommentById(
-          @PathVariable String postId,
-          @PathVariable String commentId){
-    com.blogify.blogapi.repository.model.Comment comment = commentService.findByPostId(postId,commentId);
+  public Comment getCommentById(@PathVariable String postId, @PathVariable String commentId) {
+    com.blogify.blogapi.repository.model.Comment comment =
+        commentService.findByIdAndPostId(commentId, postId);
     ReactionStat reactionStat = commentReactionService.getReactionStat(commentId);
-    return commentMapper.toRest(comment,reactionStat);
+    return commentMapper.toRest(comment, reactionStat);
   }
 }

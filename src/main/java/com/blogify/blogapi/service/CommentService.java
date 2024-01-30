@@ -26,9 +26,13 @@ public class CommentService {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return commentRepository.findByPostIdOrderByCreationDatetimeDesc(postId, pageable);
   }
-  public Comment findByPostId(String commentId, String postId){
-      return commentRepository
-              .findByPostIdAndId(commentId,postId)
-              .orElseThrow(() -> new NotFoundException("Entity with id " + (postId != null ? postId : commentId) + " not found"));
+
+  public Comment findByIdAndPostId(String commentId, String postId) {
+    return commentRepository
+        .findByIdAndPost_Id(commentId, postId)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "Entity with id " + (postId != null ? postId : commentId) + " not found"));
   }
 }
