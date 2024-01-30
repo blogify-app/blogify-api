@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, String> {
+  Optional<Comment> findByIdAndPost_Id(String commentId, String postId);
+
   List<Comment> findByPostIdOrderByCreationDatetimeDesc(String postId, Pageable pageable);
 
-  Optional<Comment> findByIdAndPost_Id(String commentId, String postId);
+  void deleteByIdAndPostId(String commentId, String postId);
 }

@@ -38,6 +38,7 @@ public class UserService {
 
   @Transactional
   public User updateUser(User user, String userId) {
+
     Optional<User> userOptional = repository.findById(userId);
     if (userOptional.isPresent()) {
       User userFromDomain = userOptional.get();

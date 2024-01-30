@@ -1,6 +1,7 @@
 package com.blogify.blogapi.repository.model;
 
 import com.blogify.blogapi.model.enums.CommentStatus;
+import com.blogify.blogapi.repository.types.PostgresEnumType;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
@@ -20,6 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.Where;
 
 @Entity
@@ -29,6 +32,7 @@ import org.hibernate.annotations.Where;
 @Data
 @Builder
 @SQLDelete(sql = "UPDATE Comment SET deleted = true WHERE id=?")
+@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 @Where(clause = "deleted=false")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -54,6 +58,7 @@ public class Comment implements Serializable {
   private List<CommentReaction> commentReactions;
 
   @Enumerated(EnumType.STRING)
+  @Type(type = "pgsql_enum")
   private CommentStatus status;
 
   private boolean deleted = Boolean.FALSE;

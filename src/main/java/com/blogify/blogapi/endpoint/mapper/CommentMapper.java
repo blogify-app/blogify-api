@@ -4,9 +4,11 @@ import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
 
 import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.CommentStatus;
-import com.blogify.blogapi.endpoint.rest.model.UserStatus;
 import com.blogify.blogapi.model.ReactionStat;
+import com.blogify.blogapi.repository.model.Post;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +31,18 @@ public class CommentMapper {
         .status(toRest(domain.getStatus()));
   }
 
+  public com.blogify.blogapi.repository.model.Comment toDomain(Comment comment, Post post) {
+    return com.blogify.blogapi.repository.model.Comment.builder()
+        .id(comment.getId())
+        .content(comment.getContent())
+        .replyToId(comment.getReplyToId())
+        .user(userMapper.toDomain(Objects.requireNonNull(comment.getUser()), new ArrayList<>()))
+        .status(toDomain(comment.getStatus()))
+        .post(post)
+        .commentReactions(null)
+        .build();
+  }
+
   public CommentStatus toRest(com.blogify.blogapi.model.enums.CommentStatus status) {
     return mapEnum(
         status,
@@ -37,7 +51,7 @@ public class CommentMapper {
             com.blogify.blogapi.model.enums.CommentStatus.DISABLED, CommentStatus.DISABLED));
   }
 
-  private com.blogify.blogapi.model.enums.CommentStatus toDomain(UserStatus status) {
+  private com.blogify.blogapi.model.enums.CommentStatus toDomain(CommentStatus status) {
     return mapEnum(
         status,
         Map.of(
