@@ -19,6 +19,7 @@ public class TestUtils {
   public static final String CLIENT1_TOKEN = "client1_token";
 
   public static final String CLIENT2_TOKEN = "client2_token";
+  public static final String CLIENT3_TOKEN = "client3_token";
 
   public static final String MANAGER_TOKEN = "manger1_token";
 
