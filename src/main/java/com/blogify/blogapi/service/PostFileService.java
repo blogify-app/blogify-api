@@ -45,8 +45,9 @@ public class PostFileService {
   }
 
   public List<PostPicture> getAllPicturesById(String pid) {
+    Post post = postService.getById(pid) ;
     List<com.blogify.blogapi.repository.model.PostPicture> postPictures =
-        repository.findAllByPostId(pid);
+        repository.findAllByPostId(post.getId());
     return postPictures.stream().map(this::getPictureWithBucketKey).toList();
   }
 
