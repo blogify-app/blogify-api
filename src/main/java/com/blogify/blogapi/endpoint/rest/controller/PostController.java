@@ -8,12 +8,15 @@ import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.ReactionStat;
+import com.blogify.blogapi.model.Whoami;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
 import com.blogify.blogapi.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.blogify.blogapi.service.WhoamiService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +37,7 @@ public class PostController {
   private final UserService userService;
   private final PostReactionService postReactionService;
   private final ReactionMapper reactionMapper;
+  private final WhoamiService whoamiService;
 
   @GetMapping("/posts")
   public List<Post> getPosts(
@@ -71,8 +75,8 @@ public class PostController {
       @PathVariable String postId,
       @RequestParam(value = "type", required = false) ReactionType type) {
     com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
-    // todo: change to user from token when it will work
-    User user = post.getUser();
+    Whoami whoami = whoamiService.whoami();
+    User user = whoami.getUser();
     return reactionMapper.toRest(
         postReactionService.reactAPost(post, reactionMapper.toDomain(type), user));
   }

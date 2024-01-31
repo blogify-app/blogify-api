@@ -360,7 +360,7 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/PageSize"
-        - name: name
+        - name: namePost
           in: query
           required: false
           description: Filters follower by first name or lastname.

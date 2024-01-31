@@ -143,6 +143,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             .authenticated()
             .antMatchers(DELETE, "/posts/*/pictures/*")
             .authenticated()
+            .antMatchers(DELETE, "/posts/*/comments/*")
+            .authenticated()
             .anyRequest()
             .denyAll()
             .and()
