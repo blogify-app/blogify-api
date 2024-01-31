@@ -18,19 +18,31 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FirebaseService {
+  private static final Object lock = new Object();
+  private static boolean firebaseAppInitialized = false;
+
   public final String privateKey;
 
   public FirebaseService(@Value("${firebase.private.key}") String privateKey) {
     this.privateKey = privateKey;
   }
 
-  @SneakyThrows
-  private FirebaseAuth auth() {
-    FirebaseOptions options =
-        new FirebaseOptions.Builder().setCredentials(getCredentials()).build();
+  private void initializeFirebaseApp() {
+    synchronized (lock) {
+      if (!firebaseAppInitialized) {
+        FirebaseOptions options =
+            new FirebaseOptions.Builder().setCredentials(getCredentials()).build();
 
-    var app = FirebaseApp.initializeApp(options);
-    return FirebaseAuth.getInstance(app);
+        FirebaseApp.initializeApp(options);
+        firebaseAppInitialized = true;
+      }
+    }
+  }
+
+  @SneakyThrows
+  public FirebaseAuth auth() {
+    initializeFirebaseApp();
+    return FirebaseAuth.getInstance();
   }
 
   @SneakyThrows
