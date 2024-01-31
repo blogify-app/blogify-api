@@ -1,9 +1,10 @@
 package com.blogify.blogapi.endpoint.rest.controller;
 
+import static com.blogify.blogapi.endpoint.validator.RequestInputValidator.InputType.QUERY_PARAMS;
+
 import com.blogify.blogapi.endpoint.rest.model.UserPicture;
 import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
-import com.blogify.blogapi.endpoint.validator.ParamsValidator;
-import com.blogify.blogapi.endpoint.validator.ParamsValidator.InputType;
+import com.blogify.blogapi.endpoint.validator.RequestInputValidator;
 import com.blogify.blogapi.file.validator.MultipartFileValidator;
 import com.blogify.blogapi.service.UserFileService;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class UserFileController {
 
   private final UserFileService service;
   private final MultipartFileValidator multipartFileValidator;
-  private final ParamsValidator paramsValidator;
+  private final RequestInputValidator requestInputValidator;
 
   @PutMapping(value = "/users/{uid}/pictures")
   public UserPicture putUserPicture(
@@ -33,7 +34,7 @@ public class UserFileController {
       @RequestPart(value = "file", required = false) MultipartFile file)
       throws IOException {
 
-    paramsValidator.notNulValue(InputType.QUERY_PARAMS, "type", type);
+    requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
     multipartFileValidator.accept(file);
     return service.uploadUserPicture(uid, type, file);
   }
@@ -43,7 +44,7 @@ public class UserFileController {
       @PathVariable String uid,
       @RequestParam(value = "type", required = false) UserPictureType type) {
 
-    paramsValidator.notNulValue(InputType.QUERY_PARAMS, "type", type);
+    requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
     return service.getUserPicture(uid, type);
   }
 }

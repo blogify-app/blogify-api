@@ -4,7 +4,7 @@ import com.blogify.blogapi.model.exception.BadRequestException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ParamsValidator {
+public class RequestInputValidator {
   public static enum InputType {
     QUERY_PARAMS("Query Parameters"),
     PATH_VARIABLE("Path Variable"),
@@ -21,9 +21,9 @@ public class ParamsValidator {
     }
   }
 
-  public void notNulValue(InputType inputType, String paramsName, Object input) {
+  public void notNullValue(InputType inputType, String paramsName, Object input) {
     if (input == null) {
-      throw new BadRequestException(inputType.getValue() + " : " + paramsName + " is mandatory");
+      throw new BadRequestException(inputType.getValue() + " " + paramsName + " is mandatory");
     }
   }
 }
