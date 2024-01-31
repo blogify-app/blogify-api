@@ -15,6 +15,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -150,6 +151,21 @@ public class PostIT {
     assertEquals(CREATE_POST1_ID, createdPost1.getId());
 
     assertEquals(3, allPostsAfterCreate.size());
+  }
+  @Test
+  @DirtiesContext
+  void client_update_ko() throws ApiException{
+    ApiClient client1 = apiClient(CLIENT1_TOKEN);
+    PostingApi api = new PostingApi(client1);
+    Post post = api.getPostById(POST1_ID);
+    Post postUpdate = post.id(null);
+
+    ApiException exception1 = assertThrows(ApiException.class,
+            () -> api.crupdatePostById(POST1_ID,postUpdate));
+
+    String exceptionMessage1 = exception1.getMessage();
+
+    assertTrue(exceptionMessage1.contains("Post_id is mandatory"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
