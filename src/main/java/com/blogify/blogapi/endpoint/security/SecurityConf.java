@@ -77,20 +77,18 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/ping"),
                         new AntPathRequestMatcher("/health/*"),
                         new AntPathRequestMatcher("/signup"),
-                        new AntPathRequestMatcher("/users"),
-                        new AntPathRequestMatcher("/users/*"),
-                        new AntPathRequestMatcher("/users/*/pictures"),
-                        new AntPathRequestMatcher("/users/*/posts"),
-                        new AntPathRequestMatcher("/categories"),
-                        new AntPathRequestMatcher("/categories"),
-                        new AntPathRequestMatcher("/posts"),
-                        new AntPathRequestMatcher("/posts/*"),
-                        new AntPathRequestMatcher("/**", OPTIONS.toString()),
-                        new AntPathRequestMatcher("/users/*"),
-                        new AntPathRequestMatcher("/posts/*/pictures"),
-                        new AntPathRequestMatcher("/posts/*/pictures/*"),
-                        new AntPathRequestMatcher("/posts/*/comments"),
-                        new AntPathRequestMatcher("/posts/*/comments/*")))),
+                        new AntPathRequestMatcher("/users", GET.name()),
+                            new AntPathRequestMatcher("/users/*", GET.name()),
+                            new AntPathRequestMatcher("/users/*/pictures", GET.name()),
+                            new AntPathRequestMatcher("/users/*/posts", GET.name()),
+                            new AntPathRequestMatcher("/categories", GET.name()),
+                            new AntPathRequestMatcher("/posts", GET.name()),
+                            new AntPathRequestMatcher("/posts/*", GET.name()),
+                            new AntPathRequestMatcher("/posts/*/comments", GET.name()),
+                            new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
+                            new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
+                            new AntPathRequestMatcher("/posts/*/pictures/*", GET.name()),
+                            new AntPathRequestMatcher("/**", OPTIONS.toString())))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
         .and()
@@ -103,62 +101,62 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(GET, "/whoami")
         .authenticated()
-        .antMatchers(POST, "/signin")
-        .authenticated()
-        .antMatchers(POST, "/signup")
-        .permitAll()
-        .antMatchers(GET, "/users")
-        .permitAll()
-        .antMatchers(GET, "/users/*")
-        .permitAll()
-        .antMatchers(PUT, "/users/*")
-        .permitAll()
-        .antMatchers(GET, "/users/*/pictures")
-        .permitAll()
-        .antMatchers(GET, "/users/*/posts")
-        .permitAll()
-        .antMatchers(PUT, "/users/*/pictures")
-        .permitAll()
-        .antMatchers(GET, "/categories")
-        .permitAll()
-        .antMatchers(GET, "/posts")
-        .permitAll()
-        .antMatchers(PUT, "/posts/*")
-        .permitAll()
-        .antMatchers(GET, "/posts/*")
-        .permitAll()
-        .antMatchers(DELETE, "/posts/*")
-        .permitAll()
-        .antMatchers(POST, "/posts/*/reaction")
-        .authenticated()
-        .antMatchers(POST, "/posts/*/comments/*/reaction")
-        .authenticated()
-        .antMatchers(GET, "/posts/*/comments")
-        .permitAll()
-        .antMatchers(GET, "/posts/*/pictures")
-        .permitAll()
-        .antMatchers(GET, "/posts/*/pictures/*")
-        .permitAll()
-        .antMatchers(POST, "/posts/*/pictures/*")
-        .permitAll()
-        .antMatchers(DELETE, "/posts/*/pictures/*")
-        .permitAll()
-        .antMatchers(PUT, "/posts/*/comments/*")
-        .permitAll()
-        .anyRequest()
-        .denyAll()
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .antMatchers(GET, "/users")
+            .permitAll()
+            .antMatchers(GET, "/users/*")
+            .permitAll()
+            .antMatchers(GET, "/users/*/posts")
+            .permitAll()
+            .antMatchers(GET, "/users/*/pictures")
+            .permitAll()
+            .antMatchers(GET, "/categories")
+            .permitAll()
+            .antMatchers(GET, "/posts")
+            .permitAll()
+            .antMatchers(GET, "/posts/*")
+            .permitAll()
+            .antMatchers(GET, "/posts/*/comments")
+            .permitAll()
+            .antMatchers(GET, "/posts/*/pictures")
+            .permitAll()
+            .antMatchers(GET, "/posts/*/pictures/*")
+            .permitAll()
+            .antMatchers(PUT, "/users/*")
+            .authenticated()
+            .antMatchers(PUT, "/users/*/pictures")
+            .authenticated()
+            .antMatchers(PUT, "/posts/*")
+            .authenticated()
+            .antMatchers(POST, "/posts/*/reaction")
+            .authenticated()
+            .antMatchers(PUT, "/posts/*/comments/*")
+            .authenticated()
+            .antMatchers(POST, "/signin")
+            .authenticated()
+            .antMatchers(POST, "/signup")
+            .permitAll()
+            .antMatchers(POST, "/posts/*/comments/*/reaction")
+            .authenticated()
+            .antMatchers(POST, "/posts/*/pictures/*")
+            .authenticated()
+            .antMatchers(DELETE, "/posts/*")
+            .authenticated()
+            .antMatchers(DELETE, "/posts/*/pictures/*")
+            .authenticated()
+            .anyRequest()
+            .denyAll()
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
   private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
     AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService, userService);
     bearerFilter.setAuthenticationManager(authenticationManager());
     bearerFilter.setAuthenticationSuccessHandler(
-        (httpServletRequest, httpServletResponse, authentication) -> {});
+    (httpServletRequest, httpServletResponse, authentication) -> {});
     bearerFilter.setAuthenticationFailureHandler(
-        (req, res, e) ->
+    (req, res, e) ->
             exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));
     return bearerFilter;
   }
