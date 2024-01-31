@@ -8,6 +8,7 @@ import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.Whoami;
+import com.blogify.blogapi.model.validator.CommentValidator;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.CommentReactionService;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
   private final PostService postService;
   private final CommentService commentService;
+  private final CommentValidator commentValidator;
   private final CommentMapper commentMapper;
   private final CommentReactionService commentReactionService;
   private final ReactionMapper reactionMapper;
@@ -74,6 +76,7 @@ public class CommentController {
     com.blogify.blogapi.repository.model.Comment crupdatedComment =
         commentService.crupdateById(
             postId, commentId, commentMapper.toDomain(updatedComment, post));
+    commentValidator.accept(crupdatedComment);
     return commentMapper.toRest(
         crupdatedComment, commentReactionService.getReactionStat(crupdatedComment.getId()));
   }
