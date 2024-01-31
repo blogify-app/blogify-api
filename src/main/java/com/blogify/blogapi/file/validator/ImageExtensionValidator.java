@@ -22,5 +22,4 @@ public class ImageExtensionValidator implements FileExtensionValidator {
     }
     return false;
   }
-
 }

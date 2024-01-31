@@ -19,8 +19,8 @@ public class ImageValidator {
       MediaType mediaType = detector.detect(inputStream, metadata);
 
       boolean isValid = type.equals(mediaType.getType()) && subType.equals(mediaType.getSubtype());
-      if (!isValid){
-        throw new BadRequestException("file is not a valid "+subType);
+      if (!isValid) {
+        throw new BadRequestException("file is not a valid " + subType);
       }
     } catch (IOException ignored) {
     }
