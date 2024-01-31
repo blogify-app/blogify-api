@@ -5,9 +5,11 @@ import com.blogify.blogapi.repository.types.PostgresEnumType;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +28,6 @@ import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "\"comment\"")
-@EqualsAndHashCode
 @Builder
 @Getter
 @Setter
@@ -53,8 +53,7 @@ public class Comment implements Serializable {
   @JoinColumn(name = "post_id")
   private Post post;
 
-  @OneToMany
-  @JoinColumn(name = "reaction_id")
+  @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<CommentReaction> commentReactions;
 
   @Enumerated(EnumType.STRING)

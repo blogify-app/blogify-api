@@ -13,10 +13,9 @@ import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
 import com.blogify.blogapi.service.UserService;
+import com.blogify.blogapi.service.WhoamiService;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.blogify.blogapi.service.WhoamiService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;

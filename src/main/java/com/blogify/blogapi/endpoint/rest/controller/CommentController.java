@@ -80,7 +80,8 @@ public class CommentController {
 
   @DeleteMapping("/posts/{postId}/comments/{commentId}")
   public Comment deleteCommentById(@PathVariable String postId, @PathVariable String commentId) {
-    com.blogify.blogapi.repository.model.Comment comment = commentService.deleteById(commentId, postId);
+    com.blogify.blogapi.repository.model.Comment comment =
+        commentService.deleteById(commentId, postId);
     return commentMapper.toRest(comment, commentReactionService.getReactionStat(commentId));
   }
 }

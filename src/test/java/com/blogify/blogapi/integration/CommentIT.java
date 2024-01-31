@@ -12,6 +12,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -103,6 +104,26 @@ public class CommentIT {
     assertEquals(commentToCreate().getReactions(), createdComment1.getReactions());
     assertEquals(commentToCreate().getStatus(), createdComment1.getStatus());
     assertEquals(4, allCommentsAfterCreate.size());
+  }
+
+  @Test
+  @DirtiesContext
+  void client_delete_ok() throws ApiException {
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
+    List<Comment> allCommentsBeforeDelete = api.getCommentsByPostId(POST1_ID, 1, 10);
+    api.deleteCommentById(POST1_ID, COMMENT1_ID);
+    List<Comment> allCommentsAfterDelete = api.getCommentsByPostId(POST1_ID, 1, 10);
+
+    assertEquals(3, allCommentsBeforeDelete.size());
+    assertTrue(allCommentsBeforeDelete.contains(comment1()));
+    assertTrue(allCommentsBeforeDelete.contains(comment2()));
+    assertTrue(allCommentsBeforeDelete.contains(comment3()));
+
+    assertEquals(2, allCommentsAfterDelete.size());
+    assertFalse(allCommentsAfterDelete.contains(comment1()));
+    assertTrue(allCommentsAfterDelete.contains(comment2()));
+    assertTrue(allCommentsAfterDelete.contains(comment3()));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

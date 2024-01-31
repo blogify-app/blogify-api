@@ -2,9 +2,9 @@ package com.blogify.blogapi.model;
 
 import java.math.BigDecimal;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class ReactionStat {
   private BigDecimal dislikes = BigDecimal.ZERO;

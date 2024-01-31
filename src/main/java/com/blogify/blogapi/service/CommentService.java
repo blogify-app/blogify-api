@@ -45,11 +45,9 @@ public class CommentService {
     return commentRepository.save(updatedComment);
   }
 
-  // todo: lock if used
   public Comment deleteById(String commentId, String postId) {
     Comment deleteComment = getBYId(commentId, postId);
-    commentRepository.deleteByIdAndPostId(commentId, postId);
-
+    commentRepository.delete(deleteComment);
     return deleteComment;
   }
 }
