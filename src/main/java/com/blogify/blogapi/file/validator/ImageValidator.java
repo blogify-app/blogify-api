@@ -1,28 +1,21 @@
 package com.blogify.blogapi.file.validator;
 
-import com.blogify.blogapi.model.exception.BadRequestException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import org.apache.tika.detect.DefaultDetector;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.Parser;
+import java.util.Objects;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+@Component
+@AllArgsConstructor
 public class ImageValidator {
-  public static void isValid(byte[] pdfData, String type, String subType) {
-    try {
-      DefaultDetector detector = new DefaultDetector();
-      Parser parser = new AutoDetectParser(detector);
-      Metadata metadata = new Metadata();
-      ByteArrayInputStream inputStream = new ByteArrayInputStream(pdfData);
-      MediaType mediaType = detector.detect(inputStream, metadata);
-
-      boolean isValid = type.equals(mediaType.getType()) && subType.equals(mediaType.getSubtype());
-      if (!isValid) {
-        throw new BadRequestException("file is not a valid " + subType);
-      }
-    } catch (IOException ignored) {
-    }
+  private final ImageExtensionValidator extensionValidator;
+  private final MultipartFileValidator multipartFileValidator;
+  private final ByteArrayTypeValidator byteArrayTypeValidator;
+  public void accept(MultipartFile file) throws IOException {
+    multipartFileValidator.accept(file);
+    extensionValidator.accept(Objects.requireNonNull(file.getOriginalFilename()));
+    byteArrayTypeValidator.accept(file.getBytes(),file.getContentType());
   }
+
 }

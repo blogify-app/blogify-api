@@ -3,7 +3,7 @@ package com.blogify.blogapi.endpoint.rest.controller;
 import com.blogify.blogapi.endpoint.mapper.PostMapper;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
-import com.blogify.blogapi.file.validator.MultipartFileValidator;
+import com.blogify.blogapi.file.validator.ImageValidator;
 import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.service.PostFileService;
 import com.blogify.blogapi.service.PostReactionService;
@@ -29,7 +29,7 @@ public class PostFileController {
   private final PostService postService;
   private final PostReactionService postReactionService;
   private final PostMapper postMapper;
-  private final MultipartFileValidator multipartFileValidator;
+  private final ImageValidator imageValidator;
 
   @GetMapping("/posts/{postId}")
   public Post getPostById(@PathVariable String postId) {
@@ -46,7 +46,7 @@ public class PostFileController {
       @RequestPart(value = "file", required = false) MultipartFile file)
       throws IOException {
 
-    multipartFileValidator.accept(file);
+    imageValidator.accept(file);
     return service.uploadPicture(pid, picId, file);
   }
 

@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class MultipartFileValidator implements Consumer<MultipartFile> {
 
-  // Maximum file size (2MB)
-  private static final long MAX_FILE_SIZE = 2 * 1024 * 1024;
+  // Maximum file size (1MB)
+  private static final long MAX_FILE_SIZE = 1 * 1024 * 1024;
 
   @Override
   public void accept(MultipartFile file) {
@@ -20,7 +20,7 @@ public class MultipartFileValidator implements Consumer<MultipartFile> {
     if (file == null || file.isEmpty()) {
       violationMessages.add("File is mandatory");
     } else if (file.getSize() > MAX_FILE_SIZE) {
-      violationMessages.add("File size must be less than " + MAX_FILE_SIZE + " bytes");
+      violationMessages.add("File size must be less than " + MAX_FILE_SIZE/(1024*1024) + " MB");
     }
 
     if (!violationMessages.isEmpty()) {
