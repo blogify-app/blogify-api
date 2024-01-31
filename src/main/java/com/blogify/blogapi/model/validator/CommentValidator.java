@@ -3,14 +3,15 @@ package com.blogify.blogapi.model.validator;
 import com.blogify.blogapi.model.enums.CommentStatus;
 import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.repository.model.Comment;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.utils.StringUtils;
 
 @Component
 @AllArgsConstructor
@@ -23,30 +24,28 @@ public class CommentValidator implements Consumer<Comment> {
 
     @Override
     public void accept(Comment comment) {
-        Set<ConstraintViolation<Comment>> violations = validator.validate(comment);
-
+        Set<String> violationMessages = new HashSet<>();
         if (!isNotNullAndNotBlank(comment.getContent())) {
             throw new BadRequestException("Content is mandatory. ");
         }
 
         if (comment.getUser() == null) {
-            throw new BadRequestException("User is mandatory");
-        }
-
-        if (comment.getPost() == null) {
-            throw new BadRequestException("Post is mandatory. ");
+            violationMessages.add("User is mandatory");
+        } else {
+            if (comment.getUser().getId() == null) {
+                violationMessages.add("User ID is mandatory");
+            }
         }
 
         if (comment.getStatus() == CommentStatus.DISABLED || !isValidCommentStatus(comment.getStatus())) {
-            throw new BadRequestException("Invalid Comment Status. ");
+            violationMessages.add("Invalid Comment Status. ");
         }
 
-        if (!violations.isEmpty()) {
-            String constraintMessages =
-                    violations.stream()
-                            .map(ConstraintViolation::getMessage)
-                            .collect(Collectors.joining(". "));
-            throw new BadRequestException(constraintMessages);
+        if (!violationMessages.isEmpty()) {
+            String formattedViolationMessages = violationMessages.stream()
+                    .map(String::toString)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(formattedViolationMessages);
         }
     }
 
@@ -55,6 +54,6 @@ public class CommentValidator implements Consumer<Comment> {
     }
 
     private boolean isNotNullAndNotBlank(String content) {
-        return true;
+        return StringUtils.isNotBlank(content);
     }
 }

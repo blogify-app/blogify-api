@@ -3,6 +3,7 @@ package com.blogify.blogapi.service;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
+import com.blogify.blogapi.model.validator.CommentValidator;
 import com.blogify.blogapi.repository.CommentRepository;
 import com.blogify.blogapi.repository.model.Comment;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CommentService {
   private final CommentRepository commentRepository;
+  private final CommentValidator commentValidator;
 
   public Comment getBYId(String commentId, String postId) {
     return commentRepository
@@ -36,6 +38,7 @@ public class CommentService {
   }
 
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {
+    commentValidator.accept(updatedComment);
     Optional<Comment> existingComment = commentRepository.findByIdAndPost_Id(commentId, postId);
     if (existingComment.isPresent()) {
       Comment comment = existingComment.get();

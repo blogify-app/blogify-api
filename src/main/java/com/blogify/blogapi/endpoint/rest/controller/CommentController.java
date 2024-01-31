@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
   private final PostService postService;
   private final CommentService commentService;
-  private final CommentValidator commentValidator;
   private final CommentMapper commentMapper;
   private final CommentReactionService commentReactionService;
   private final ReactionMapper reactionMapper;
@@ -76,7 +75,6 @@ public class CommentController {
     com.blogify.blogapi.repository.model.Comment crupdatedComment =
         commentService.crupdateById(
             postId, commentId, commentMapper.toDomain(updatedComment, post));
-    commentValidator.accept(crupdatedComment);
     return commentMapper.toRest(
         crupdatedComment, commentReactionService.getReactionStat(crupdatedComment.getId()));
   }
