@@ -17,6 +17,7 @@ import com.blogify.blogapi.service.WhoamiService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,6 @@ public class CommentController {
       @RequestParam(value = "type", required = false) ReactionType type) {
     com.blogify.blogapi.repository.model.Comment comment =
         commentService.getBYId(commentId, postId);
-    // todo: change to user from token when it will work
     Whoami whoami = whoamiService.whoami();
     User user = whoami.getUser();
     return reactionMapper.toRest(
@@ -76,5 +76,11 @@ public class CommentController {
             postId, commentId, commentMapper.toDomain(updatedComment, post));
     return commentMapper.toRest(
         crupdatedComment, commentReactionService.getReactionStat(crupdatedComment.getId()));
+  }
+
+  @DeleteMapping("/posts/{postId}/comments/{commentId}")
+  public Comment deletePostById(@PathVariable String postId, @PathVariable String commentId) {
+    com.blogify.blogapi.repository.model.Comment comment = commentService.deleteById(commentId, postId);
+    return commentMapper.toRest(comment, commentReactionService.getReactionStat(commentId));
   }
 }

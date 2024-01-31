@@ -15,10 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
@@ -28,9 +28,9 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "\"comment\"")
 @EqualsAndHashCode
-@ToString
-@Data
 @Builder
+@Getter
+@Setter
 @SQLDelete(sql = "UPDATE Comment SET deleted = true WHERE id=?")
 @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 @Where(clause = "deleted=false")

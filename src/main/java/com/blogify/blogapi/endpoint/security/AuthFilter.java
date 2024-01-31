@@ -48,28 +48,13 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
       HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
     FirebaseUser authUser = firebaseService.getUserByBearer(token);
-
-    System.out.println("*******************************");
-    System.out.println(authUser);
-
     if (authUser != null) {
       log.info("Authenticated user {}", authUser.getEmail());
       User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
-      System.out.println("*******************************");
-      System.out.println(user);
       UsernamePasswordAuthenticationToken authentication =
           new UsernamePasswordAuthenticationToken(user, token);
-      System.out.println("*******************************");
-      System.out.println(authentication);
-
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-      System.out.println("*************----------------------******************");
-
       SecurityContextHolder.getContext().setAuthentication(authentication);
-      System.out.println("*************----------***************------------******************");
-      System.out.println(authentication);
-
       return authentication;
     }
     throw new ForbiddenException("Access denied");
