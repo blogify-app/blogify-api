@@ -45,10 +45,10 @@ public class PostService {
   }
 
   public Post savePost(Post post, String postId) {
+    postValidator.accept(post);
     Optional<Post> optionalPost = postRepository.findById(postId);
     if (!optionalPost.isEmpty()) {
       Post postToUpdate = optionalPost.get();
-      postValidator.accept(post);
       post.setCreationDatetime(postToUpdate.getCreationDatetime());
     } else {
       post.setCreationDatetime(Instant.now());
