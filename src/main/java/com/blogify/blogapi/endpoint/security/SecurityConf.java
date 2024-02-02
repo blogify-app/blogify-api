@@ -44,19 +44,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     provider = auth;
   }
 
-  /*
-  @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.addAllowedHeader("*");
-    configuration.addAllowedMethod("*");
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
-
-   */
-
   private Exception forbiddenWithRemoteInfo(Exception e, HttpServletRequest req) {
     log.info(
         String.format(
@@ -68,8 +55,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors()
-        //.configurationSource(corsConfigurationSource())
-        .and()
+        .disable()
         .csrf()
         .disable()
         .formLogin()
@@ -109,11 +95,15 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .anonymous()
         .and()
         .authorizeRequests()
+        .antMatchers(OPTIONS, "/**")
+        .permitAll()
         .antMatchers(GET, "/health/*")
         .permitAll()
         .antMatchers(GET, "/ping")
         .permitAll()
         .antMatchers(GET, "/whoami")
+        .authenticated()
+        .antMatchers(POST, "/signin")
         .authenticated()
         .antMatchers(POST, "/signup")
         .permitAll()
