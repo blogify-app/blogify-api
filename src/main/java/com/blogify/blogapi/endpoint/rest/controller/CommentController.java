@@ -7,6 +7,7 @@ import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.model.Whoami;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.model.User;
@@ -55,16 +56,22 @@ public class CommentController {
   public Reaction reactToCommentById(
       @PathVariable String postId,
       @PathVariable String commentId,
-      @RequestParam(value = "type", required = false) ReactionType type) {
+      @RequestParam(value = "type", required = false) ReactionType type) {;
     com.blogify.blogapi.repository.model.Comment comment =
         commentService.getBYId(commentId, postId);
-    // todo: change to user from token when it will work
     Whoami whoami = whoamiService.whoami();
     User user = whoami.getUser();
     return reactionMapper.toRest(
         commentReactionService.reactAComment(comment, reactionMapper.toDomain(type), user));
   }
 
+  @GetMapping("/posts/{postId}/comments/{commentId}")
+  public Comment getCommentById(@PathVariable String postId, @PathVariable String commentId) {
+    com.blogify.blogapi.repository.model.Comment comment =
+            commentService.findByIdAndPostId(commentId, postId);
+    ReactionStat reactionStat = commentReactionService.getReactionStat(commentId);
+    return commentMapper.toRest(comment, reactionStat);
+  }
   @PutMapping("/posts/{postId}/comments/{commentId}")
   public Comment crupdateCommentById(
       @PathVariable String postId,
