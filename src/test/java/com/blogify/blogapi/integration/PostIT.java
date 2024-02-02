@@ -169,7 +169,7 @@ public class PostIT {
     String exceptionMessage2 = exception2.getMessage();
 
     assertTrue(exceptionMessage1.contains("Post_id is mandatory"));
-    assertTrue(exceptionMessage2.contains("User is mandatory"));
+    assertTrue(exceptionMessage2.contains("Author_id is mandatory"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

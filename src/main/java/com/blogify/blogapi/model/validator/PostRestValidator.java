@@ -22,7 +22,7 @@ public class PostRestValidator implements Consumer<com.blogify.blogapi.endpoint.
     public void accept(Post post){
         Set<String> violationMessages = new HashSet<>();
         if (post.getAuthorId() == null){
-            violationMessages.add("User is mandatory");
+            violationMessages.add("Author_id is mandatory");
         }
         if (!violationMessages.isEmpty()){
             String formattedViolationMessages = violationMessages.stream()
