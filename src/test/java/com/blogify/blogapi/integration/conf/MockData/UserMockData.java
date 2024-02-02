@@ -4,12 +4,19 @@ import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.C
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_LABEL;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_ID;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_LABEL;
-import static java.util.UUID.randomUUID;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_BANNER_KEY;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_BANNER_URL;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_PROFILE_KEY;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_PROFILE_URL;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_BANNER_URL;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_PROFILE_URL;
 
 import com.blogify.blogapi.endpoint.rest.model.Category;
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
+import com.blogify.blogapi.endpoint.rest.model.UserPicture;
+import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -41,9 +48,9 @@ public class UserMockData {
         .birthDate(LocalDate.parse("1995-01-01"))
         .sex(Sex.M)
         .status(UserStatus.ENABLED)
-        .photoUrl("photo_url_client1")
+        .photoUrl(CLIENT1_PROFILE_KEY)
         .bio("bio_client1")
-        .profileBannerUrl("banner_url_client1")
+        .profileBannerUrl(CLIENT1_BANNER_KEY)
         .entranceDatetime(Instant.parse("2000-01-01T08:12:20.00Z"))
         .categories(List.of(category1(), category2()))
         .isFollowed(null);
@@ -60,9 +67,9 @@ public class UserMockData {
         .birthDate(LocalDate.parse("2002-01-01"))
         .sex(Sex.F)
         .status(UserStatus.ENABLED)
-        .photoUrl("photo_url_client2")
+        .photoUrl(null)
         .bio("bio_client2")
-        .profileBannerUrl("banner_url_client2")
+        .profileBannerUrl(null)
         .entranceDatetime(Instant.parse("2002-01-01T08:12:20.00Z"))
         .categories(List.of(category1()))
         .isFollowed(null);
@@ -79,9 +86,9 @@ public class UserMockData {
         .birthDate(LocalDate.parse("1995-07-15"))
         .sex(Sex.M)
         .status(UserStatus.ENABLED)
-        .photoUrl("photo_url_client3")
+        .photoUrl(null)
         .bio("bio_client3")
-        .profileBannerUrl("banner_url_client3")
+        .profileBannerUrl(null)
         .entranceDatetime(null)
         .categories(List.of(category2(), category1()))
         .isFollowed(true);
@@ -109,19 +116,39 @@ public class UserMockData {
         .birthDate(LocalDate.parse("2000-01-01"))
         .sex(Sex.M)
         .status(UserStatus.ENABLED)
-        .photoUrl("photo_url_manager1")
+        .photoUrl(null)
         .bio("bio_manager1")
-        .profileBannerUrl("banner_url_manager1")
+        .profileBannerUrl(null)
         .entranceDatetime(Instant.parse("2000-09-01T08:12:20.00Z"))
         .categories(List.of())
         .isFollowed(null);
   }
 
-  public static com.blogify.blogapi.repository.model.Category category() {
-    return com.blogify.blogapi.repository.model.Category.builder()
-        .id(randomUUID().toString())
-        .name("machine learning")
-        .creationDatetime(Instant.now())
-        .build();
+  public static UserPicture userPictureClient1Profile() {
+    return new UserPicture()
+        .userId(CLIENT1_ID)
+        .type(UserPictureType.PROFILE)
+        .url(CLIENT1_PROFILE_URL);
+  }
+
+  public static UserPicture userPictureClient2Profile() {
+    return new UserPicture()
+        .userId(CLIENT2_ID)
+        .type(UserPictureType.PROFILE)
+        .url(CLIENT2_PROFILE_URL);
+  }
+
+  public static UserPicture userPictureClient1Banner() {
+    return new UserPicture()
+        .userId(CLIENT1_ID)
+        .type(UserPictureType.BANNER)
+        .url(CLIENT1_BANNER_URL);
+  }
+
+  public static UserPicture userPictureClient2Banner() {
+    return new UserPicture()
+        .userId(CLIENT2_ID)
+        .type(UserPictureType.BANNER)
+        .url(CLIENT2_BANNER_URL);
   }
 }
