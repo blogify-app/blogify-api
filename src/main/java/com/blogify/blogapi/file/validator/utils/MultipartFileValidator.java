@@ -1,4 +1,4 @@
-package com.blogify.blogapi.file.validator;
+package com.blogify.blogapi.file.validator.utils;
 
 import com.blogify.blogapi.model.exception.BadRequestException;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class MultipartFileValidator implements Consumer<MultipartFile> {
     if (file == null || file.isEmpty()) {
       violationMessages.add("File is mandatory");
     } else if (file.getSize() > MAX_FILE_SIZE) {
-      violationMessages.add("File size must be less than " + MAX_FILE_SIZE/(1024*1024) + " MB");
+      violationMessages.add("File size must be less than " + MAX_FILE_SIZE / (1024 * 1024) + " MB");
     }
 
     if (!violationMessages.isEmpty()) {

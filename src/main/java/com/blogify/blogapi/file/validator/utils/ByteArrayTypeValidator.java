@@ -1,4 +1,4 @@
-package com.blogify.blogapi.file.validator;
+package com.blogify.blogapi.file.validator.utils;
 
 import com.blogify.blogapi.model.exception.BadRequestException;
 import java.io.ByteArrayInputStream;
@@ -16,14 +16,15 @@ public class ByteArrayTypeValidator {
       Metadata metadata = new Metadata();
       ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
       MediaType mediaType = detector.detect(inputStream, metadata);
-      return contentType.startsWith(mediaType.getType()) && contentType.endsWith(mediaType.getSubtype());
+      return contentType.startsWith(mediaType.getType())
+          && contentType.endsWith(mediaType.getSubtype());
     } catch (IOException ignored) {
     }
     return false;
   }
 
-  public void accept(byte[] bytes, String contentType){
-    if (!isValid(bytes, contentType)){
+  public void accept(byte[] bytes, String contentType) {
+    if (!isValid(bytes, contentType)) {
       throw new BadRequestException("Fife type not supported");
     }
   }

@@ -1,4 +1,4 @@
-package com.blogify.blogapi.file.validator;
+package com.blogify.blogapi.file.validator.utils;
 
 import com.blogify.blogapi.model.exception.BadRequestException;
 import java.util.Arrays;
@@ -17,11 +17,10 @@ public class ImageExtensionValidator implements FileExtensionValidator {
 
   @Override
   public void accept(String filename) {
-    if (!isValidFile(filename)){
+    if (!isValidFile(filename)) {
       throw new BadRequestException("File type not supported");
     }
   }
-
 
   private boolean endsWithValidExtension(String filename) {
     for (String extension : ALLOWED_EXTENSIONS) {

@@ -40,14 +40,12 @@ public class PostController {
 
   @GetMapping("/posts")
   public List<Post> getPosts(
-      @RequestParam(required = false) Integer page,
-      @RequestParam(value = "page_size", required = false) Integer pageSize,
+      @RequestParam(required = false) PageFromOne page,
+      @RequestParam(value = "page_size", required = false) BoundedPageSize pageSize,
       @RequestParam(value = "categories", required = false) String categories) {
-    requestInputValidator.notNullValue(InputType.QUERY_PARAMS,"page_size",pageSize);
-    requestInputValidator.notNullValue(InputType.QUERY_PARAMS,"page",page);
-    PageFromOne pageFromOne = new PageFromOne(page);
-    BoundedPageSize boundedPageSize = new BoundedPageSize(pageSize);
-    return postService.findAllByCategory(categories, pageFromOne, boundedPageSize).stream()
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page_size", pageSize);
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page", page);
+    return postService.findAllByCategory(categories, page, pageSize).stream()
         .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
         .toList();
   }
@@ -57,8 +55,8 @@ public class PostController {
       @PathVariable("uId") String uId,
       @RequestParam(value = "page", required = false) PageFromOne page,
       @RequestParam(value = "page_size", required = false) BoundedPageSize pageSize) {
-    requestInputValidator.notNullValue(InputType.QUERY_PARAMS,"page_size",pageSize);
-    requestInputValidator.notNullValue(InputType.QUERY_PARAMS,"page",page);
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page_size", pageSize);
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page", page);
     var posts = postService.getPostsByUserId(uId, page, pageSize);
     return posts.stream()
         .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
@@ -77,9 +75,8 @@ public class PostController {
   public Reaction reactToPostById(
       @PathVariable String postId,
       @RequestParam(value = "type", required = false) ReactionType type) {
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "type", type);
     com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
-    requestInputValidator.notNullValue(InputType.QUERY_PARAMS,"type",type
-    );
     // todo: change to user from token when it will work
     User user = post.getUser();
     return reactionMapper.toRest(
