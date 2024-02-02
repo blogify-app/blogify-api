@@ -12,6 +12,7 @@ import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_I
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,8 +22,10 @@ import com.blogify.blogapi.endpoint.rest.api.CommentsApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
+import com.blogify.blogapi.endpoint.rest.model.CommentStatus;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
+import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,6 +112,30 @@ public class CommentIT {
     assertEquals(commentToCreate().getStatus(), createdComment1.getStatus());
     assertEquals(4, allCommentsAfterCreate.size());
   }
+
+  @Test
+  void client_write_ko() throws ApiException{
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
+
+    List<Comment> allCommentsBeforeCreate = api.getCommentsByPostId(POST1_ID, 1, 10);
+
+    Comment invalidComment = new Comment();
+    invalidComment.setContent("");
+    invalidComment.setUser(null);
+    invalidComment.setStatus(CommentStatus.DISABLED);
+
+    assertThrows(ApiException.class, () -> {
+      api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, invalidComment);
+    });
+
+    List<Comment> allCommentsAfterCreate = api.getCommentsByPostId(POST1_ID, 1, 10);
+
+    assertEquals(3, allCommentsBeforeCreate.size());
+    assertEquals(3, allCommentsAfterCreate.size());
+  }
+
+
 
   @Test
   @DirtiesContext
