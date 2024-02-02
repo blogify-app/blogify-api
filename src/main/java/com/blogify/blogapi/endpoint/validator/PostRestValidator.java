@@ -1,4 +1,4 @@
-package com.blogify.blogapi.model.validator;
+package com.blogify.blogapi.endpoint.validator;
 
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.model.exception.BadRequestException;
@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class PostRestValidator implements Consumer<com.blogify.blogapi.endpoint.rest.model.Post> {
+public class PostRestValidator implements Consumer<Post> {
     private  final Validator validator;
 
-    public void  accept(List<com.blogify.blogapi.endpoint.rest.model.Post> posts){posts.forEach(this);}
+    public void  accept(List<Post> posts){posts.forEach(this);}
     @Override
     public void accept(Post post){
         Set<String> violationMessages = new HashSet<>();
