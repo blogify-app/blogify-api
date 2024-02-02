@@ -5,6 +5,8 @@ import com.blogify.blogapi.endpoint.mapper.ReactionMapper;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
+import com.blogify.blogapi.endpoint.validator.RequestInputValidator;
+import com.blogify.blogapi.endpoint.validator.RequestInputValidator.InputType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.ReactionStat;
@@ -37,15 +39,16 @@ public class PostController {
   private final PostReactionService postReactionService;
   private final ReactionMapper reactionMapper;
   private final WhoamiService whoamiService;
+  private final RequestInputValidator requestInputValidator;
 
   @GetMapping("/posts")
   public List<Post> getPosts(
-      @RequestParam(required = false) Integer page,
-      @RequestParam(value = "page_size", required = false) Integer pageSize,
+      @RequestParam(required = false) PageFromOne page,
+      @RequestParam(value = "page_size", required = false) BoundedPageSize pageSize,
       @RequestParam(value = "categories", required = false) String categories) {
-    PageFromOne pageFromOne = new PageFromOne(page);
-    BoundedPageSize boundedPageSize = new BoundedPageSize(pageSize);
-    return postService.findAllByCategory(categories, pageFromOne, boundedPageSize).stream()
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page_size", pageSize);
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page", page);
+    return postService.findAllByCategory(categories, page, pageSize).stream()
         .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
         .toList();
   }
@@ -54,7 +57,9 @@ public class PostController {
   public List<Post> getPostByUserId(
       @PathVariable("uId") String uId,
       @RequestParam(value = "page", required = false) PageFromOne page,
-      @RequestParam(value = "pageSize", required = false) BoundedPageSize pageSize) {
+      @RequestParam(value = "page_size", required = false) BoundedPageSize pageSize) {
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page_size", pageSize);
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "page", page);
     var posts = postService.getPostsByUserId(uId, page, pageSize);
     return posts.stream()
         .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
@@ -73,6 +78,7 @@ public class PostController {
   public Reaction reactToPostById(
       @PathVariable String postId,
       @RequestParam(value = "type", required = false) ReactionType type) {
+    requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "type", type);
     com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
     Whoami whoami = whoamiService.whoami();
     User user = whoami.getUser();

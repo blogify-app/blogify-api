@@ -29,10 +29,10 @@ public class TestUtils {
   public static final String MANAGER_TOKEN = "manger1_token";
 
   public static final FirebaseUser firebaseUserClient1 =
-      new FirebaseUser("test+ryan@hei.school", "client1_firebase_id");
+      new FirebaseUser("test@gmail.com", "uQp7l4pzKuaaqCXjruhZw525pI23");
 
   public static final FirebaseUser firebaseUserClient2 =
-      new FirebaseUser("test+herilala@hei.school", "client2_firebase_id");
+      new FirebaseUser("hei.hajatiana@gmail.com", "W2O94puRphSI6HkaCP7kAjA9GFB2");
   public static final FirebaseUser firebaseUserManager1 =
       new FirebaseUser("test+vano@hei.school", "manager1_firebase_id");
 
