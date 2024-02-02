@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class PostValidator implements Consumer<Post> {
   private  final Validator validator;
 
-  public void  accept(List<Post> posts){posts.forEach(this);}
+  public void  accept(List<Post> posts){posts.forEach(this::accept);}
   @Override
   public void accept(Post post){
     Set<String> violationMessages = new HashSet<>();
