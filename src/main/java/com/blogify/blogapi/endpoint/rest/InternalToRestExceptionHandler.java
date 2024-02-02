@@ -40,11 +40,11 @@ public class InternalToRestExceptionHandler {
     return new ResponseEntity<>(toRest(e, HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
   }
 
-  ResponseEntity<Exception> handleDefault(java.lang.Exception e) {
-    log.error("Internal error", e);
-    return new ResponseEntity<>(
-        toRest(e, HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+  //  ResponseEntity<Exception> handleDefault(java.lang.Exception e) {
+  //    log.error("Internal error", e);
+  //    return new ResponseEntity<>(
+  //        toRest(e, HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+  //  }
 
   private Exception toRest(java.lang.Exception e, HttpStatus status) {
     var restException = new Exception();

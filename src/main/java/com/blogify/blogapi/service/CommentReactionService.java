@@ -18,11 +18,10 @@ public class CommentReactionService {
   private final CommentReactionRepository commentReactionRepository;
 
   public ReactionStat getReactionStat(String commentId) {
-
     Long dislikeNumber =
-        commentReactionRepository.sumOfPropertyByPostAndType(commentId, ReactionType.DISLIKE);
+        commentReactionRepository.sumOfPropertyByCommentAndType(commentId, ReactionType.DISLIKE);
     Long likeNumber =
-        commentReactionRepository.sumOfPropertyByPostAndType(commentId, ReactionType.LIKE);
+        commentReactionRepository.sumOfPropertyByCommentAndType(commentId, ReactionType.LIKE);
     return ReactionStat.builder()
         .likes(BigDecimal.valueOf(likeNumber))
         .dislikes(BigDecimal.valueOf(dislikeNumber))

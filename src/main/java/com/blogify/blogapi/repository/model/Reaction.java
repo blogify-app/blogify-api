@@ -12,8 +12,9 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity(name = "\"reaction\"")
@@ -21,7 +22,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @DiscriminatorColumn(name = "disc_type", length = 4)
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Reaction {
   @Id private String id;
 

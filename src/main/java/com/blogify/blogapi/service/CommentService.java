@@ -35,6 +35,15 @@ public class CommentService {
     return commentRepository.findByPostIdOrderByCreationDatetimeDesc(postId, pageable);
   }
 
+  public Comment findByIdAndPostId(String commentId, String postId) {
+    return commentRepository
+        .findByIdAndPost_Id(commentId, postId)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "Entity with id " + (postId != null ? postId : commentId) + " not found"));
+  }
+
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {
     Optional<Comment> existingComment = commentRepository.findByIdAndPost_Id(commentId, postId);
     if (existingComment.isPresent()) {
@@ -45,11 +54,9 @@ public class CommentService {
     return commentRepository.save(updatedComment);
   }
 
-  // todo: lock if used
   public Comment deleteById(String commentId, String postId) {
     Comment deleteComment = getBYId(commentId, postId);
-    commentRepository.deleteByIdAndPostId(commentId, postId);
-
+    commentRepository.delete(deleteComment);
     return deleteComment;
   }
 }

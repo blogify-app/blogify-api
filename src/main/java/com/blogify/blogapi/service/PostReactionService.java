@@ -18,7 +18,6 @@ public class PostReactionService {
   private final PostReactionRepository postReactionRepository;
 
   public ReactionStat getReactionStat(String pstId) {
-
     Long dislikeNumber =
         postReactionRepository.sumOfPropertyByPostAndType(pstId, ReactionType.DISLIKE);
     Long likeNumber = postReactionRepository.sumOfPropertyByPostAndType(pstId, ReactionType.LIKE);
