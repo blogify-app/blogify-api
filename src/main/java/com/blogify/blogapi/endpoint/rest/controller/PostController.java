@@ -10,10 +10,12 @@ import com.blogify.blogapi.endpoint.validator.RequestInputValidator.InputType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.ReactionStat;
+import com.blogify.blogapi.model.Whoami;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
 import com.blogify.blogapi.service.UserService;
+import com.blogify.blogapi.service.WhoamiService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -36,6 +38,7 @@ public class PostController {
   private final UserService userService;
   private final PostReactionService postReactionService;
   private final ReactionMapper reactionMapper;
+  private final WhoamiService whoamiService;
   private final RequestInputValidator requestInputValidator;
 
   @GetMapping("/posts")
@@ -77,8 +80,8 @@ public class PostController {
       @RequestParam(value = "type", required = false) ReactionType type) {
     requestInputValidator.notNullValue(InputType.QUERY_PARAMS, "type", type);
     com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
-    // todo: change to user from token when it will work
-    User user = post.getUser();
+    Whoami whoami = whoamiService.whoami();
+    User user = whoami.getUser();
     return reactionMapper.toRest(
         postReactionService.reactAPost(post, reactionMapper.toDomain(type), user));
   }

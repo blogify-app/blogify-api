@@ -21,26 +21,24 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.Where;
 
-@Data
 @EqualsAndHashCode
 @ToString
 @Entity
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
-@SQLDelete(sql = "UPDATE User SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 @Table(name = "\"user\"")
 public class User implements Serializable {
   @Id private String id;

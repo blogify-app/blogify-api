@@ -18,7 +18,6 @@ public class CommentReactionService {
   private final CommentReactionRepository commentReactionRepository;
 
   public ReactionStat getReactionStat(String commentId) {
-
     Long dislikeNumber =
         commentReactionRepository.sumOfPropertyByCommentAndType(commentId, ReactionType.DISLIKE);
     Long likeNumber =
