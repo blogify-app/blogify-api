@@ -157,22 +157,16 @@ public class PostIT {
   void client_update_ko() throws ApiException{
     ApiClient client1 = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1);
-    Post post1 = api.getPostById(POST1_ID);
-    Post post2 = api.getPostById(POST1_ID);
-    Post postUpdate1 = post1.id(null);
-    Post postUpdate2 = post2.authorId(null);
+    Post postUpdate1 = api.getPostById(POST1_ID).id(null);
+    Post postUpdate2 = api.getPostById(POST1_ID).authorId(null);
 
     ApiException exception1 = assertThrows(ApiException.class,
             () -> api.crupdatePostById(POST1_ID,postUpdate1));
     ApiException exception2 = assertThrows(ApiException.class,
             () -> api.crupdatePostById(POST1_ID,postUpdate2));
 
-    System.out.println("*******************************************************");
-    System.out.println(postUpdate1);
-    System.out.println(postUpdate2);
     String exceptionMessage1 = exception1.getMessage();
     String exceptionMessage2 = exception2.getMessage();
-    System.out.println(exceptionMessage2);
 
     assertTrue(exceptionMessage1.contains("Post_id is mandatory"));
     assertTrue(exceptionMessage2.contains("User is mandatory"));
