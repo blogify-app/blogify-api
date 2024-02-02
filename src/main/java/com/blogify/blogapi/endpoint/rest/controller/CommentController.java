@@ -7,6 +7,7 @@ import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.model.Whoami;
 import com.blogify.blogapi.model.validator.CommentValidator;
 import com.blogify.blogapi.repository.model.Post;
@@ -18,6 +19,7 @@ import com.blogify.blogapi.service.WhoamiService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,13 +59,21 @@ public class CommentController {
       @PathVariable String postId,
       @PathVariable String commentId,
       @RequestParam(value = "type", required = false) ReactionType type) {
+    ;
     com.blogify.blogapi.repository.model.Comment comment =
         commentService.getBYId(commentId, postId);
-    // todo: change to user from token when it will work
     Whoami whoami = whoamiService.whoami();
     User user = whoami.getUser();
     return reactionMapper.toRest(
         commentReactionService.reactAComment(comment, reactionMapper.toDomain(type), user));
+  }
+
+  @GetMapping("/posts/{postId}/comments/{commentId}")
+  public Comment getCommentById(@PathVariable String postId, @PathVariable String commentId) {
+    com.blogify.blogapi.repository.model.Comment comment =
+        commentService.findByIdAndPostId(commentId, postId);
+    ReactionStat reactionStat = commentReactionService.getReactionStat(commentId);
+    return commentMapper.toRest(comment, reactionStat);
   }
 
   @PutMapping("/posts/{postId}/comments/{commentId}")
@@ -77,5 +87,12 @@ public class CommentController {
             postId, commentId, commentMapper.toDomain(updatedComment, post));
     return commentMapper.toRest(
         crupdatedComment, commentReactionService.getReactionStat(crupdatedComment.getId()));
+  }
+
+  @DeleteMapping("/posts/{postId}/comments/{commentId}")
+  public Comment deleteCommentById(@PathVariable String postId, @PathVariable String commentId) {
+    com.blogify.blogapi.repository.model.Comment comment =
+        commentService.deleteById(commentId, postId);
+    return commentMapper.toRest(comment, commentReactionService.getReactionStat(commentId));
   }
 }

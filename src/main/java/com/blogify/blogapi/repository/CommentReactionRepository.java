@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface CommentReactionRepository extends JpaRepository<CommentReaction, String> {
   @Query(
       "SELECT count(c) FROM CommentReaction c WHERE c.comment.id = :comment_id and c.type = :type")
-  Long sumOfPropertyByPostAndType(
+  Long sumOfPropertyByCommentAndType(
       @Param("comment_id") String comment_id, @Param("type") ReactionType type);
 
   List<CommentReaction> findAllByCommentAndUser(Comment comment, User user);
