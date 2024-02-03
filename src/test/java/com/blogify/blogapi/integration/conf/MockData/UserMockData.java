@@ -4,9 +4,7 @@ import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.C
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY1_LABEL;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_ID;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.CATEGORY2_LABEL;
-import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_BANNER_KEY;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_BANNER_URL;
-import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_PROFILE_KEY;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_PROFILE_URL;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_BANNER_URL;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_PROFILE_URL;
@@ -48,9 +46,9 @@ public class UserMockData {
         .birthDate(LocalDate.parse("1995-01-01"))
         .sex(Sex.M)
         .status(UserStatus.ENABLED)
-        .photoUrl(CLIENT1_PROFILE_KEY)
+        .photoUrl(null)
         .bio("bio_client1")
-        .profileBannerUrl(CLIENT1_BANNER_KEY)
+        .profileBannerUrl(null)
         .entranceDatetime(Instant.parse("2000-01-01T08:12:20.00Z"))
         .categories(List.of(category1(), category2()))
         .isFollowed(null);

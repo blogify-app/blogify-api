@@ -56,6 +56,17 @@ public class UserFileIT {
     assertEquals(actualUserPictureProfile, userPictureClient1Profile());
   }
 
+  //  @Test
+  //  void client_write_ok() throws ApiException {
+  //    ApiClient client1Client = anApiClient(CLIENT1_TOKEN);
+  //    UserApi api = new UserApi(client1Client);
+  //
+  //    UserPicture actual = api.putUserPicture(CLIENT1_ID, UserPictureType.PROFILE,
+  // jpgMultipartFile());
+  //
+  //    assertEquals(userPictureClient1Profile().url(CLIENT1_PROFILE_URL_JPG), actual);
+  //  }
+
   static class ContextInitializer extends AbstractContextInitializer {
     public static final int SERVER_PORT = anAvailableRandomPort();
 

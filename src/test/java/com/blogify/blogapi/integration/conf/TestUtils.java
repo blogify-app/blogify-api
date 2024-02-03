@@ -1,5 +1,6 @@
 package com.blogify.blogapi.integration.conf;
 
+import static com.blogify.blogapi.integration.conf.MockData.FileMockData.jpgFileContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -39,6 +40,8 @@ public class TestUtils {
   public static final String CLIENT2_PROFILE_URL = "https://profile.url.com/client2";
   public static final String CLIENT2_BANNER_URL = "https://banner.url.com/client2";
 
+  public static final String CLIENT1_PROFILE_URL_JPG = "https://profile.url.com/client1/jpg";
+
   public static final String POST1_PICTURE1_KEY = "post1_bucket_picture1_id_key";
   public static final String POST1_PICTURE2_KEY = "post1_bucket_picture2_id_key";
   public static final String POST1_PICTURE1_URL = "https://post1.url.com/picture1";
@@ -46,7 +49,6 @@ public class TestUtils {
 
   public static final FirebaseUser firebaseUserClient1 =
       new FirebaseUser("test@gmail.com", "uQp7l4pzKuaaqCXjruhZw525pI23");
-
   public static final FirebaseUser firebaseUserClient2 =
       new FirebaseUser("hei.hajatiana@gmail.com", "W2O94puRphSI6HkaCP7kAjA9GFB2");
   public static final FirebaseUser firebaseUserManager1 =
@@ -73,6 +75,10 @@ public class TestUtils {
           .thenReturn(new URL(POST1_PICTURE1_URL));
       when(s3Service.generatePresignedUrl(POST1_PICTURE2_KEY, FileConstant.URL_DURATION))
           .thenReturn(new URL(POST1_PICTURE2_URL));
+
+      when(s3Service.uploadObjectToS3Bucket(CLIENT1_PROFILE_KEY, jpgFileContent()))
+          .thenReturn(CLIENT1_PROFILE_URL_JPG);
+
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
