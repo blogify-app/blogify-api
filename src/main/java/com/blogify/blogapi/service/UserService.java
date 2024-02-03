@@ -37,14 +37,15 @@ public class UserService {
   }
 
   @Transactional
-  public User updateUser(User user, String userId) {
-
+  public User crupdateUser(User user, String userId) {
+    userValidator.accept(user);
     Optional<User> userOptional = repository.findById(userId);
     if (userOptional.isPresent()) {
       User userFromDomain = userOptional.get();
-      userValidator.accept(user);
       user.setCreationDatetime(userFromDomain.getCreationDatetime());
       user.setRole(userFromDomain.getRole());
+      user.setPhotoUrl(userFromDomain.getPhotoUrl());
+      user.setProfileBannerUrl(userFromDomain.getProfileBannerUrl());
     }
     return repository.save(user);
   }
