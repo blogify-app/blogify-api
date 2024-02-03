@@ -20,4 +20,8 @@ public class CategoryService {
   public Category save(Category toSave) {
     return categoryRepository.save(toSave);
   }
+
+  public List<Category> saveAll(List<Category> categories){
+    return categoryRepository.saveAll(categories);
+  }
 }
