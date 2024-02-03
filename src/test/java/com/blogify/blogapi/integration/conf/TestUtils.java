@@ -75,8 +75,8 @@ public class TestUtils {
       when(s3Service.generatePresignedUrl(POST1_PICTURE2_KEY, FileConstant.URL_DURATION))
           .thenReturn(new URL(POST1_PICTURE2_URL));
 
-//      when(s3Service.uploadObjectToS3Bucket(CLIENT1_PROFILE_KEY, jpgFileContent()))
-//          .thenReturn(CLIENT1_PROFILE_URL_JPG);
+      //      when(s3Service.uploadObjectToS3Bucket(CLIENT1_PROFILE_KEY, jpgFileContent()))
+      //          .thenReturn(CLIENT1_PROFILE_URL_JPG);
 
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
