@@ -128,7 +128,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(PUT, "/users/*/pictures")
         .permitAll()
         .antMatchers(PUT, "/posts/*")
-        .authenticated()
+        .permitAll()
         .antMatchers(POST, "/posts/*/reaction")
         .authenticated()
         .antMatchers(PUT, "/posts/*/comments/*")
