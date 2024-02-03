@@ -5,6 +5,7 @@ import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.not
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
+import com.blogify.blogapi.model.validator.PostValidator;
 import com.blogify.blogapi.repository.PostRepository;
 import com.blogify.blogapi.repository.dao.PostDao;
 import com.blogify.blogapi.repository.model.Post;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
   private final PostRepository postRepository;
   private final PostDao postDao;
+  private PostValidator postValidator;
   private final String RESOURCE_NAME = "Post";
 
   public Post getById(String id) {
@@ -43,6 +45,7 @@ public class PostService {
   }
 
   public Post savePost(Post post, String postId) {
+    postValidator.accept(post);
     Optional<Post> optionalPost = postRepository.findById(postId);
     if (!optionalPost.isEmpty()) {
       Post postToUpdate = optionalPost.get();
