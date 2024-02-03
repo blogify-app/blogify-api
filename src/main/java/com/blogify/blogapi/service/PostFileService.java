@@ -5,11 +5,14 @@ import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.not
 import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.PostPicture;
 import com.blogify.blogapi.file.S3Service;
+import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.PostPictureRepository;
 import com.blogify.blogapi.repository.model.Post;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +29,15 @@ public class PostFileService {
   @Transactional
   public PostPicture uploadPicture(String pid, String picId, MultipartFile file)
       throws IOException {
+    Optional<com.blogify.blogapi.repository.model.PostPicture> picture = repository.findById(picId);
+    if (picture.isPresent()) {
+      throw new BadRequestException("Post picture with id " + picId + "already exists");
+    }
+    String extension =
+        Objects.requireNonNull(file.getContentType())
+            .substring(file.getContentType().lastIndexOf("/") + 1);
     Post post = postService.getById(pid);
-    String bucketKey = picId + file.getContentType();
+    String bucketKey = picId + "." + extension;
     s3Service.uploadObjectToS3Bucket(bucketKey, file.getBytes());
     com.blogify.blogapi.repository.model.PostPicture postPicture =
         com.blogify.blogapi.repository.model.PostPicture.builder().post(post).build();
