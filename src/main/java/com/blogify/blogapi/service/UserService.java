@@ -44,8 +44,8 @@ public class UserService {
       User userFromDomain = userOptional.get();
       user.setCreationDatetime(userFromDomain.getCreationDatetime());
       user.setRole(userFromDomain.getRole());
-      user.setPhotoUrl(userFromDomain.getPhotoUrl());
-      user.setProfileBannerUrl(userFromDomain.getProfileBannerUrl());
+      user.setPhotoKey(userFromDomain.getPhotoKey());
+      user.setProfileBannerKey(userFromDomain.getProfileBannerKey());
     }
     return repository.save(user);
   }

@@ -24,6 +24,7 @@ public class PostService {
   private final String RESOURCE_NAME = "Post";
 
   public Post getById(String id) {
+
     return postRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME, id)));
@@ -47,6 +48,7 @@ public class PostService {
     if (!optionalPost.isEmpty()) {
       Post postToUpdate = optionalPost.get();
       post.setCreationDatetime(postToUpdate.getCreationDatetime());
+      post.setThumbnailKey(postToUpdate.getThumbnailKey());
     } else {
       post.setCreationDatetime(Instant.now());
     }

@@ -18,6 +18,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.getDislikeReactionP
 import static com.blogify.blogapi.integration.conf.TestUtils.getLikeReactionPoint;
 import static com.blogify.blogapi.integration.conf.TestUtils.getLikeReactionPointInComment;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -30,6 +31,7 @@ import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
+import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -48,6 +50,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = ReactionIT.ContextInitializer.class)
 public class ReactionIT {
   @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean private S3Service s3Service;
 
   private static ApiClient apiClient(String token) {
     return TestUtils.anApiClient(token, ReactionIT.ContextInitializer.SERVER_PORT);
@@ -56,6 +59,7 @@ public class ReactionIT {
   @BeforeEach
   void setUp() {
     setUpFirebase(firebaseServiceMock);
+    setUpS3Service(s3Service);
   }
 
   @Test

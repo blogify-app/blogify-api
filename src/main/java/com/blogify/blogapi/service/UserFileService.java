@@ -41,20 +41,20 @@ public class UserFileService {
 
   private String getBucketKeyByPictureType(String uid, UserPictureType type) {
     User user = userService.findById(uid);
-    return type == UserPictureType.PROFILE ? user.getPhotoUrl() : user.getProfileBannerUrl();
+    return type == UserPictureType.PROFILE ? user.getPhotoKey() : user.getProfileBannerKey();
   }
 
   private String setBucketKeyByPictureType(String uid, UserPictureType type) {
     User user = userService.findById(uid);
     if (type == UserPictureType.PROFILE) {
-      if (user.getPhotoUrl() == null) {
-        user.setPhotoUrl("user/" + uid + "/" + type.getValue());
+      if (user.getPhotoKey() == null) {
+        user.setPhotoKey("user/" + uid + "/" + type.getValue());
       }
-      return userService.crupdateUser(user, uid).getPhotoUrl();
+      return userService.crupdateUser(user, uid).getPhotoKey();
     }
-    if (user.getProfileBannerUrl() == null) {
-      user.setProfileBannerUrl("user/" + uid + "/" + type.getValue());
+    if (user.getProfileBannerKey() == null) {
+      user.setProfileBannerKey("user/" + uid + "/" + type.getValue());
     }
-    return userService.crupdateUser(user, uid).getProfileBannerUrl();
+    return userService.crupdateUser(user, uid).getProfileBannerKey();
   }
 }

@@ -47,6 +47,9 @@ public class TestUtils {
   public static final String POST1_PICTURE1_URL = "https://post1.url.com/picture1";
   public static final String POST1_PICTURE2_URL = "https://post1.url.com/picture2";
 
+  public static final String POST1_THUMBNAIL_KEY = "post1_thumbnail_key";
+  public static final String POST1_THUMBNAIL_URL = "https://post1.url.com/thumbnail";
+
   public static final FirebaseUser firebaseUserClient1 =
       new FirebaseUser("test@gmail.com", "uQp7l4pzKuaaqCXjruhZw525pI23");
   public static final FirebaseUser firebaseUserClient2 =
@@ -75,6 +78,9 @@ public class TestUtils {
           .thenReturn(new URL(POST1_PICTURE1_URL));
       when(s3Service.generatePresignedUrl(POST1_PICTURE2_KEY, FileConstant.URL_DURATION))
           .thenReturn(new URL(POST1_PICTURE2_URL));
+
+      when(s3Service.generatePresignedUrl(POST1_THUMBNAIL_KEY, FileConstant.URL_DURATION))
+          .thenReturn(new URL(POST1_THUMBNAIL_URL));
 
       when(s3Service.uploadObjectToS3Bucket(CLIENT1_PROFILE_KEY, jpgFileContent()))
           .thenReturn(CLIENT1_PROFILE_URL_JPG);

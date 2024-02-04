@@ -63,9 +63,9 @@ public class User implements Serializable {
   @CreationTimestamp private Instant creationDatetime;
   private Instant lastUpdateDatetime;
 
-  private String photoUrl;
+  private String photoKey;
   private String bio;
-  private String profileBannerUrl;
+  private String profileBannerKey;
   private String username;
   private String about;
 

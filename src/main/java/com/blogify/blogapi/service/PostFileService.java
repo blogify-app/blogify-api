@@ -9,6 +9,7 @@ import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.repository.PostPictureRepository;
 import com.blogify.blogapi.repository.model.Post;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -102,5 +103,22 @@ public class PostFileService {
           htmlContent.replace(placeholder, picture.getUrl() != null ? picture.getUrl() : "");
     }
     return htmlContent;
+  }
+
+  public Post uploadPostThumbnail(String pid, MultipartFile file) throws IOException {
+    String fileBucketKey = setBucketThumbnailKeyByPostId(pid);
+    s3Service.uploadObjectToS3Bucket(fileBucketKey, file.getBytes());
+    URL url = s3Service.generatePresignedUrl(fileBucketKey, FileConstant.URL_DURATION);
+    Post post = postService.getById(pid);
+    post.setThumbnailKey(url.toString());
+    return post;
+  }
+
+  private String setBucketThumbnailKeyByPostId(String pid) {
+    Post post = postService.getById(pid);
+    if (post.getThumbnailKey() == null) {
+      post.setThumbnailKey("post/" + pid + "/" + "thumbnail");
+    }
+    return postService.savePost(post, pid).getThumbnailKey();
   }
 }

@@ -46,7 +46,7 @@ public class UserMockData {
         .birthDate(LocalDate.parse("1995-01-01"))
         .sex(Sex.M)
         .status(UserStatus.ENABLED)
-        .photoUrl(null)
+        .photoUrl(CLIENT1_PROFILE_URL)
         .bio("bio_client1")
         .profileBannerUrl(null)
         .entranceDatetime(Instant.parse("2000-01-01T08:12:20.00Z"))
