@@ -1,6 +1,5 @@
 package com.blogify.blogapi.integration.conf.MockData;
 
-
 public class FileMockData {
   //  private static byte[] readFileToByteArray(String filePath) {
   //    try (FileInputStream fileInputStream = new FileInputStream(filePath)) {

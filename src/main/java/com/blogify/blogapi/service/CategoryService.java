@@ -23,7 +23,7 @@ public class CategoryService {
     return categoryRepository.save(toSave);
   }
 
-  public List<Category> saveAll(List<Category> categories){
+  public List<Category> saveAll(List<Category> categories) {
     categoryValidator.accept(categories);
     return categoryRepository.saveAll(categories);
   }

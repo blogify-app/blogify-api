@@ -81,7 +81,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/users/*", GET.name()),
                         new AntPathRequestMatcher("/users/*/pictures"),
                         new AntPathRequestMatcher("/users/*/posts", GET.name()),
-                        new AntPathRequestMatcher("/categories", GET.name()),
+                        new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/posts", GET.name()),
                         new AntPathRequestMatcher("/posts/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments", GET.name()),
