@@ -49,14 +49,14 @@ public class UserUnitTest extends FacadeIT {
     user.setLastUpdateDatetime(Instant.now());
     assertNotNull(user.getLastUpdateDatetime()); // Check if the last update datetime is not null
 
-    user.setPhotoUrl("http://example.com/photo.jpg");
-    assertEquals("http://example.com/photo.jpg", user.getPhotoUrl());
+    user.setPhotoKey("http://example.com/photo.jpg");
+    assertEquals("http://example.com/photo.jpg", user.getPhotoKey());
 
     user.setBio("I am a blogger");
     assertEquals("I am a blogger", user.getBio());
 
-    user.setProfileBannerUrl("http://example.com/banner.jpg");
-    assertEquals("http://example.com/banner.jpg", user.getProfileBannerUrl());
+    user.setProfileBannerKey("http://example.com/banner.jpg");
+    assertEquals("http://example.com/banner.jpg", user.getProfileBannerKey());
 
     user.setUsername("john_doe");
     assertEquals("john_doe", user.getUsername());
@@ -94,9 +94,9 @@ public class UserUnitTest extends FacadeIT {
             .sex(Sex.F)
             .creationDatetime(Instant.now())
             .lastUpdateDatetime(Instant.now())
-            .photoUrl("http://example.com/photo.jpg")
+            .photoKey("http://example.com/photo.jpg")
             .bio("I am a blogger")
-            .profileBannerUrl("http://example.com/banner.jpg")
+            .profileBannerKey("http://example.com/banner.jpg")
             .username("john_doe")
             .about("About John Doe")
             .status(UserStatus.ENABLED)
@@ -113,9 +113,9 @@ public class UserUnitTest extends FacadeIT {
     assertEquals(Sex.F, user.getSex());
     assertNotNull(user.getCreationDatetime()); // Check if the creation datetime is not null
     assertNotNull(user.getLastUpdateDatetime()); // Check if the last update datetime is not null
-    assertEquals("http://example.com/photo.jpg", user.getPhotoUrl());
+    assertEquals("http://example.com/photo.jpg", user.getPhotoKey());
     assertEquals("I am a blogger", user.getBio());
-    assertEquals("http://example.com/banner.jpg", user.getProfileBannerUrl());
+    assertEquals("http://example.com/banner.jpg", user.getProfileBannerKey());
     assertEquals("john_doe", user.getUsername());
     assertEquals("About John Doe", user.getAbout());
     assertEquals(UserStatus.ENABLED, user.getStatus());

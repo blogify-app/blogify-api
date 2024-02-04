@@ -42,7 +42,7 @@ public class Post implements Serializable {
 
   private String title;
   private String content;
-  private String thumbnailUrl;
+  private String thumbnailKey;
   private String description;
 
   @Enumerated(EnumType.STRING)

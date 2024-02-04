@@ -33,9 +33,6 @@ public class UserFileController {
       @RequestParam(value = "type", required = false) UserPictureType type,
       @RequestPart(value = "file", required = false) MultipartFile file)
       throws IOException {
-    System.out.println(
-        "-------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    System.out.println(file.getName());
     requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
     imageValidator.accept(file);
     return service.uploadUserPicture(uid, type, file);

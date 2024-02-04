@@ -2,8 +2,10 @@ package com.blogify.blogapi.endpoint.mapper;
 
 import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
 
+import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.PostStatus;
+import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.repository.model.User;
 import java.util.Map;
@@ -15,12 +17,19 @@ import org.springframework.stereotype.Component;
 public class PostMapper {
   private final CategoryMapper categoryMapper;
   private final ReactionMapper reactionMapper;
+  private final S3Service s3Service;
 
   public Post toRest(com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
+    String thumbnailKey = domain.getThumbnailKey();
     return new Post()
         .id(domain.getId())
         .authorId(domain.getUser().getId())
-        .thumbnailUrl(domain.getThumbnailUrl())
+        .thumbnailUrl(
+            thumbnailKey == null
+                ? null
+                : s3Service
+                    .generatePresignedUrl(domain.getThumbnailKey(), FileConstant.URL_DURATION)
+                    .toString())
         .description(domain.getDescription())
         .content(domain.getContent())
         .title(domain.getTitle())
@@ -33,10 +42,16 @@ public class PostMapper {
 
   public Post toRest(
       String content, com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
+    String thumbnailKey = domain.getThumbnailKey();
     return new Post()
         .id(domain.getId())
         .authorId(domain.getUser().getId())
-        .thumbnailUrl(domain.getThumbnailUrl())
+        .thumbnailUrl(
+            thumbnailKey == null
+                ? null
+                : s3Service
+                    .generatePresignedUrl(domain.getThumbnailKey(), FileConstant.URL_DURATION)
+                    .toString())
         .description(domain.getDescription())
         .content(content)
         .title(domain.getTitle())
@@ -51,10 +66,9 @@ public class PostMapper {
     return com.blogify.blogapi.repository.model.Post.builder()
         .id(rest.getId())
         .user(user)
-        .thumbnailUrl(rest.getThumbnailUrl())
         .description(rest.getDescription())
         .content(rest.getContent())
-        .lastUpdateDatetime(rest.getUpdatedAt())
+        //        .lastUpdateDatetime(rest.getUpdatedAt())
         .title(rest.getTitle())
         .status(toDomain(rest.getStatus()))
         .postCategories(

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,17 @@ public class PostFileController {
     com.blogify.blogapi.repository.model.Post post = postService.getById(postId);
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
     String fullContent = service.getPostFullContent(post);
+    return postMapper.toRest(fullContent, post, reactionStat);
+  }
+
+  @PutMapping(value = "/posts/{pid}/thumbnail")
+  public Post putPostThumbnail(
+      @PathVariable String pid, @RequestPart(value = "file", required = false) MultipartFile file)
+      throws IOException {
+    com.blogify.blogapi.repository.model.Post post = service.uploadPostThumbnail(pid, file);
+    ReactionStat reactionStat = postReactionService.getReactionStat(pid);
+    String fullContent = service.getPostFullContent(post);
+    imageValidator.accept(file);
     return postMapper.toRest(fullContent, post, reactionStat);
   }
 

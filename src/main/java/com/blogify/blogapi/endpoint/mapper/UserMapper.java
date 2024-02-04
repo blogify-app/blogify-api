@@ -2,10 +2,12 @@ package com.blogify.blogapi.endpoint.mapper;
 
 import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
 
+import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.Sex;
 import com.blogify.blogapi.endpoint.rest.model.SignUp;
 import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserStatus;
+import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.enums.Role;
 import com.blogify.blogapi.repository.model.UserCategory;
 import java.time.Instant;
@@ -19,15 +21,21 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
   private final CategoryMapper categoryMapper;
+  private final S3Service s3Service;
 
   public User toRest(com.blogify.blogapi.repository.model.User domain) {
+    String photoKey = domain.getPhotoKey();
+
     return new User()
         .id(domain.getId())
         .firstName(domain.getFirstname())
         .lastName(domain.getLastname())
         .email(domain.getMail())
         .birthDate(domain.getBirthdate())
-        // .photoUrl(domain.getPhotoUrl())
+        .photoUrl(
+            photoKey == null
+                ? null
+                : s3Service.generatePresignedUrl(photoKey, FileConstant.URL_DURATION).toString())
         .bio(domain.getBio())
         // .profileBannerUrl(domain.getProfileBannerUrl())
         .username(domain.getUsername())
@@ -48,9 +56,7 @@ public class UserMapper {
         .lastUpdateDatetime(Instant.now())
         .mail(signUp.getEmail())
         .role(Role.CLIENT)
-        // .photoUrl(signUp.getPhotoUrl())
         .bio(signUp.getBio())
-        // .profileBannerUrl(signUp.getProfileBannerUrl())
         .username(signUp.getUsername())
         .about(signUp.getAbout())
         .status(toDomain(signUp.getStatus()))
@@ -69,9 +75,7 @@ public class UserMapper {
         .birthdate(rest.getBirthDate())
         .lastUpdateDatetime(Instant.now())
         .mail(rest.getEmail())
-        // .photoUrl(rest.getPhotoUrl())
         .bio(rest.getBio())
-        // .profileBannerUrl(rest.getProfileBannerUrl())
         .username(rest.getUsername())
         .about(rest.getAbout())
         .status(toDomain(rest.getStatus()))
