@@ -12,6 +12,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +23,7 @@ import com.blogify.blogapi.endpoint.rest.api.UserApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.User;
+import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -39,6 +41,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class UserIT {
 
   @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean private S3Service s3Service;
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
@@ -47,6 +50,7 @@ public class UserIT {
   @BeforeEach
   void setUp() {
     setUpFirebase(firebaseServiceMock);
+    setUpS3Service(s3Service);
   }
 
   @Test
