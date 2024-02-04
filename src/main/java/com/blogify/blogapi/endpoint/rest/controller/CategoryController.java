@@ -7,6 +7,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +25,12 @@ public class CategoryController {
   public List<Category> getCategories(
       @RequestParam(value = "label", required = false, defaultValue = "") String label) {
     return service.findAllByLabel(label).stream().map(mapper::toRest).toList();
+  }
+
+  @PutMapping("/categories")
+  public List<Category> crupdateCategories(@RequestBody List<Category> categories) {
+    return service.saveAll(categories.stream().map(mapper::toDomain).toList()).stream()
+        .map(mapper::toRest)
+        .toList();
   }
 }
