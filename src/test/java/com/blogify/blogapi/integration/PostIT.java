@@ -12,9 +12,11 @@ import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -22,6 +24,7 @@ import com.blogify.blogapi.endpoint.rest.api.PostingApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Post;
+import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -39,6 +42,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = PostIT.ContextInitializer.class)
 public class PostIT {
   @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean private S3Service s3Service;
 
   private static ApiClient apiClient(String token) {
     return TestUtils.anApiClient(token, PostIT.ContextInitializer.SERVER_PORT);
@@ -47,6 +51,7 @@ public class PostIT {
   @BeforeEach
   void setUp() {
     setUpFirebase(firebaseServiceMock);
+    setUpS3Service(s3Service);
   }
 
   @Test
@@ -150,6 +155,26 @@ public class PostIT {
     assertEquals(CREATE_POST1_ID, createdPost1.getId());
 
     assertEquals(3, allPostsAfterCreate.size());
+  }
+
+  @Test
+  @DirtiesContext
+  void client_update_ko() throws ApiException {
+    ApiClient client1 = apiClient(CLIENT1_TOKEN);
+    PostingApi api = new PostingApi(client1);
+    Post postUpdate1 = api.getPostById(POST1_ID).id(null);
+    Post postUpdate2 = api.getPostById(POST1_ID).authorId(null);
+
+    ApiException exception1 =
+        assertThrows(ApiException.class, () -> api.crupdatePostById(POST1_ID, postUpdate1));
+    ApiException exception2 =
+        assertThrows(ApiException.class, () -> api.crupdatePostById(POST1_ID, postUpdate2));
+
+    String exceptionMessage1 = exception1.getMessage();
+    String exceptionMessage2 = exception2.getMessage();
+
+    assertTrue(exceptionMessage1.contains("Post_id is mandatory"));
+    assertTrue(exceptionMessage2.contains("Author_id is mandatory"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

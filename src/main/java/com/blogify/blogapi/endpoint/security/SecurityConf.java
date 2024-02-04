@@ -79,15 +79,16 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/signup"),
                         new AntPathRequestMatcher("/users", GET.name()),
                         new AntPathRequestMatcher("/users/*", GET.name()),
-                        new AntPathRequestMatcher("/users/*/pictures", GET.name()),
+                        new AntPathRequestMatcher("/users/*/pictures"),
                         new AntPathRequestMatcher("/users/*/posts", GET.name()),
-                        new AntPathRequestMatcher("/categories", GET.name()),
+                        new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/posts", GET.name()),
                         new AntPathRequestMatcher("/posts/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
                         new AntPathRequestMatcher("/posts/*/pictures/*", GET.name()),
+                        new AntPathRequestMatcher("/posts/*/thumbnail"),
                         new AntPathRequestMatcher("/**", OPTIONS.toString())))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
@@ -126,13 +127,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(PUT, "/users/*")
         .authenticated()
         .antMatchers(PUT, "/users/*/pictures")
-        .authenticated()
+        .permitAll()
+        .antMatchers(PUT, "/categories")
+        .permitAll()
         .antMatchers(PUT, "/posts/*")
-        .authenticated()
+        .permitAll()
         .antMatchers(POST, "/posts/*/reaction")
         .authenticated()
         .antMatchers(PUT, "/posts/*/comments/*")
         .authenticated()
+        .antMatchers(PUT, "/posts/*/thumbnail")
+        .permitAll()
         .antMatchers(POST, "/signin")
         .authenticated()
         .antMatchers(POST, "/signup")

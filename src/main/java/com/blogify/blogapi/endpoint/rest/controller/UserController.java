@@ -50,6 +50,6 @@ public class UserController {
         userCategoryMapper.toCategoryToUserCategory(
             toUpdate, userMapper.toDomain(toUpdate, new ArrayList<>()));
     return userMapper.toRest(
-        userService.updateUser(userMapper.toDomain(toUpdate, userCategories), userId));
+        userService.crupdateUser(userMapper.toDomain(toUpdate, userCategories), userId));
   }
 }

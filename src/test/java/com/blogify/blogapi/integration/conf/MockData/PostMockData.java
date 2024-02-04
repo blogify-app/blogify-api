@@ -4,8 +4,12 @@ import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.c
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT2_ID;
+import static com.blogify.blogapi.integration.conf.TestUtils.POST1_PICTURE1_URL;
+import static com.blogify.blogapi.integration.conf.TestUtils.POST1_PICTURE2_URL;
+import static com.blogify.blogapi.integration.conf.TestUtils.POST1_THUMBNAIL_URL;
 
 import com.blogify.blogapi.endpoint.rest.model.Post;
+import com.blogify.blogapi.endpoint.rest.model.PostPicture;
 import com.blogify.blogapi.endpoint.rest.model.PostStatus;
 import com.blogify.blogapi.endpoint.rest.model.ReactionStat;
 import java.math.BigDecimal;
@@ -16,14 +20,17 @@ public class PostMockData {
 
   public static final String POST1_ID = "post1_id";
   public static final String POST2_ID = "post2_id";
-
+  public static final String PICTURE1_URL = "picture1_id";
+  public static final String PICTURE2_URL = "picture1_id";
   public static final String CREATE_POST1_ID = "creat_post1_id";
+  public static final String PICTURE1_ID = "picture1_id";
+  public static final String PICTURE2_ID = "picture2_id";
 
   public static Post post1() {
     return new Post()
         .id(POST1_ID)
         .authorId(CLIENT1_ID)
-        .thumbnailUrl("url_image1.jpg")
+        .thumbnailUrl(POST1_THUMBNAIL_URL)
         .description("Description du premier post")
         .content("Contenu du premier post")
         .title("Premier Post")
@@ -38,7 +45,7 @@ public class PostMockData {
     return new Post()
         .id(POST2_ID)
         .authorId(CLIENT2_ID)
-        .thumbnailUrl("url_image2.jpg")
+        .thumbnailUrl(null)
         .description("Description du deuxième post")
         .content("Contenu du deuxième post")
         .title("Deuxième Post")
@@ -53,7 +60,7 @@ public class PostMockData {
     return new Post()
         .id(CREATE_POST1_ID)
         .authorId(CLIENT2_ID)
-        .thumbnailUrl("url_image_creat.jpg")
+        .thumbnailUrl(null)
         .description("create description")
         .content("create content")
         .title("create Post")
@@ -62,5 +69,21 @@ public class PostMockData {
         .creationDatetime(null)
         .updatedAt(null)
         .categories(List.of(category1()));
+  }
+
+  public static PostPicture postPicture1() {
+    return new PostPicture()
+        .id(PICTURE1_ID)
+        .postId(POST1_ID)
+        .placeholder(PICTURE1_ID)
+        .url(POST1_PICTURE1_URL);
+  }
+
+  public static PostPicture postPicture2() {
+    return new PostPicture()
+        .id(PICTURE2_ID)
+        .postId(POST1_ID)
+        .placeholder(PICTURE2_ID)
+        .url(POST1_PICTURE2_URL);
   }
 }

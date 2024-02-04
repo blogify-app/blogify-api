@@ -1,6 +1,6 @@
 package com.blogify.blogapi.unit.service;
 
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.category;
+import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.blogify.blogapi.conf.FacadeIT;

@@ -18,7 +18,7 @@ public class UserFileService {
 
   public UserPicture uploadUserPicture(String uid, UserPictureType type, MultipartFile file)
       throws IOException {
-    String fileBucketKey = getBucketKeyByPictureType(uid, type);
+    String fileBucketKey = setBucketKeyByPictureType(uid, type);
     s3Service.uploadObjectToS3Bucket(fileBucketKey, file.getBytes());
     return getUserPictureWithBucketKey(uid, type, fileBucketKey);
   }
@@ -41,7 +41,20 @@ public class UserFileService {
 
   private String getBucketKeyByPictureType(String uid, UserPictureType type) {
     User user = userService.findById(uid);
-    return type == UserPictureType.PROFILE ? user.getPhotoUrl() : user.getProfileBannerUrl();
+    return type == UserPictureType.PROFILE ? user.getPhotoKey() : user.getProfileBannerKey();
   }
-  ;
+
+  private String setBucketKeyByPictureType(String uid, UserPictureType type) {
+    User user = userService.findById(uid);
+    if (type == UserPictureType.PROFILE) {
+      if (user.getPhotoKey() == null) {
+        user.setPhotoKey("user/" + uid + "/" + type.getValue());
+      }
+      return userService.crupdateUser(user, uid).getPhotoKey();
+    }
+    if (user.getProfileBannerKey() == null) {
+      user.setProfileBannerKey("user/" + uid + "/" + type.getValue());
+    }
+    return userService.crupdateUser(user, uid).getProfileBannerKey();
+  }
 }

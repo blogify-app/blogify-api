@@ -12,6 +12,7 @@ import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_I
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
+import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,9 +24,9 @@ import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.CommentStatus;
+import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
-import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = CommentIT.ContextInitializer.class)
 public class CommentIT {
   @MockBean private FirebaseService firebaseServiceMock;
+  @MockBean private S3Service s3Service;
 
   private static ApiClient apiClient(String token) {
     return TestUtils.anApiClient(token, CommentIT.ContextInitializer.SERVER_PORT);
@@ -49,6 +51,7 @@ public class CommentIT {
   @BeforeEach
   void setUp() {
     setUpFirebase(firebaseServiceMock);
+    setUpS3Service(s3Service);
   }
 
   @Test
@@ -114,7 +117,7 @@ public class CommentIT {
   }
 
   @Test
-  void client_write_ko() throws ApiException{
+  void client_write_ko() throws ApiException {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
 
@@ -125,17 +128,17 @@ public class CommentIT {
     invalidComment.setUser(null);
     invalidComment.setStatus(CommentStatus.DISABLED);
 
-    assertThrows(ApiException.class, () -> {
-      api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, invalidComment);
-    });
+    assertThrows(
+        ApiException.class,
+        () -> {
+          api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, invalidComment);
+        });
 
     List<Comment> allCommentsAfterCreate = api.getCommentsByPostId(POST1_ID, 1, 10);
 
     assertEquals(3, allCommentsBeforeCreate.size());
     assertEquals(3, allCommentsAfterCreate.size());
   }
-
-
 
   @Test
   @DirtiesContext

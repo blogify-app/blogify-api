@@ -16,44 +16,44 @@ import software.amazon.awssdk.utils.StringUtils;
 @Component
 @AllArgsConstructor
 public class CommentValidator implements Consumer<Comment> {
-    private final Validator validator;
+  private final Validator validator;
 
-    public void accept(List<Comment> comments) {
-        comments.forEach(this);
+  public void accept(List<Comment> comments) {
+    comments.forEach(this);
+  }
+
+  @Override
+  public void accept(Comment comment) {
+    Set<String> violationMessages = new HashSet<>();
+    if (!isNotNullAndNotBlank(comment.getContent())) {
+      throw new BadRequestException("Content is mandatory. ");
     }
 
-    @Override
-    public void accept(Comment comment) {
-        Set<String> violationMessages = new HashSet<>();
-        if (!isNotNullAndNotBlank(comment.getContent())) {
-            throw new BadRequestException("Content is mandatory. ");
-        }
-
-        if (comment.getUser() == null) {
-            violationMessages.add("User is mandatory");
-        } else {
-            if (comment.getUser().getId() == null) {
-                violationMessages.add("User ID is mandatory");
-            }
-        }
-
-        if (comment.getStatus() == CommentStatus.DISABLED || !isValidCommentStatus(comment.getStatus())) {
-            violationMessages.add("Invalid Comment Status. ");
-        }
-
-        if (!violationMessages.isEmpty()) {
-            String formattedViolationMessages = violationMessages.stream()
-                    .map(String::toString)
-                    .collect(Collectors.joining(". "));
-            throw new BadRequestException(formattedViolationMessages);
-        }
+    if (comment.getUser() == null) {
+      violationMessages.add("User is mandatory");
+    } else {
+      if (comment.getUser().getId() == null) {
+        violationMessages.add("User ID is mandatory");
+      }
     }
 
-    private boolean isValidCommentStatus(CommentStatus status) {
-        return CommentStatus.ENABLED.equals(status);
+    if (comment.getStatus() == CommentStatus.DISABLED
+        || !isValidCommentStatus(comment.getStatus())) {
+      violationMessages.add("Invalid Comment Status. ");
     }
 
-    private boolean isNotNullAndNotBlank(String content) {
-        return StringUtils.isNotBlank(content);
+    if (!violationMessages.isEmpty()) {
+      String formattedViolationMessages =
+          violationMessages.stream().map(String::toString).collect(Collectors.joining(". "));
+      throw new BadRequestException(formattedViolationMessages);
     }
+  }
+
+  private boolean isValidCommentStatus(CommentStatus status) {
+    return CommentStatus.ENABLED.equals(status);
+  }
+
+  private boolean isNotNullAndNotBlank(String content) {
+    return StringUtils.isNotBlank(content);
+  }
 }

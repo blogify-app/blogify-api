@@ -9,7 +9,6 @@ import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.model.Whoami;
-import com.blogify.blogapi.model.validator.CommentValidator;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.CommentReactionService;
