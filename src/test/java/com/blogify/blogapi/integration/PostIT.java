@@ -163,7 +163,7 @@ public class PostIT {
     ApiClient client1 = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1);
     Post postUpdate1 = api.getPostById(POST1_ID).id(null);
-    Post postUpdate2 = api.getPostById(POST1_ID).authorId(null);
+    Post postUpdate2 = api.getPostById(POST1_ID).author(null);
 
     ApiException exception1 =
         assertThrows(ApiException.class, () -> api.crupdatePostById(POST1_ID, postUpdate1));

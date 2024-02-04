@@ -23,7 +23,7 @@ public class PostRestValidator implements Consumer<Post> {
   @Override
   public void accept(Post post) {
     Set<String> violationMessages = new HashSet<>();
-    if (post.getAuthorId() == null) {
+    if (post.getAuthor() == null) {
       violationMessages.add("Author_id is mandatory");
     }
     if (!violationMessages.isEmpty()) {
