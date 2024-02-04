@@ -7,15 +7,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 public class PostValidator implements Consumer<Post> {
-  private final Validator validator;
-
   public void accept(List<Post> posts) {
     posts.forEach(this::accept);
   }

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.utils.StringUtils;
@@ -16,8 +15,6 @@ import software.amazon.awssdk.utils.StringUtils;
 @Component
 @AllArgsConstructor
 public class CommentValidator implements Consumer<Comment> {
-  private final Validator validator;
-
   public void accept(List<Comment> comments) {
     comments.forEach(this);
   }
@@ -30,7 +27,7 @@ public class CommentValidator implements Consumer<Comment> {
     }
 
     if (comment.getUser() == null) {
-      violationMessages.add("User is mandatory");
+      violationMessages.add("User is mandatory.");
     } else {
       if (comment.getUser().getId() == null) {
         violationMessages.add("User ID is mandatory");

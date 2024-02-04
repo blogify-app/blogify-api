@@ -11,9 +11,9 @@ import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_I
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_ID;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
+import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -121,23 +121,30 @@ public class CommentIT {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
 
-    List<Comment> allCommentsBeforeCreate = api.getCommentsByPostId(POST1_ID, 1, 10);
-
-    Comment invalidComment = new Comment();
-    invalidComment.setContent("");
-    invalidComment.setUser(null);
-    invalidComment.setStatus(CommentStatus.DISABLED);
-
-    assertThrows(
-        ApiException.class,
+    assertThrowsApiException(
+        "{\"type\":\"400 BAD_REQUEST\",\"message\":\"" + "Content is mandatory. " + "\"}",
         () -> {
-          api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, invalidComment);
+          api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, commentToCreate().content(""));
         });
 
-    List<Comment> allCommentsAfterCreate = api.getCommentsByPostId(POST1_ID, 1, 10);
+    assertThrowsApiException(
+        "{\"type\":\"400 BAD_REQUEST\",\"message\":\"" + "Content is mandatory. " + "\"}",
+        () -> {
+          api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, commentToCreate().content(null));
+        });
 
-    assertEquals(3, allCommentsBeforeCreate.size());
-    assertEquals(3, allCommentsAfterCreate.size());
+    assertThrowsApiException(
+        "{\"type\":\"400 BAD_REQUEST\",\"message\":\"" + "Invalid Comment Status. " + "\"}",
+        () -> {
+          api.crupdateCommentById(
+              POST1_ID, CREATE_COMMENT1_ID, commentToCreate().status(CommentStatus.DISABLED));
+        });
+
+    assertThrowsApiException(
+        "{\"type\":\"400 BAD_REQUEST\",\"message\":\"" + "User is mandatory." + "\"}",
+        () -> {
+          api.crupdateCommentById(POST1_ID, CREATE_COMMENT1_ID, commentToCreate().user(null));
+        });
   }
 
   @Test
