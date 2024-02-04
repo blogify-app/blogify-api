@@ -1240,8 +1240,8 @@ components:
         updated_at:
           type: string
           format: date-time
-        author_id:
-          type: string
+        author:
+          $ref: "#/components/schemas/User"
         status:
           $ref: "#/components/schemas/PostStatus"
         categories:

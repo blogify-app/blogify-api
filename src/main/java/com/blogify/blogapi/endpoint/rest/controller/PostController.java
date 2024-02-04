@@ -15,7 +15,6 @@ import com.blogify.blogapi.model.Whoami;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
-import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.WhoamiService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PostController {
   private final PostService postService;
   private final PostMapper postMapper;
-  private final UserService userService;
   private final PostReactionService postReactionService;
   private final ReactionMapper reactionMapper;
   private final PostRestValidator postRestValidator;
@@ -71,10 +69,8 @@ public class PostController {
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
     postRestValidator.accept(post);
-    User author = userService.findById(post.getAuthorId());
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
-    return postMapper.toRest(
-        postService.savePost(postMapper.toDomain(post, author), postId), reactionStat);
+    return postMapper.toRest(postService.savePost(postMapper.toDomain(post), postId), reactionStat);
   }
 
   @PostMapping("/posts/{postId}/reaction")

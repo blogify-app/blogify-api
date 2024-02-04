@@ -7,7 +7,6 @@ import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.PostStatus;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.ReactionStat;
-import com.blogify.blogapi.repository.model.User;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,13 +16,14 @@ import org.springframework.stereotype.Component;
 public class PostMapper {
   private final CategoryMapper categoryMapper;
   private final ReactionMapper reactionMapper;
+  private final UserMapper userMapper;
   private final S3Service s3Service;
 
   public Post toRest(com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
     String thumbnailKey = domain.getThumbnailKey();
     return new Post()
         .id(domain.getId())
-        .authorId(domain.getUser().getId())
+        .author(userMapper.toRest(domain.getUser()))
         .thumbnailUrl(
             thumbnailKey == null
                 ? null
@@ -45,7 +45,7 @@ public class PostMapper {
     String thumbnailKey = domain.getThumbnailKey();
     return new Post()
         .id(domain.getId())
-        .authorId(domain.getUser().getId())
+        .author(userMapper.toRest(domain.getUser()))
         .thumbnailUrl(
             thumbnailKey == null
                 ? null
@@ -62,10 +62,10 @@ public class PostMapper {
         .categories(domain.getPostCategories().stream().map(categoryMapper::toRest).toList());
   }
 
-  public com.blogify.blogapi.repository.model.Post toDomain(Post rest, User user) {
+  public com.blogify.blogapi.repository.model.Post toDomain(Post rest) {
     return com.blogify.blogapi.repository.model.Post.builder()
         .id(rest.getId())
-        .user(user)
+        .user(rest.getAuthor() == null ? null : userMapper.toDomain(rest.getAuthor(), null))
         .description(rest.getDescription())
         .content(rest.getContent())
         //        .lastUpdateDatetime(rest.getUpdatedAt())

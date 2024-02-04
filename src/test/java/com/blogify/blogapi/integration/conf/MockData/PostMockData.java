@@ -2,8 +2,8 @@ package com.blogify.blogapi.integration.conf.MockData;
 
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category1;
 import static com.blogify.blogapi.integration.conf.MockData.CategoriesMockData.category2;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1_ID;
-import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT2_ID;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client2;
 import static com.blogify.blogapi.integration.conf.TestUtils.POST1_PICTURE1_URL;
 import static com.blogify.blogapi.integration.conf.TestUtils.POST1_PICTURE2_URL;
 import static com.blogify.blogapi.integration.conf.TestUtils.POST1_THUMBNAIL_URL;
@@ -29,7 +29,7 @@ public class PostMockData {
   public static Post post1() {
     return new Post()
         .id(POST1_ID)
-        .authorId(CLIENT1_ID)
+        .author(client1())
         .thumbnailUrl(POST1_THUMBNAIL_URL)
         .description("Description du premier post")
         .content("Contenu du premier post")
@@ -44,7 +44,7 @@ public class PostMockData {
   public static Post post2() {
     return new Post()
         .id(POST2_ID)
-        .authorId(CLIENT2_ID)
+        .author(client2())
         .thumbnailUrl(null)
         .description("Description du deuxième post")
         .content("Contenu du deuxième post")
@@ -59,7 +59,7 @@ public class PostMockData {
   public static Post postToCreate() {
     return new Post()
         .id(CREATE_POST1_ID)
-        .authorId(CLIENT2_ID)
+        .author(client2())
         .thumbnailUrl(null)
         .description("create description")
         .content("create content")
