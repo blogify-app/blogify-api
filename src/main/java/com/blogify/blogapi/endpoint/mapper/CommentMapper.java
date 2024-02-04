@@ -8,7 +8,6 @@ import com.blogify.blogapi.model.ReactionStat;
 import com.blogify.blogapi.repository.model.Post;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,10 @@ public class CommentMapper {
         .id(comment.getId())
         .content(comment.getContent())
         .replyToId(comment.getReplyToId())
-        .user(userMapper.toDomain(Objects.requireNonNull(comment.getUser()), new ArrayList<>()))
+        .user(
+            comment.getUser() == null
+                ? null
+                : userMapper.toDomain((comment.getUser()), new ArrayList<>()))
         .status(toDomain(comment.getStatus()))
         .post(post)
         .commentReactions(null)

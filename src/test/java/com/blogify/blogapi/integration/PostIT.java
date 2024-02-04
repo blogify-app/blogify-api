@@ -156,18 +156,19 @@ public class PostIT {
 
     assertEquals(3, allPostsAfterCreate.size());
   }
+
   @Test
   @DirtiesContext
-  void client_update_ko() throws ApiException{
+  void client_update_ko() throws ApiException {
     ApiClient client1 = apiClient(CLIENT1_TOKEN);
     PostingApi api = new PostingApi(client1);
     Post postUpdate1 = api.getPostById(POST1_ID).id(null);
     Post postUpdate2 = api.getPostById(POST1_ID).authorId(null);
 
-    ApiException exception1 = assertThrows(ApiException.class,
-            () -> api.crupdatePostById(POST1_ID,postUpdate1));
-    ApiException exception2 = assertThrows(ApiException.class,
-            () -> api.crupdatePostById(POST1_ID,postUpdate2));
+    ApiException exception1 =
+        assertThrows(ApiException.class, () -> api.crupdatePostById(POST1_ID, postUpdate1));
+    ApiException exception2 =
+        assertThrows(ApiException.class, () -> api.crupdatePostById(POST1_ID, postUpdate2));
 
     String exceptionMessage1 = exception1.getMessage();
     String exceptionMessage2 = exception2.getMessage();
