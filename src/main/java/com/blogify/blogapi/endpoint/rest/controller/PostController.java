@@ -5,6 +5,7 @@ import com.blogify.blogapi.endpoint.mapper.ReactionMapper;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.Reaction;
 import com.blogify.blogapi.endpoint.rest.model.ReactionType;
+import com.blogify.blogapi.endpoint.validator.PostRestValidator;
 import com.blogify.blogapi.endpoint.validator.RequestInputValidator;
 import com.blogify.blogapi.endpoint.validator.RequestInputValidator.InputType;
 import com.blogify.blogapi.model.BoundedPageSize;
@@ -38,6 +39,7 @@ public class PostController {
   private final UserService userService;
   private final PostReactionService postReactionService;
   private final ReactionMapper reactionMapper;
+  private final PostRestValidator postRestValidator;
   private final WhoamiService whoamiService;
   private final RequestInputValidator requestInputValidator;
 
@@ -68,6 +70,7 @@ public class PostController {
 
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
+    postRestValidator.accept(post);
     User author = userService.findById(post.getAuthorId());
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
     return postMapper.toRest(

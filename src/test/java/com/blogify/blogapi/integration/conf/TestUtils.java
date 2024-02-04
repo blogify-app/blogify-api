@@ -1,6 +1,5 @@
 package com.blogify.blogapi.integration.conf;
 
-import static com.blogify.blogapi.integration.conf.MockData.FileMockData.jpgFileContent;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -81,9 +80,8 @@ public class TestUtils {
 
       when(s3Service.generatePresignedUrl(POST1_THUMBNAIL_KEY, FileConstant.URL_DURATION))
           .thenReturn(new URL(POST1_THUMBNAIL_URL));
-
-      when(s3Service.uploadObjectToS3Bucket(CLIENT1_PROFILE_KEY, jpgFileContent()))
-          .thenReturn(CLIENT1_PROFILE_URL_JPG);
+      //      when(s3Service.uploadObjectToS3Bucket(CLIENT1_PROFILE_KEY, jpgFileContent()))
+      //          .thenReturn(CLIENT1_PROFILE_URL_JPG);
 
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
