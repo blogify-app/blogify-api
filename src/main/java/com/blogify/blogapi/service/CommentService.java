@@ -43,7 +43,7 @@ public class CommentService {
         .orElseThrow(
             () ->
                 new NotFoundException(
-                    "Entity with id " + (postId != null ? postId : commentId) + " not found"));
+                    "Comment with postId " + postId + " and commentId " + commentId + " not found"));
   }
 
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {

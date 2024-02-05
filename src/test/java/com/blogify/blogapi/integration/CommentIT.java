@@ -14,6 +14,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPo
 import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -165,6 +166,23 @@ public class CommentIT {
     assertFalse(allCommentsAfterDelete.contains(comment1()));
     assertTrue(allCommentsAfterDelete.contains(comment2()));
     assertTrue(allCommentsAfterDelete.contains(comment3()));
+  }
+
+  @Test
+  void read_comment_by_postId_ko() throws ApiException{
+    ApiClient client1Client = apiClient(CLIENT1_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
+    String postId = randomUUID().toString();
+    String commentId = randomUUID().toString();
+
+    assertThrowsApiException(
+            "{\"type\":\"404 NOT_FOUND\",\"message\":\"" + "Comment with postId "
+                    + postId +
+                    " and commentId "
+                    + commentId +
+                    " not found" + "\"}",
+            () -> api.getCommentById(postId,commentId)
+    );
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
