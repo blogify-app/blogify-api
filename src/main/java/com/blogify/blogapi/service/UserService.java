@@ -2,13 +2,16 @@ package com.blogify.blogapi.service;
 
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +36,14 @@ public class UserService {
 
   @Transactional
   public User save(User toSave) {
-    return repository.save(toSave);
+    try {
+      return repository.save(toSave);
+    } catch (Exception e) {
+      if (Objects.requireNonNull(e.getMessage()).contains("user_mail_key")) {
+        throw new BadRequestException("Email "+ toSave.getMail()+" already exists");
+      }
+      throw new BadRequestException("Database error occurs when trying to save");
+    }
   }
 
   @Transactional
