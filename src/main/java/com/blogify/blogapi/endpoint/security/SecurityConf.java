@@ -12,6 +12,7 @@ import com.blogify.blogapi.service.firebase.FirebaseService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
@@ -83,7 +87,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/users/*/posts", GET.name()),
                         new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/posts", GET.name()),
-                        new AntPathRequestMatcher("/posts/*", GET.name()),
+                        new AntPathRequestMatcher("/posts/*"),
                         new AntPathRequestMatcher("/posts/*/comments", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
@@ -147,7 +151,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(POST, "/posts/*/pictures/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*")
-        .authenticated()
+        .permitAll()
         .antMatchers(DELETE, "/posts/*/pictures/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*/comments/*")
@@ -173,4 +177,16 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));
     return bearerFilter;
   }
+
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.addAllowedHeader("*");
+    configuration.addAllowedMethod("*");
+    configuration.addAllowedOrigin("*");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
 }
