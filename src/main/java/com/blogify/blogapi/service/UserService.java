@@ -5,8 +5,10 @@ import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.model.validator.UserValidator;
+import com.blogify.blogapi.repository.CommentRepository;
 import com.blogify.blogapi.repository.PostRepository;
 import com.blogify.blogapi.repository.UserRepository;
+import com.blogify.blogapi.repository.model.Comment;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   private final UserRepository repository;
   private UserValidator userValidator;
+  private CommentRepository commentRepository;
   private PostRepository postRepository;
 
   public List<User> findAllByName(String name, PageFromOne page, BoundedPageSize pageSize) {
@@ -75,5 +78,23 @@ public class UserService {
     }
     Post post = postOptional.get();
     return post.getUser().getId().equals(userId);
+  }
+
+  public Boolean checkUserOfComment(String userId, String commentId) {
+    Optional<Comment> commentOptional = commentRepository.findById(commentId);
+    if (commentOptional.isEmpty()) {
+      return true;
+    }
+    Comment comment = commentOptional.get();
+    return comment.getUser().getId().equals(userId);
+  }
+
+  public Boolean checkSelfUser(String userId, String userIdFromEndpoint) {
+    Optional<User> userOptional = repository.findById(userIdFromEndpoint);
+    if (userOptional.isEmpty()) {
+      return true;
+    }
+    User user = userOptional.get();
+    return user.getId().equals(userId);
   }
 }

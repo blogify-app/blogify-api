@@ -9,6 +9,7 @@ import static com.blogify.blogapi.integration.conf.MockData.UserMockData.clientT
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.manager1;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.signUpToCreate;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -101,16 +102,22 @@ public class UserIT {
     UserApi api = new UserApi(client1Client);
     SecurityApi securityApi = new SecurityApi(client1Client);
 
+    ApiClient client2Client = anApiClient(CLIENT2_TOKEN);
+    UserApi api2 = new UserApi(client2Client);
+
     String newName = "new last Name";
 
     User actualUser = api.getUserById(CLIENT1_ID);
     List<User> actual = api.getUsers(1, 10, null);
 
-    User actualUpdated = api.crupdateUserById(CLIENT2_ID, client2().lastName(newName));
+    User actualUpdated = api2.crupdateUserById(CLIENT2_ID, client2().lastName(newName));
     List<User> actualAfterUpdate = api.getUsers(1, 10, null);
 
     User user = securityApi.signUp(signUpToCreate());
-    User actualCreated = api.crupdateUserById(CREATED_CLIENT_ID, clientToCreate());
+    ApiClient client3Client = anApiClient(CREATED_CLIENT_ID);
+    UserApi api3 = new UserApi(client3Client);
+
+    User actualCreated = api3.crupdateUserById(CREATED_CLIENT_ID, clientToCreate());
     List<User> actualAfterCreate = api.getUsers(1, 10, null);
 
     assertEquals(client1(), actualUser);
