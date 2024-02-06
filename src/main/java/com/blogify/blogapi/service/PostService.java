@@ -46,8 +46,6 @@ public class PostService {
   }
 
   public Post savePost(Post post, String postId) {
-    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
-    System.out.println(post);
     postValidator.accept(post);
     Optional<Post> optionalPost = postRepository.findById(postId);
     if (!optionalPost.isEmpty()) {

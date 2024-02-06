@@ -16,16 +16,11 @@ public class FileMockData {
   //
   //  public static File jpgFile() {
   //    File file = new File(jpgFilePath);
-  //    System.out.println(
-  //
-  // "-----------------------------//////////////////////////////////////////////////-----------------------------------------------...00");
-  //    System.out.println(file);
   //    return file;
   //  }
   //
   //  public static byte[] jpgFileContent() {
   //    File file = new File(jpgFilePath);
-  //    System.out.println(file);
   //    return readFileToByteArray(jpgFilePath);
   //  }
   //  ;

@@ -31,7 +31,6 @@ import org.hibernate.annotations.Where;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @SQLDelete(sql = "UPDATE Post SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
 @Table(name = "post")

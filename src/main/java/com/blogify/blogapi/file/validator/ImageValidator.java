@@ -20,10 +20,6 @@ public class ImageValidator implements Consumer<MultipartFile> {
 
   @Override
   public void accept(MultipartFile file) {
-    System.out.println(
-        "///////////////***********************************************************************************");
-    System.out.println(file.getName());
-    System.out.println(file.getContentType());
     byte[] imageBytes;
     try {
       imageBytes = file.getBytes();
