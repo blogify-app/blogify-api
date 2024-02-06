@@ -13,11 +13,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
+
 @Service
 @AllArgsConstructor
 public class CommentService {
   private final CommentRepository commentRepository;
   private final CommentValidator commentValidator;
+
+  private final String RESOURCE_NAME = "Comment";
 
   public Comment getBYId(String commentId, String postId) {
     return commentRepository
@@ -42,8 +46,7 @@ public class CommentService {
         .findByIdAndPost_Id(commentId, postId)
         .orElseThrow(
             () ->
-                new NotFoundException(
-                    "Comment with postId " + postId + " and commentId " + commentId + " not found"));
+                new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME,commentId)));
   }
 
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {

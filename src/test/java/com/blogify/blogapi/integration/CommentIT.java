@@ -172,15 +172,13 @@ public class CommentIT {
   void read_comment_by_postId_ko() throws ApiException{
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
-    String postId = randomUUID().toString();
+    String postId = POST1_ID;
     String commentId = randomUUID().toString();
 
     assertThrowsApiException(
-            "{\"type\":\"404 NOT_FOUND\",\"message\":\"" + "Comment with postId "
-                    + postId +
-                    " and commentId "
-                    + commentId +
-                    " not found" + "\"}",
+            "{\"type\":\"404 NOT_FOUND\",\"message\":\"Resource of type Comment identified by "
+                + commentId
+                + " not found\"}",
             () -> api.getCommentById(postId,commentId)
     );
   }
