@@ -2,6 +2,7 @@ package com.blogify.blogapi.service;
 
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.PostRepository;
@@ -36,6 +37,14 @@ public class UserService {
 
   @Transactional
   public User save(User toSave) {
+    return repository.save(toSave);
+  }
+
+  @Transactional
+  public User saveSignUpUser(User toSave) {
+    if (repository.findByMail(toSave.getMail()).isPresent()) {
+      throw new BadRequestException("User already exists");
+    }
     return repository.save(toSave);
   }
 
