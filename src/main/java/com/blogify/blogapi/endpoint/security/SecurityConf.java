@@ -87,7 +87,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/users/*/posts", GET.name()),
                         new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/posts", GET.name()),
-                        new AntPathRequestMatcher("/posts/*"),
+                        new AntPathRequestMatcher("/posts/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
@@ -134,8 +134,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(PUT, "/categories")
         .permitAll()
-        .antMatchers(PUT, "/posts/*")
-        .permitAll()
+        //        .antMatchers(PUT, "/posts/*")
+        //        .authenticated()
         .antMatchers(POST, "/posts/*/reaction")
         .authenticated()
         .antMatchers(PUT, "/posts/*/comments/*")
@@ -151,13 +151,15 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(POST, "/posts/*/pictures/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*")
-        .permitAll()
+        .authenticated()
         .antMatchers(DELETE, "/posts/*/pictures/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*/comments/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*/pictures/*")
         .permitAll()
+        .requestMatchers(new PostOfUserMatcher(userService, PUT, "/posts/*"))
+        .authenticated()
         .anyRequest()
         .denyAll()
         .and()
