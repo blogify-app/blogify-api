@@ -87,7 +87,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/users/*/posts", GET.name()),
                         new AntPathRequestMatcher("/categories"),
                         new AntPathRequestMatcher("/posts", GET.name()),
-                        new AntPathRequestMatcher("/posts/*"),
+                        new AntPathRequestMatcher("/posts/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments", GET.name()),
                         new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
                         new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
@@ -151,7 +151,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers(POST, "/posts/*/pictures/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*")
-        .permitAll()
+        .authenticated()
         .antMatchers(DELETE, "/posts/*/pictures/*")
         .authenticated()
         .antMatchers(DELETE, "/posts/*/comments/*")
