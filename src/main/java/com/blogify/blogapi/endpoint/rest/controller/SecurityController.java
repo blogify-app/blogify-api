@@ -29,7 +29,7 @@ public class SecurityController {
   public User signup(@RequestBody SignUp toCreate) {
     var domain =
         userMapper.toDomain(toCreate, new ArrayList<>()).toBuilder().role(Role.CLIENT).build();
-    return userMapper.toRest(userService.save(domain));
+    return userMapper.toRest(userService.saveSignUpUser(domain));
   }
 
   @PostMapping("/signin")

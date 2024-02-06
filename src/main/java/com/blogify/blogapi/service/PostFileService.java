@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,9 +29,8 @@ public class PostFileService {
   @Transactional
   public PostPicture uploadPicture(String pid, String picId, MultipartFile file)
       throws IOException {
-    Optional<com.blogify.blogapi.repository.model.PostPicture> picture = repository.findById(picId);
-    if (picture.isPresent()) {
-      throw new BadRequestException("Post picture with id " + picId + "already exists");
+    if (repository.findById(picId).isPresent()) {
+      throw new BadRequestException("Post picture with id " + picId + " already exists");
     }
     String extension =
         Objects.requireNonNull(file.getContentType())
