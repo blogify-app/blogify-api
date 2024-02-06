@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -47,6 +48,7 @@ public class User implements Serializable {
 
   @NotBlank(message = "Email is mandatory")
   @Email(message = "Email must be valid")
+  @Column(unique = true)
   private String mail;
 
   private LocalDate birthdate;

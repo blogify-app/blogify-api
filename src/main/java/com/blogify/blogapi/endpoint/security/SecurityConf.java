@@ -12,6 +12,7 @@ import com.blogify.blogapi.service.firebase.FirebaseService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
@@ -130,8 +134,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(PUT, "/categories")
         .permitAll()
-        .antMatchers(PUT, "/posts/*")
-        .permitAll()
+        //        .antMatchers(PUT, "/posts/*")
+        //        .authenticated()
         .antMatchers(POST, "/posts/*/reaction")
         .authenticated()
         .antMatchers(PUT, "/posts/*/comments/*")
@@ -154,6 +158,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .authenticated()
         .antMatchers(DELETE, "/posts/*/pictures/*")
         .permitAll()
+        .requestMatchers(new PostOfUserMatcher(userService, PUT, "/posts/*"))
+        .authenticated()
         .anyRequest()
         .denyAll()
         .and()
@@ -170,5 +176,16 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         (req, res, e) ->
             exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));
     return bearerFilter;
+  }
+
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.addAllowedHeader("*");
+    configuration.addAllowedMethod("*");
+    configuration.addAllowedOrigin("*");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 }
