@@ -1,5 +1,7 @@
 package com.blogify.blogapi.integration.conf;
 
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CREATED_CLIENT_ID;
+import static com.blogify.blogapi.integration.conf.MockData.UserMockData.signUpToCreate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -56,11 +58,15 @@ public class TestUtils {
   public static final FirebaseUser firebaseUserManager1 =
       new FirebaseUser("test+vano@hei.school", "manager1_firebase_id");
 
+  public static final FirebaseUser firebaseCreateClientId =
+      new FirebaseUser(signUpToCreate().getEmail(), signUpToCreate().getProviderId());
+
   public static void setUpFirebase(FirebaseService firebaseService) {
     when(firebaseService.getUserByBearer(BAD_TOKEN)).thenReturn(null);
     when(firebaseService.getUserByBearer(CLIENT1_TOKEN)).thenReturn(firebaseUserClient1);
     when(firebaseService.getUserByBearer(CLIENT2_TOKEN)).thenReturn(firebaseUserClient2);
     when(firebaseService.getUserByBearer(MANAGER_TOKEN)).thenReturn(firebaseUserManager1);
+    when(firebaseService.getUserByBearer(CREATED_CLIENT_ID)).thenReturn(firebaseCreateClientId);
   }
 
   public static void setUpS3Service(S3Service s3Service) {
