@@ -8,10 +8,8 @@ import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,15 +34,15 @@ public class UserService {
 
   @Transactional
   public User save(User toSave) {
-      return repository.save(toSave);
+    return repository.save(toSave);
   }
 
   @Transactional
   public User saveSignUpUser(User toSave) {
-    if (repository.findByMail(toSave.getMail()).isPresent()){
+    if (repository.findByMail(toSave.getMail()).isPresent()) {
       throw new BadRequestException("User already exists");
     }
-      return repository.save(toSave);
+    return repository.save(toSave);
   }
 
   @Transactional
