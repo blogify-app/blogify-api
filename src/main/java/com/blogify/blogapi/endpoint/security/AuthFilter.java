@@ -52,8 +52,9 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
     if (authUser != null) {
       log.info("Authenticated user {}", authUser.getEmail());
       User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
+      var principal = new Principal(token, user);
       UsernamePasswordAuthenticationToken authentication =
-          new UsernamePasswordAuthenticationToken(user, token);
+          new UsernamePasswordAuthenticationToken(principal, token);
 
       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(authentication);

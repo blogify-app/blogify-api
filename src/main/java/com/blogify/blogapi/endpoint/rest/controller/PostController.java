@@ -68,6 +68,8 @@ public class PostController {
 
   @PutMapping("/posts/{postId}")
   public Post putPost(@PathVariable String postId, @RequestBody Post post) {
+    System.out.println("/////////////////////////////////////////////////////");
+    System.out.println(post);
     postRestValidator.accept(post);
     ReactionStat reactionStat = postReactionService.getReactionStat(postId);
     return postMapper.toRest(postService.savePost(postMapper.toDomain(post), postId), reactionStat);

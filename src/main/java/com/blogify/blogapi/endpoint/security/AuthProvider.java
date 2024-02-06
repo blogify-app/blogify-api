@@ -20,6 +20,8 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   private static Principal getPrincipal() {
     SecurityContext context = SecurityContextHolder.getContext();
     Object principal = context.getAuthentication().getPrincipal();
+    System.out.println("--------------------------------------------------------------------");
+    System.out.println(principal);
     return ((Principal) principal);
   }
 
@@ -48,8 +50,6 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   protected UserDetails retrieveUser(
       String username, UsernamePasswordAuthenticationToken authentication)
       throws AuthenticationException {
-    User user = (User) authentication.getPrincipal();
-    String token = (String) authentication.getCredentials();
-    return new Principal(token, user);
+    return (Principal) authentication.getPrincipal();
   }
 }
