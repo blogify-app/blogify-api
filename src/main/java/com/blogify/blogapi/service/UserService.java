@@ -36,14 +36,15 @@ public class UserService {
 
   @Transactional
   public User save(User toSave) {
-    try {
       return repository.save(toSave);
-    } catch (Exception e) {
-      if (Objects.requireNonNull(e.getMessage()).contains("user_mail_key")) {
-        throw new BadRequestException("Email "+ toSave.getMail()+" already exists");
-      }
-      throw new BadRequestException("Database error occurs when trying to save");
+  }
+
+  @Transactional
+  public User saveSignUpUser(User toSave) {
+    if (repository.findByMail(toSave.getMail()).isPresent()){
+      throw new BadRequestException("User already exists");
     }
+      return repository.save(toSave);
   }
 
   @Transactional
