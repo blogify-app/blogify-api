@@ -1,5 +1,7 @@
 package com.blogify.blogapi.service;
 
+import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
+
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
@@ -12,8 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import static com.blogify.blogapi.service.utils.ExceptionMessageBuilderUtils.notFoundByIdMessageException;
 
 @Service
 @AllArgsConstructor
@@ -45,8 +45,7 @@ public class CommentService {
     return commentRepository
         .findByIdAndPost_Id(commentId, postId)
         .orElseThrow(
-            () ->
-                new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME,commentId)));
+            () -> new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME, commentId)));
   }
 
   public Comment crupdateById(String postId, String commentId, Comment updatedComment) {

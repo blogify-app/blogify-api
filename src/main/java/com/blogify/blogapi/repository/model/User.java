@@ -80,5 +80,4 @@ public class User implements Serializable {
   private List<UserCategory> userCategories;
 
   private boolean deleted = Boolean.FALSE;
-
 }
