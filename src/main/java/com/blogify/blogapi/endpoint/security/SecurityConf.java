@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -58,43 +59,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.cors()
-        .disable()
-        .csrf()
-        .disable()
-        .formLogin()
-        .disable()
-        .logout()
-        .disable()
-        .httpBasic()
-        .disable()
+    http
+        .cors().disable()
+        .csrf().disable()
+        .formLogin().disable()
+        .logout().disable()
+        .httpBasic().disable()
         .exceptionHandling()
-        .authenticationEntryPoint(
-            (req, res, e) ->
-                exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
+        .authenticationEntryPoint(customAuthenticationEntryPoint())
         .and()
         .authenticationProvider(provider)
-        .addFilterBefore(
-            bearerFilter(
-                new NegatedRequestMatcher(
-                    new OrRequestMatcher(
-                        new AntPathRequestMatcher("/ping"),
-                        new AntPathRequestMatcher("/health/*"),
-                        new AntPathRequestMatcher("/signup"),
-                        new AntPathRequestMatcher("/users", GET.name()),
-                        new AntPathRequestMatcher("/users/*", GET.name()),
-                        new AntPathRequestMatcher("/users/*/pictures", GET.name()),
-                        new AntPathRequestMatcher("/users/*/posts", GET.name()),
-                        new AntPathRequestMatcher("/categories", GET.name()),
-                        new AntPathRequestMatcher("/posts", GET.name()),
-                        new AntPathRequestMatcher("/posts/*", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/comments", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/pictures/*", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/thumbnail", GET.name()),
-                        new AntPathRequestMatcher("/**", OPTIONS.toString())))),
-            AnonymousAuthenticationFilter.class)
+        .addFilterBefore(bearerFilter(), AnonymousAuthenticationFilter.class)
         .anonymous()
         .and()
         .authorizeRequests()
@@ -167,6 +142,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
+  /*
   private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
     AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService, userService);
     bearerFilter.setAuthenticationManager(authenticationManager());
@@ -178,6 +154,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     return bearerFilter;
   }
 
+   */
+
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -188,4 +166,41 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
+
+  public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+    return new CustomAuthenticationEntryPoint();
+  }
+  private AuthFilter bearerFilter() throws Exception {
+    AuthFilter bearerFilter = new AuthFilter(bearerRequestMatcher(), firebaseService, userService);
+    bearerFilter.setAuthenticationManager(authenticationManager());
+    bearerFilter.setAuthenticationSuccessHandler((request, response, authentication) -> {});
+    bearerFilter.setAuthenticationFailureHandler((request, response, exception) -> {
+      exceptionResolver.resolveException(request, response, null, forbiddenWithRemoteInfo(exception, request));
+    });
+    return bearerFilter;
+  }
+
+  private RequestMatcher bearerRequestMatcher() {
+    // Define the request matcher for bearer authentication filter
+    return new NegatedRequestMatcher(
+        new OrRequestMatcher(
+            new AntPathRequestMatcher("/ping"),
+            new AntPathRequestMatcher("/health/*"),
+            new AntPathRequestMatcher("/signup"),
+            new AntPathRequestMatcher("/users", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/users/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/users/*/pictures"),
+            new AntPathRequestMatcher("/users/*/posts", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/categories"),
+            new AntPathRequestMatcher("/posts", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/comments", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/comments/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/pictures", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/pictures/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/thumbnail"),
+            new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.toString())));
+
+  }
+
 }
