@@ -1,6 +1,5 @@
 package com.blogify.blogapi.endpoint.security;
 
-import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -47,20 +47,23 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
-    FirebaseUser authUser = firebaseService.getUserByBearer(token);
-
-    if (authUser != null) {
-      log.info("Authenticated user {}", authUser.getEmail());
-      User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
-      var principal = new Principal(token, user);
-      UsernamePasswordAuthenticationToken authentication =
-          new UsernamePasswordAuthenticationToken(principal, token);
-
-      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-
-      return authentication;
+    if (token == null || token.isEmpty()) {
+      throw new AuthenticationServiceException("Bearer token is missing or invalid");
     }
-    throw new ForbiddenException("Access denied");
+
+    FirebaseUser authUser = firebaseService.getUserByBearer(token);
+    if (authUser == null) {
+      throw new AuthenticationServiceException("Bearer token is expired or invalid");
+    }
+    log.info("Authenticated user {}", authUser.getEmail());
+    User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
+    var principal = new Principal(token, user);
+    UsernamePasswordAuthenticationToken authentication =
+        new UsernamePasswordAuthenticationToken(principal, token);
+
+    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    return authentication;
   }
 }

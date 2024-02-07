@@ -10,15 +10,19 @@ import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
@@ -69,32 +73,14 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .httpBasic()
         .disable()
         .exceptionHandling()
-        .authenticationEntryPoint(
-            (req, res, e) ->
-                exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
+        .authenticationEntryPoint(basicAuthenticationEntryPoint())
+        .accessDeniedHandler(
+            (request, response, ex) -> {
+              response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
+            })
         .and()
         .authenticationProvider(provider)
-        .addFilterBefore(
-            bearerFilter(
-                new NegatedRequestMatcher(
-                    new OrRequestMatcher(
-                        new AntPathRequestMatcher("/ping"),
-                        new AntPathRequestMatcher("/health/*"),
-                        new AntPathRequestMatcher("/signup"),
-                        new AntPathRequestMatcher("/users", GET.name()),
-                        new AntPathRequestMatcher("/users/*", GET.name()),
-                        new AntPathRequestMatcher("/users/*/pictures", GET.name()),
-                        new AntPathRequestMatcher("/users/*/posts", GET.name()),
-                        new AntPathRequestMatcher("/categories", GET.name()),
-                        new AntPathRequestMatcher("/posts", GET.name()),
-                        new AntPathRequestMatcher("/posts/*", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/comments", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/pictures/*", GET.name()),
-                        new AntPathRequestMatcher("/posts/*/thumbnail", GET.name()),
-                        new AntPathRequestMatcher("/**", OPTIONS.toString())))),
-            AnonymousAuthenticationFilter.class)
+        .addFilterBefore(bearerFilter(), AnonymousAuthenticationFilter.class)
         .anonymous()
         .and()
         .authorizeRequests()
@@ -167,17 +153,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
-  private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
-    AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService, userService);
-    bearerFilter.setAuthenticationManager(authenticationManager());
-    bearerFilter.setAuthenticationSuccessHandler(
-        (httpServletRequest, httpServletResponse, authentication) -> {});
-    bearerFilter.setAuthenticationFailureHandler(
-        (req, res, e) ->
-            exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));
-    return bearerFilter;
-  }
-
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -187,5 +162,51 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
+  }
+
+  private AuthFilter bearerFilter() throws Exception {
+    AuthFilter bearerFilter = new AuthFilter(bearerRequestMatcher(), firebaseService, userService);
+    bearerFilter.setAuthenticationManager(authenticationManager());
+    bearerFilter.setAuthenticationSuccessHandler((request, response, authentication) -> {});
+    bearerFilter.setAuthenticationFailureHandler(
+        (request, response, exception) -> {
+          exceptionResolver.resolveException(
+              request, response, null, forbiddenWithRemoteInfo(exception, request));
+        });
+    return bearerFilter;
+  }
+
+  private RequestMatcher bearerRequestMatcher() {
+    // Define the request matcher for bearer authentication filter
+    return new NegatedRequestMatcher(
+        new OrRequestMatcher(
+            new AntPathRequestMatcher("/ping"),
+            new AntPathRequestMatcher("/health/*"),
+            new AntPathRequestMatcher("/signup"),
+            new AntPathRequestMatcher("/users", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/users/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/users/*/pictures"),
+            new AntPathRequestMatcher("/users/*/posts", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/categories"),
+            new AntPathRequestMatcher("/posts", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/comments", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/comments/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/pictures", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/pictures/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts/*/thumbnail"),
+            new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.toString())));
+  }
+
+  @Bean
+  public AccessDeniedHandler accessDeniedHandler() {
+    return new CustomAccessDeniedHandler();
+  }
+
+  @Bean
+  public BasicAuthenticationEntryPoint basicAuthenticationEntryPoint() {
+    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+    entryPoint.setRealmName("Realm");
+    return entryPoint;
   }
 }
