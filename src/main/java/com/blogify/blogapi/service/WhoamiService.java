@@ -1,7 +1,5 @@
 package com.blogify.blogapi.service;
 
-import static java.util.UUID.randomUUID;
-
 import com.blogify.blogapi.endpoint.security.AuthProvider;
 import com.blogify.blogapi.model.Whoami;
 import lombok.AllArgsConstructor;
@@ -14,6 +12,6 @@ public class WhoamiService {
   public Whoami whoami() {
     var bearer = AuthProvider.getBearer();
     var user = AuthProvider.getUser();
-    return Whoami.builder().id(randomUUID().toString()).bearer(bearer).user(user).build();
+    return Whoami.builder().id(user.getId()).bearer(bearer).user(user).build();
   }
 }
