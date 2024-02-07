@@ -169,18 +169,17 @@ public class CommentIT {
   }
 
   @Test
-  void read_comment_by_postId_ko() throws ApiException{
+  void read_comment_by_postId_ko() throws ApiException {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
     String postId = POST1_ID;
     String commentId = randomUUID().toString();
 
     assertThrowsApiException(
-            "{\"type\":\"404 NOT_FOUND\",\"message\":\"Resource of type Comment identified by "
-                + commentId
-                + " not found\"}",
-            () -> api.getCommentById(postId,commentId)
-    );
+        "{\"type\":\"404 NOT_FOUND\",\"message\":\"Resource of type Comment identified by "
+            + commentId
+            + " not found\"}",
+        () -> api.getCommentById(postId, commentId));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

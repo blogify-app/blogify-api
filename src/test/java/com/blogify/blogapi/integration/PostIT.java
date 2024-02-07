@@ -8,7 +8,9 @@ import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post1;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post2;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.postToCreate;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.client1;
+import static com.blogify.blogapi.integration.conf.TestUtils.BAD_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -175,6 +177,39 @@ public class PostIT {
 
     assertTrue(exceptionMessage1.contains("Post_id is mandatory"));
     assertTrue(exceptionMessage2.contains("Author_id is mandatory"));
+  }
+
+  @Test
+  void not_authenticate_create_ko() {
+    ApiClient client1Client = apiClient(BAD_TOKEN);
+    PostingApi api = new PostingApi(client1Client);
+
+    assertThrowsApiException(
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.crupdatePostById(CREATE_POST1_ID, postToCreate()));
+  }
+
+  @Test
+  void not_authenticate_update_ko() {
+    ApiClient client1Client = apiClient(BAD_TOKEN);
+    PostingApi api = new PostingApi(client1Client);
+
+    assertThrowsApiException(
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.crupdatePostById(POST1_ID, post1().content("new content")));
+  }
+
+  @Test
+  void other_client_update_ko() {
+    ApiClient client2Client = apiClient(CLIENT2_TOKEN);
+    PostingApi api = new PostingApi(client2Client);
+
+    ApiException exception =
+        assertThrows(
+            ApiException.class,
+            () -> api.crupdatePostById(POST1_ID, post1().content("new content")));
+
+    assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
