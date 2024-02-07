@@ -2,17 +2,39 @@ package com.blogify.blogapi.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import com.blogify.blogapi.conf.FacadeIT;
 import com.blogify.blogapi.model.enums.Role;
 import com.blogify.blogapi.model.enums.Sex;
 import com.blogify.blogapi.model.enums.UserStatus;
+import com.blogify.blogapi.model.validator.UserValidator;
+import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
 import java.time.Instant;
 import java.time.LocalDate;
-import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.Optional;
 
+import com.blogify.blogapi.service.UserService;
+import lombok.AllArgsConstructor;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
 public class UserUnitTest extends FacadeIT {
+
+  @Mock
+  private UserRepository userRepository;
+
+  @Mock
+  private UserValidator userValidator;
+
+  @InjectMocks
+  private UserService userService;
 
   @Test
   void testGetterSetter() {
@@ -121,5 +143,47 @@ public class UserUnitTest extends FacadeIT {
     assertEquals(UserStatus.ENABLED, user.getStatus());
 
     // Add assertions for other fields if necessary
+  }
+
+
+
+
+  @Test
+  public void testCrupdateUser() {
+    User user = new User();
+    user.setId("1");
+    user.setFirstname("John");
+    user.setLastname("Doe");
+    user.setMail("john.doe@example.com");
+    user.setBirthdate(LocalDate.of(1990, 1, 1));
+    user.setFirebaseId("firebaseId");
+    user.setRole(Role.CLIENT);
+    user.setSex(Sex.M);
+    user.setCreationDatetime(Instant.now());
+    user.setLastUpdateDatetime(Instant.now());
+    user.setPhotoKey("photoKey");
+    user.setBio("Bio");
+    user.setProfileBannerKey("bannerKey");
+    user.setUsername("john_doe");
+    user.setAbout("About");
+    user.setStatus(UserStatus.ENABLED);
+    user.setUserCategories(new ArrayList<>());
+    user.setDeleted(false);
+
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+
+    Mockito.doNothing().when(userValidator).accept(user);
+
+    User updatedUser = userService.crupdateUser(user, user.getId());
+
+    Mockito.verify(userRepository).findById(user.getId());
+
+    Mockito.verify(userRepository).save(Mockito.any(User.class));
+
+    assertEquals(user.getCreationDatetime(), updatedUser.getCreationDatetime());
+    assertEquals(user.getRole(), updatedUser.getRole());
+    assertEquals(user.getPhotoKey(), updatedUser.getPhotoKey());
+    assertEquals(user.getProfileBannerKey(), updatedUser.getProfileBannerKey());
   }
 }
