@@ -1,6 +1,5 @@
 package com.blogify.blogapi.endpoint.security;
 
-import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
@@ -45,27 +44,26 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
   @Override
   @SneakyThrows
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-      throws AuthenticationException {
+  public Authentication attemptAuthentication(
+      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
     if (token == null || token.isEmpty()) {
-      throw new AuthenticationServiceException("Bearer token is missing or empty");
+      throw new AuthenticationServiceException("Bearer token is missing or invalid");
     }
 
     FirebaseUser authUser = firebaseService.getUserByBearer(token);
-    if (authUser != null) {
-      log.info("Authenticated user {}", authUser.getEmail());
-      User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
-      var principal = new Principal(token, user);
-      UsernamePasswordAuthenticationToken authentication =
-          new UsernamePasswordAuthenticationToken(principal, token);
-
-      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-
-      return authentication;
+    if (authUser == null) {
+      throw new AuthenticationServiceException("Bearer token is expired or invalid");
     }
+    log.info("Authenticated user {}", authUser.getEmail());
+    User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
+    var principal = new Principal(token, user);
+    UsernamePasswordAuthenticationToken authentication =
+        new UsernamePasswordAuthenticationToken(principal, token);
 
-    throw new ForbiddenException("Access denied");
+    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    return authentication;
   }
 }

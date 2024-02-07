@@ -30,7 +30,6 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
     return null;
   }
 
-
   public static User getUser() {
     return getPrincipal().getUser();
   }

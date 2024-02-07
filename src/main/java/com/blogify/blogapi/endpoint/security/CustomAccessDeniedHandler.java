@@ -1,18 +1,19 @@
 package com.blogify.blogapi.endpoint.security;
 
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import javax.servlet.ServletException;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
   @Override
-  public void handle(HttpServletRequest request, HttpServletResponse response,
-      AccessDeniedException accessDeniedException) throws IOException, ServletException {
-    // You can customize the response here, for example:
+  public void handle(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AccessDeniedException accessDeniedException)
+      throws IOException {
     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     response.getWriter().write("Access Denied");
   }

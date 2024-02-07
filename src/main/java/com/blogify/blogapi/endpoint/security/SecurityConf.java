@@ -62,17 +62,22 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http
-        .cors().disable()
-        .csrf().disable()
-        .formLogin().disable()
-        .logout().disable()
-        .httpBasic().disable()
+    http.cors()
+        .disable()
+        .csrf()
+        .disable()
+        .formLogin()
+        .disable()
+        .logout()
+        .disable()
+        .httpBasic()
+        .disable()
         .exceptionHandling()
         .authenticationEntryPoint(basicAuthenticationEntryPoint())
-        .accessDeniedHandler((request, response, ex) -> {
-          response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
-        })
+        .accessDeniedHandler(
+            (request, response, ex) -> {
+              response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
+            })
         .and()
         .authenticationProvider(provider)
         .addFilterBefore(bearerFilter(), AnonymousAuthenticationFilter.class)
@@ -163,9 +168,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     AuthFilter bearerFilter = new AuthFilter(bearerRequestMatcher(), firebaseService, userService);
     bearerFilter.setAuthenticationManager(authenticationManager());
     bearerFilter.setAuthenticationSuccessHandler((request, response, authentication) -> {});
-    bearerFilter.setAuthenticationFailureHandler((request, response, exception) -> {
-      exceptionResolver.resolveException(request, response, null, forbiddenWithRemoteInfo(exception, request));
-    });
+    bearerFilter.setAuthenticationFailureHandler(
+        (request, response, exception) -> {
+          exceptionResolver.resolveException(
+              request, response, null, forbiddenWithRemoteInfo(exception, request));
+        });
     return bearerFilter;
   }
 
@@ -189,11 +196,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/posts/*/pictures/*", HttpMethod.GET.name()),
             new AntPathRequestMatcher("/posts/*/thumbnail"),
             new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.toString())));
-
   }
 
   @Bean
-  public AccessDeniedHandler accessDeniedHandler(){
+  public AccessDeniedHandler accessDeniedHandler() {
     return new CustomAccessDeniedHandler();
   }
 
@@ -203,5 +209,4 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     entryPoint.setRealmName("Realm");
     return entryPoint;
   }
-
 }

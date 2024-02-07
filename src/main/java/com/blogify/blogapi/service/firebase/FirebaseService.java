@@ -62,7 +62,11 @@ public class FirebaseService {
           ? null
           : FirebaseUser.builder().id(token.getUid()).email(token.getEmail()).build();
     } catch (FirebaseAuthException e) {
-      throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
+      if (e.getMessage().contains("Firebase ID token has expired")) {
+        return null;
+      } else {
+        throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
+      }
     }
   }
 
