@@ -3,6 +3,7 @@ package com.blogify.blogapi.endpoint.mapper;
 import static com.blogify.blogapi.service.utils.EnumMapperUtils.mapEnum;
 
 import com.blogify.blogapi.constant.FileConstant;
+import com.blogify.blogapi.endpoint.mapper.utils.ToDomainMapperUtils;
 import com.blogify.blogapi.endpoint.rest.model.Post;
 import com.blogify.blogapi.endpoint.rest.model.PostStatus;
 import com.blogify.blogapi.file.S3Service;
@@ -18,6 +19,7 @@ public class PostMapper {
   private final ReactionMapper reactionMapper;
   private final UserMapper userMapper;
   private final S3Service s3Service;
+  private final ToDomainMapperUtils toDomainMapperUtils;
 
   public Post toRest(com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
     String thumbnailKey = domain.getThumbnailKey();
@@ -37,7 +39,7 @@ public class PostMapper {
         .updatedAt(domain.getLastUpdateDatetime())
         .status(toRest(domain.getStatus()))
         .reactions(reactionMapper.toRest(reactionStat))
-        .categories(domain.getPostCategories().stream().map(categoryMapper::toRest).toList());
+        .categories(toDomainMapperUtils.checkNullList(domain.getPostCategories()).stream().map(categoryMapper::toRest).toList());
   }
 
   public Post toRest(
@@ -72,9 +74,7 @@ public class PostMapper {
         .title(rest.getTitle())
         .status(toDomain(rest.getStatus()))
         .postCategories(
-            rest.getCategories().isEmpty()
-                ? null
-                : rest.getCategories().stream().map(categoryMapper::toPostCategoryDomain).toList())
+            toDomainMapperUtils.checkNullList(rest.getCategories()).stream().map(categoryMapper::toPostCategoryDomain).toList())
         .build();
   }
 
