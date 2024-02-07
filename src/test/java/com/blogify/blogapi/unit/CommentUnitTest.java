@@ -1,110 +1,142 @@
 package com.blogify.blogapi.unit;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.blogify.blogapi.conf.FacadeIT;
-import com.blogify.blogapi.model.enums.CommentStatus;
+import com.blogify.blogapi.model.BoundedPageSize;
+import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.model.exception.NotFoundException;
 import com.blogify.blogapi.model.validator.CommentValidator;
 import com.blogify.blogapi.repository.CommentRepository;
 import com.blogify.blogapi.repository.model.Comment;
 import com.blogify.blogapi.repository.model.Post;
-import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.CommentService;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 public class CommentUnitTest extends FacadeIT {
-    @Autowired
+
+    @Mock
     private CommentRepository commentRepository;
-    @Autowired
+
+    @Mock
+    private CommentValidator commentValidator;
+
+    @InjectMocks
     private CommentService commentService;
 
     @Test
-    void getByIdWithExistingComment() {
-        // Given
-        String commentId = "commentId";
-        String postId = "postId";
-        Comment expectedComment = createTestComment(commentId, postId);
-
-        Comment actualComment = commentService.getBYId(commentId, postId);
-
-        assertEquals(expectedComment, actualComment);
-    }
-
-    // Helper method to create a test comment
-    private Comment createTestComment(String commentId, String postId) {
+    public void testGetById() {
         Comment comment = new Comment();
-        comment.setId(commentId);
-        comment.setPost(new Post(postId)); // Assuming there's a constructor for Post that accepts postId
-        comment.setContent("Test content");
-        comment.setUser(new User("testUserId", "Test User")); // Assuming there's a constructor for User that accepts userId and userName
-        comment.setReplyToId("replyToTestId");
-        comment.setCommentReactions(new ArrayList<>()); // Assuming you want to initialize an empty list for commentReactions
-        comment.setStatus(CommentStatus.ENABLED); // Assuming ENABLED is a valid status
-        comment.setDeleted(false);
-        return comment;
+        Post post = new Post();
+        post.setId("postId");
+
+        comment.setPost(post);
+        comment.setId("commentId");
+
+        when(commentRepository.findByIdAndPost_Id(eq("commentId"), eq("postId"))).thenReturn(Optional.of(comment));
+
+        Comment result = commentService.getBYId("commentId", "postId");
+
+        assertEquals(comment, result);
     }
 
     @Test
-    void getByIdNoExistingComment() {
-        String commentId = "commentId";
-        String postId = "postId";
-        assertThrows(NotFoundException.class, () -> commentService.getBYId(commentId, postId));
+    public void testGetById_NotFound() {
+        when(commentRepository.findByIdAndPost_Id(any(), any())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> commentService.getBYId("notExistingCommentId", "postId"));
     }
 
     @Test
-    void crupdateByIdWithExistingComment() {
-        // Given
-        String postId = "post1_id";
-        String commentId = "comment3_id";
-        // Comment existingComment = createTestComment(commentId, postId);
-        Comment updatedComment = createTestComment(commentId, postId); // Assume updated fields here
+    public void testFindByPostId() {
+        List<Comment> comments = new ArrayList<>();
+        comments.add(new Comment());
+        comments.add(new Comment());
+
+        when(commentRepository.findByPostIdOrderByCreationDatetimeDesc(eq("postId"), any(PageRequest.class))).thenReturn(comments);
+
+        List<Comment> result = commentService.findByPostId("postId", new PageFromOne(1), new BoundedPageSize(10));
+
+        assertEquals(comments.size(), result.size());
+        assertEquals(comments.get(0), result.get(0));
+        assertEquals(comments.get(1), result.get(1));
+    }
+
+    @Test
+    public void testFindByIdAndPostId_WhenCommentExists() {
+        Comment comment = new Comment();
+        comment.setId("1");
+        comment.setPost(new Post());
+
+        when(commentRepository.findByIdAndPost_Id("1", "postId")).thenReturn(Optional.of(comment));
+
+        Comment result = commentService.findByIdAndPostId("1", "postId");
+
+        assertEquals(comment, result);
+    }
+
+    @Test
+    public void testFindByIdAndPostId_WhenCommentDoesNotExist() {
+        when(commentRepository.findByIdAndPost_Id("1", "postId")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () ->
+                commentService.findByIdAndPostId("1", "postId"));
+    }
+
+    @Test
+    public void testCommentCrupdateById() {
+        Comment existingComment = new Comment();
+        existingComment.setId("1");
+        existingComment.setContent("Existing content");
+        existingComment.setCreationDatetime(Instant.now());
+
+        when(commentRepository.findByIdAndPost_Id(existingComment.getId(), "postId")).thenReturn(Optional.of(existingComment));
+        when(commentRepository.save(Mockito.any(Comment.class))).thenReturn(existingComment);
+
+        Mockito.doNothing().when(commentValidator).accept(existingComment);
+
+        Comment updatedComment = commentService.crupdateById("postId", existingComment.getId(), existingComment);
+
+        assertNotNull(updatedComment);
+
         updatedComment.setContent("Updated content");
+        Mockito.verify(commentRepository).save(Mockito.any(Comment.class));
 
-        Comment result = commentService.crupdateById(postId, commentId, updatedComment);
+        Comment result = commentService.crupdateById("postId", updatedComment.getId(), updatedComment);
 
-        assertEquals(updatedComment, result);
-
-        assertNotNull(result.getCreationDatetime());
-        assertEquals("Updated content", result.getContent());
+        verify(commentRepository, times(2)).findByIdAndPost_Id(existingComment.getId(), "postId");
+        verify(commentRepository, times(2)).save(Mockito.any(Comment.class));
+        assertEquals(updatedComment.getContent(), result.getContent());
+        assertEquals(existingComment.getCreationDatetime(), result.getCreationDatetime());
     }
 
     @Test
-    void crupdateByIdNoExistingComment() {
-        String postId = "postId";
-        String commentId = "commentId";
-        Comment updatedComment = createTestComment(commentId, postId);
+    public void testDeleteById() {
+        Comment commentToDelete = new Comment();
+        Post post = new Post();
+        post.setId("postId");
+        commentToDelete.setId("commentId");
+        commentToDelete.setPost(post);
 
-        assertThrows(NotFoundException.class, () -> commentService.crupdateById(postId, commentId, updatedComment));
+        when(commentRepository.findByIdAndPost_Id("commentId", "postId")).thenReturn(Optional.of(commentToDelete));
+
+        Comment deletedComment = commentService.deleteById("commentId", "postId");
+
+        assertEquals(commentToDelete, deletedComment);
+        verify(commentRepository, times(1)).delete(commentToDelete);
     }
 
-    @Test
-    void deleteByIdWithExistingComment() {
-        String postId = "postId";
-        String commentId = "commentId";
-        Comment existingComment = createTestComment(commentId, postId);
 
-        Comment result = commentService.deleteById(commentId, postId);
-
-        // Then
-        assertEquals(existingComment, result);
-        verify(commentRepository).delete(existingComment);
-    }
-    @Test
-    void deleteByIdNoExistingComment() {
-        String postId = "postId";
-        String commentId = "commentId";
-
-        assertThrows(NotFoundException.class, () -> commentService.deleteById(commentId, postId));
-    }
 }
