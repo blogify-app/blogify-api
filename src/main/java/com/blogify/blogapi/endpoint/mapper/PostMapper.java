@@ -39,7 +39,10 @@ public class PostMapper {
         .updatedAt(domain.getLastUpdateDatetime())
         .status(toRest(domain.getStatus()))
         .reactions(reactionMapper.toRest(reactionStat))
-        .categories(toDomainMapperUtils.checkNullList(domain.getPostCategories()).stream().map(categoryMapper::toRest).toList());
+        .categories(
+            toDomainMapperUtils.checkNullList(domain.getPostCategories()).stream()
+                .map(categoryMapper::toRest)
+                .toList());
   }
 
   public Post toRest(
@@ -74,7 +77,9 @@ public class PostMapper {
         .title(rest.getTitle())
         .status(toDomain(rest.getStatus()))
         .postCategories(
-            toDomainMapperUtils.checkNullList(rest.getCategories()).stream().map(categoryMapper::toPostCategoryDomain).toList())
+            toDomainMapperUtils.checkNullList(rest.getCategories()).stream()
+                .map(categoryMapper::toPostCategoryDomain)
+                .toList())
         .build();
   }
 
