@@ -52,13 +52,17 @@ public class FirebaseService {
   }
 
   public FirebaseUser getUserByBearer(String bearer) {
+    if (bearer == null || bearer.isEmpty()) {
+      throw new IllegalArgumentException("Bearer token must not be null or empty");
+    }
+
     try {
       FirebaseToken token = auth().verifyIdToken(bearer);
       return token == null
           ? null
           : FirebaseUser.builder().id(token.getUid()).email(token.getEmail()).build();
     } catch (FirebaseAuthException e) {
-      throw new ApiException(SERVER_EXCEPTION, e.getMessage());
+      throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
     }
   }
 

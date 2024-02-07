@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -44,11 +45,14 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
   @Override
   @SneakyThrows
-  public Authentication attemptAuthentication(
-      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+      throws AuthenticationException {
     String token = AuthProvider.getBearer(request);
-    FirebaseUser authUser = firebaseService.getUserByBearer(token);
+    if (token == null || token.isEmpty()) {
+      throw new AuthenticationServiceException("Bearer token is missing or empty");
+    }
 
+    FirebaseUser authUser = firebaseService.getUserByBearer(token);
     if (authUser != null) {
       log.info("Authenticated user {}", authUser.getEmail());
       User user = userService.getUserByFirebaseIdAndEmail(authUser.getId(), authUser.getEmail());
@@ -61,6 +65,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
       return authentication;
     }
+
     throw new ForbiddenException("Access denied");
   }
 }

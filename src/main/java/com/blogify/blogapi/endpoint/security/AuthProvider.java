@@ -1,6 +1,5 @@
 package com.blogify.blogapi.endpoint.security;
 
-import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.repository.model.User;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +25,11 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   public static String getBearer(HttpServletRequest req) {
     String authorization = req.getHeader("Authorization");
     if (authorization != null && authorization.startsWith(BEARER_PREFIX)) {
-      return authorization.substring(7);
+      return authorization.substring(BEARER_PREFIX.length());
     }
-    throw new ForbiddenException("Access denied");
+    return null;
   }
+
 
   public static User getUser() {
     return getPrincipal().getUser();

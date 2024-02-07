@@ -10,6 +10,7 @@ import com.blogify.blogapi.model.exception.ForbiddenException;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.firebase.FirebaseService;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
@@ -66,7 +69,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .logout().disable()
         .httpBasic().disable()
         .exceptionHandling()
-        .authenticationEntryPoint(customAuthenticationEntryPoint())
+        .authenticationEntryPoint(basicAuthenticationEntryPoint())
+        .accessDeniedHandler((request, response, ex) -> {
+          response.sendError(HttpServletResponse.SC_FORBIDDEN, ex.getMessage());
+        })
         .and()
         .authenticationProvider(provider)
         .addFilterBefore(bearerFilter(), AnonymousAuthenticationFilter.class)
@@ -201,6 +207,18 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/posts/*/thumbnail"),
             new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.toString())));
 
+  }
+
+  @Bean
+  public AccessDeniedHandler accessDeniedHandler(){
+    return new CustomAccessDeniedHandler();
+  }
+
+  @Bean
+  public BasicAuthenticationEntryPoint basicAuthenticationEntryPoint() {
+    BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+    entryPoint.setRealmName("Realm");
+    return entryPoint;
   }
 
 }
