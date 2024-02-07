@@ -148,20 +148,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
-  /*
-  private AuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
-    AuthFilter bearerFilter = new AuthFilter(requestMatcher, firebaseService, userService);
-    bearerFilter.setAuthenticationManager(authenticationManager());
-    bearerFilter.setAuthenticationSuccessHandler(
-        (httpServletRequest, httpServletResponse, authentication) -> {});
-    bearerFilter.setAuthenticationFailureHandler(
-        (req, res, e) ->
-            exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)));
-    return bearerFilter;
-  }
-
-   */
-
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -173,9 +159,6 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     return source;
   }
 
-  public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
-    return new CustomAuthenticationEntryPoint();
-  }
   private AuthFilter bearerFilter() throws Exception {
     AuthFilter bearerFilter = new AuthFilter(bearerRequestMatcher(), firebaseService, userService);
     bearerFilter.setAuthenticationManager(authenticationManager());
