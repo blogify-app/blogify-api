@@ -15,8 +15,8 @@ Globals:
       SecurityGroupIds:
         - !Sub '{{resolve:ssm:/poja/sg/id}}'
       SubnetIds:
-        - !Sub '{{resolve:ssm:/poja/public-subnet-1/id}}'
-        - !Sub '{{resolve:ssm:/poja/public-subnet-2/id}}'
+        - !Sub '{{resolve:ssm:/poja/private-subnet-1/id}}'
+        - !Sub '{{resolve:ssm:/poja/private-subnet-2/id}}'
     Environment:
       Variables:
         ENV: !Ref Env
@@ -24,13 +24,13 @@ Globals:
         AWS_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/blogify-api/${Env}/eventbridge/bus-name}}'
         AWS_S3_BUCKET: !Sub '{{resolve:ssm:/blogify-api/${Env}/s3/bucket-name}}'
         AWS_SES_SOURCE: noreply@nowhere.com
-        DRIVERCLASSNAME: org.sqlite.JDBC
-        SPRING_JPA_DATABASEPLATFORM: com.blogify.blogapi.repository.conf.SqliteDialect
-        DATABASE_URL: jdbc:sqlite:/mnt/efs/sqlite-data:db?cache=shared
-        DATABASE_USERNAME: sa
-        DATABASE_PASSWORD: sa
         
-        
+        DATABASE_URL: !Sub '{{resolve:ssm:/blogify-api/${Env}/db/url}}'
+        DATABASE_USERNAME: !Sub '{{resolve:ssm:/blogify-api/${Env}/db/username}}'
+        DATABASE_PASSWORD: !Sub '{{resolve:ssm:/blogify-api/${Env}/db/password}}'
+
+        FIREBASE_PRIVATE_KEY: !Sub '{{resolve:ssm:/blogify-api/${Env}/firebase/key}}'
+
         JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Dspring.main.lazy-initialization=true -Dspring.data.jpa.repositories.bootstrap-mode=lazy -Dspring.datasource.max-active=5 -Dspring.datasource.max-idle=1 -Dspring.datasource.min-idle=1 -Dspring.datasource.initial-size=1
 
 Parameters:
@@ -51,9 +51,7 @@ Resources:
       Handler: com.blogify.blogapi.ApiEventHandler::handleRequest
       MemorySize: 2048
       Role: !Sub '{{resolve:ssm:/blogify-api/${Env}/execution/role-arn}}'
-      FileSystemConfigs:
-        - Arn: !Sub '{{resolve:ssm:/blogify-api/${Env}/efs/access-point/arn}}'
-          LocalMountPath: /mnt/efs
+      
       Events:
         ApiCall:
           Type: Api
@@ -69,9 +67,7 @@ Resources:
       Handler: com.blogify.blogapi.MailboxEventHandler::handleRequest
       MemorySize: 1024
       Role: !Sub '{{resolve:ssm:/blogify-api/${Env}/execution/role-arn}}'
-      FileSystemConfigs:
-        - Arn: !Sub '{{resolve:ssm:/blogify-api/${Env}/efs/access-point/arn}}'
-          LocalMountPath: /mnt/efs
+      
       Events:
         AllEvents:
           Type: SQS

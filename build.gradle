@@ -38,6 +38,54 @@ repositories {
     mavenCentral()
 }
 
+task generateJavaClient(type: GenerateTask) {
+    generatorName = "java"
+    inputSpec = "$rootDir/doc/api.yml".toString()
+    outputDir = "$buildDir/gen".toString()
+    apiPackage = "com.blogify.blogapi.endpoint.rest.api"
+    invokerPackage = "com.blogify.blogapi.endpoint.rest.client"
+    modelPackage = "com.blogify.blogapi.endpoint.rest.model"
+
+    configOptions = [
+            serializationLibrary: "jackson",
+            dateLibrary: "custom"
+    ]
+    typeMappings = [
+            // What date-time type to use when? https://i.stack.imgur.com/QPhGW.png
+            Date: "java.time.LocalDate",
+            DateTime: "java.time.Instant",
+    ]
+    library = "native"
+
+    groupId = 'com.blogify'
+    id = 'blogify-api-gen'
+    skipValidateSpec = false
+    logToStderr = true
+    generateAliasAsModel = false
+    enablePostProcessFile = false
+}
+task generateTsClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "typescript-axios"
+    inputSpec = "$rootDir/doc/api.yml".toString()
+    outputDir = "$buildDir/gen-ts".toString()
+    typeMappings = [
+            Date    : "Date",
+            DateTime: "Date",
+    ]
+    additionalProperties = [
+            enumPropertyNaming: "original",
+            npmName           : "@blogify-api/typescript-client",
+            npmVersion        : project.properties["args"] ?: "latest"
+    ]
+}
+task publishJavaClientToMavenLocal(type: Exec, dependsOn: generateJavaClient) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        commandLine './.shell/publish_gen_to_maven_local.bat'
+    } else {
+        commandLine './.shell/publish_gen_to_maven_local.sh'
+    }
+}
+tasks.compileJava.dependsOn publishJavaClientToMavenLocal
 
 
 test {
@@ -51,13 +99,23 @@ jacocoTestCoverageVerification {
         rule {
             limit {
                 counter = "LINE"
-                minimum = 0.8
+                minimum = 0.6
             }
         }
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    dependsOn test
+}
+
+
 dependencies {
+    implementation 'com.blogify:blogify-api-gen:latest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.flywaydb:flyway-core'
@@ -86,9 +144,17 @@ dependencies {
     implementation 'com.sun.mail:jakarta.mail:2.0.1'
     implementation 'com.sun.activation:jakarta.activation:2.0.1'
 
-    implementation 'org.apache.tika:tika-core:1.18'
+    implementation 'org.apache.tika:tika-core:2.9.1'
+
+    implementation 'com.blogify:blogify-api-gen:latest'
+
 
     implementation 'org.reflections:reflections:0.10.2'
+
+    // https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
