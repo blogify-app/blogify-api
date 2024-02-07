@@ -183,19 +183,19 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/ping"),
             new AntPathRequestMatcher("/health/*"),
             new AntPathRequestMatcher("/signup"),
-            new AntPathRequestMatcher("/users", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/users/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/users/*/pictures"),
-            new AntPathRequestMatcher("/users/*/posts", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/users", GET.name()),
+            new AntPathRequestMatcher("/users/*", GET.name()),
+            new AntPathRequestMatcher("/users/*/pictures", GET.name()),
+            new AntPathRequestMatcher("/users/*/posts", GET.name()),
             new AntPathRequestMatcher("/categories"),
-            new AntPathRequestMatcher("/posts", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/posts/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/posts/*/comments", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/posts/*/comments/*", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/posts/*/pictures", HttpMethod.GET.name()),
-            new AntPathRequestMatcher("/posts/*/pictures/*", HttpMethod.GET.name()),
+            new AntPathRequestMatcher("/posts", GET.name()),
+            new AntPathRequestMatcher("/posts/*", GET.name()),
+            new AntPathRequestMatcher("/posts/*/comments", GET.name()),
+            new AntPathRequestMatcher("/posts/*/comments/*", GET.name()),
+            new AntPathRequestMatcher("/posts/*/pictures", GET.name()),
+            new AntPathRequestMatcher("/posts/*/pictures/*", GET.name()),
             new AntPathRequestMatcher("/posts/*/thumbnail"),
-            new AntPathRequestMatcher("/**", HttpMethod.OPTIONS.toString())));
+            new AntPathRequestMatcher("/**", OPTIONS.toString())));
   }
 
   @Bean
