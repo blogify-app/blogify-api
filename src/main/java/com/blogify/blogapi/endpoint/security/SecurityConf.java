@@ -131,6 +131,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .authenticated()
         .requestMatchers(new UserOfUserMatcher(userService, PUT, "/users/*/pictures"))
         .authenticated()
+        .requestMatchers(new UserOfUserMatcher(userService, PUT, "/users/*/pictures/profile"))
+        .authenticated()
         .requestMatchers(new CommentOfUserMatcher(userService, PUT, "/posts/*/comments/*"))
         .authenticated()
         .requestMatchers(new PostOfUserMatcher(userService, PUT, "/posts/*/thumbnail"))
