@@ -4,10 +4,13 @@ import static com.blogify.blogapi.integration.conf.MockData.UserMockData.CLIENT1
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.userPictureClient1Banner;
 import static com.blogify.blogapi.integration.conf.MockData.UserMockData.userPictureClient1Profile;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.blogify.blogapi.endpoint.rest.api.UserApi;
@@ -19,6 +22,7 @@ import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
 import com.blogify.blogapi.service.firebase.FirebaseService;
+import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,6 +58,42 @@ public class UserFileIT {
 
     assertEquals(actualUserPictureBanner, userPictureClient1Banner());
     assertEquals(actualUserPictureProfile, userPictureClient1Profile());
+  }
+
+  @Test
+  void other_client_update_picture_ko() throws ApiException {
+    ApiClient client2Client = anApiClient(CLIENT2_TOKEN);
+    UserApi api = new UserApi(client2Client);
+
+    ApiException exception1 =
+        assertThrows(
+            ApiException.class,
+            () ->
+                api.putUserPicture(
+                    CLIENT1_ID, UserPictureType.PROFILE, new File("/home/test.jpg")));
+    ApiException exception2 =
+        assertThrows(
+            ApiException.class,
+            () ->
+                api.putUserPicture(CLIENT1_ID, UserPictureType.BANNER, new File("/home/test.jpg")));
+    assertTrue(exception1.getMessage().contains("status\":403,\"error\":\"Forbidden"));
+    assertTrue(exception2.getMessage().contains("status\":403,\"error\":\"Forbidden"));
+  }
+
+  @Test
+  void other_client_delete_picture_ko() throws ApiException {
+    ApiClient client2Client = anApiClient(CLIENT2_TOKEN);
+    UserApi api = new UserApi(client2Client);
+
+    ApiException exception1 =
+        assertThrows(
+            ApiException.class, () -> api.deleteUserPicture(CLIENT1_ID, UserPictureType.PROFILE));
+    ApiException exception2 =
+        assertThrows(
+            ApiException.class, () -> api.deleteUserPicture(CLIENT1_ID, UserPictureType.BANNER));
+
+    assertTrue(exception1.getMessage().contains("status\":403,\"error\":\"Forbidden"));
+    assertTrue(exception2.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
 
   //  @Test

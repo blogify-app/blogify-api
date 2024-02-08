@@ -2,6 +2,7 @@ package com.blogify.blogapi.integration;
 
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT2_ID;
+import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.COMMENT3_ID;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.CREATE_COMMENT1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment1;
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comment2;
@@ -9,7 +10,9 @@ import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comm
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.commentToCreate;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_ID;
+import static com.blogify.blogapi.integration.conf.TestUtils.BAD_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.assertThrowsApiException;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
@@ -17,6 +20,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -25,6 +29,7 @@ import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
 import com.blogify.blogapi.endpoint.rest.model.CommentStatus;
+import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
@@ -118,7 +123,7 @@ public class CommentIT {
   }
 
   @Test
-  void client_write_ko() throws ApiException {
+  void client_write_ko() {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
 
@@ -169,7 +174,7 @@ public class CommentIT {
   }
 
   @Test
-  void read_comment_by_postId_ko() throws ApiException {
+  void read_comment_by_postId_ko() {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
     String postId = POST1_ID;
@@ -180,6 +185,37 @@ public class CommentIT {
             + commentId
             + " not found\"}",
         () -> api.getCommentById(postId, commentId));
+  }
+
+  @Test
+  void not_authenticate_create_ko() {
+    ApiClient client1Client = apiClient(BAD_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
+
+    assertThrowsApiException(
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.reactToCommentById(POST1_ID, COMMENT3_ID, ReactionType.DISLIKE));
+  }
+
+  @Test
+  void not_authenticate_delete_ko() {
+    ApiClient client1Client = apiClient(BAD_TOKEN);
+    CommentsApi api = new CommentsApi(client1Client);
+
+    assertThrowsApiException(
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.deleteCommentById(POST1_ID, COMMENT2_ID));
+  }
+
+  @Test
+  void other_client_delete_ko() {
+    ApiClient client2Client = apiClient(CLIENT2_TOKEN);
+    CommentsApi api = new CommentsApi(client2Client);
+
+    ApiException exception =
+        assertThrows(ApiException.class, () -> api.deleteCommentById(POST1_ID, COMMENT2_ID));
+
+    assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

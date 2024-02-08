@@ -26,6 +26,7 @@ import com.blogify.blogapi.endpoint.rest.api.PostingApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Post;
+import com.blogify.blogapi.endpoint.rest.model.ReactionType;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.integration.conf.AbstractContextInitializer;
 import com.blogify.blogapi.integration.conf.TestUtils;
@@ -210,6 +211,25 @@ public class PostIT {
             () -> api.crupdatePostById(POST1_ID, post1().content("new content")));
 
     assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
+  }
+
+  @Test
+  void other_client_delete_ko() {
+    ApiClient client2 = apiClient(CLIENT2_TOKEN);
+    PostingApi api = new PostingApi(client2);
+
+    ApiException exception = assertThrows(ApiException.class, () -> api.deletePostById(POST1_ID));
+    assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
+  }
+
+  @Test
+  void not_authenticate_create_reaction_ko() {
+    ApiClient client = apiClient(BAD_TOKEN);
+    PostingApi api = new PostingApi(client);
+
+    assertThrowsApiException(
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.reactToPostById(POST1_ID, ReactionType.LIKE));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {

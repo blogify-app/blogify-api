@@ -6,9 +6,11 @@ import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_I
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.postPicture1;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.postPicture2;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
+import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.anAvailableRandomPort;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -62,6 +64,28 @@ public class PostIFileT {
     assertEquals(2, actualPostPictures.size());
     assertTrue(actualPostPictures.contains(postPicture1()));
     assertTrue(actualPostPictures.contains(postPicture2()));
+  }
+
+  @Test
+  void other_client_create_picture_ko() {
+    ApiClient client = apiClient(CLIENT2_TOKEN);
+    PostingApi api = new PostingApi((client));
+
+    ApiException exception =
+        assertThrows(ApiException.class, () -> api.uploadPostPicture(POST1_ID, PICTURE1_ID, null));
+
+    assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
+  }
+
+  @Test
+  void other_client_delete_picture_ko() {
+    ApiClient client = apiClient(CLIENT2_TOKEN);
+    PostingApi api = new PostingApi((client));
+
+    ApiException exception =
+        assertThrows(ApiException.class, () -> api.deletePostPictureById(POST1_ID, PICTURE1_ID));
+
+    assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
