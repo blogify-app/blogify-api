@@ -16,6 +16,7 @@ import static com.blogify.blogapi.integration.conf.TestUtils.setUpFirebase;
 import static com.blogify.blogapi.integration.conf.TestUtils.setUpS3Service;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -142,6 +143,18 @@ public class UserIT {
     assertEquals(clientToCreate().getProfileBannerUrl(), actualCreated.getProfileBannerUrl());
     assertEquals(clientToCreate().getCategories(), actualCreated.getCategories());
     assertEquals(4, actualAfterCreate.size());
+  }
+  @Test
+  void other_client_update_ko(){
+    ApiClient client2Client = anApiClient(CLIENT2_TOKEN);
+    UserApi api = new UserApi(client2Client);
+
+    ApiException exception =
+            assertThrows(
+                    ApiException.class,
+                    () -> api.crupdateUserById(CLIENT1_ID,client1().lastName("new last name"))
+            );
+    assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
