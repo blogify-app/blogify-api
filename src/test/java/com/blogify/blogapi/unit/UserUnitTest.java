@@ -11,13 +11,11 @@ import com.blogify.blogapi.model.enums.UserStatus;
 import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.UserRepository;
 import com.blogify.blogapi.repository.model.User;
+import com.blogify.blogapi.service.UserService;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
-
-import com.blogify.blogapi.service.UserService;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,14 +25,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class UserUnitTest extends FacadeIT {
 
-  @Mock
-  private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-  @Mock
-  private UserValidator userValidator;
+  @Mock private UserValidator userValidator;
 
-  @InjectMocks
-  private UserService userService;
+  @InjectMocks private UserService userService;
 
   @Test
   void testGetterSetter() {
@@ -144,9 +139,6 @@ public class UserUnitTest extends FacadeIT {
 
     // Add assertions for other fields if necessary
   }
-
-
-
 
   @Test
   public void testCrupdateUser() {

@@ -59,5 +59,4 @@ public class Post implements Serializable {
   private List<PostReaction> postReactions;
 
   private boolean deleted = Boolean.FALSE;
-
 }

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
@@ -25,12 +26,12 @@ public class PostDao {
     CriteriaBuilder builder = entityManager.getCriteriaBuilder();
     CriteriaQuery<Post> query = builder.createQuery(Post.class);
     Root<Post> root = query.from(Post.class);
-    Join<Post, PostCategory> postCategoryJoin = root.join("postCategories");
-    Join<PostCategory, Category> categoryJoin = postCategoryJoin.join("category");
+    Join<Post, PostCategory> postCategoryJoin = root.join("postCategories", JoinType.LEFT);
+    Join<PostCategory, Category> categoryJoin = postCategoryJoin.join("category", JoinType.LEFT);
 
     Predicate predicate = builder.conjunction();
 
-    if (categories != null) {
+    if (categories != null && !categories.isEmpty()) {
       List<String> categoreisList = Arrays.stream(categories.split(",")).toList();
       predicate =
           builder.equal(
@@ -48,7 +49,8 @@ public class PostDao {
     query
         .distinct(true)
         .where(predicate)
-        .orderBy(QueryUtils.toOrders(pageable.getSort(), root, builder));
+        .orderBy(QueryUtils.toOrders(pageable.getSort(), root, builder))
+        .orderBy(builder.desc(root.get("creationDatetime")));
 
     return entityManager
         .createQuery(query)
