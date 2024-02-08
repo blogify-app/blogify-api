@@ -34,8 +34,8 @@ public class CommentValidator implements Consumer<Comment> {
       }
     }
 
-    if (comment.getStatus() == CommentStatus.DISABLED
-        || !isValidCommentStatus(comment.getStatus())) {
+    if (comment.getStatus() != null && (comment.getStatus() == CommentStatus.DISABLED
+            || !isValidCommentStatus(comment.getStatus()))) {
       violationMessages.add("Invalid Comment Status. ");
     }
 
