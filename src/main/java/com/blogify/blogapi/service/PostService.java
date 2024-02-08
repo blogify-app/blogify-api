@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -39,12 +40,18 @@ public class PostService {
     return postRepository.findByUserId(userId, pageable).stream().toList();
   }
 
+  public List<Post> findAllWithPagination(PageFromOne page, BoundedPageSize pageSize) {
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
+    return postRepository.findAll(pageable).stream().toList();
+  }
+
   public List<Post> findAllByCategory(
       String categoryName, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return postDao.findByCriteria(categoryName, pageable);
   }
 
+  @Transactional
   public Post savePost(Post post, String postId) {
     postValidator.accept(post);
     Optional<Post> optionalPost = postRepository.findById(postId);
@@ -52,8 +59,10 @@ public class PostService {
       Post postToUpdate = optionalPost.get();
       post.setCreationDatetime(postToUpdate.getCreationDatetime());
       post.setThumbnailKey(postToUpdate.getThumbnailKey());
+      post.setPointByView(postToUpdate.getPointByView());
     } else {
       post.setCreationDatetime(Instant.now());
+      post.setPointByView(0L);
     }
     return postRepository.save(post);
   }

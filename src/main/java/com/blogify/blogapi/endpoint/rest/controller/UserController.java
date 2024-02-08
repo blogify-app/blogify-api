@@ -2,17 +2,22 @@ package com.blogify.blogapi.endpoint.rest.controller;
 
 import com.blogify.blogapi.endpoint.mapper.UserCategoryMapper;
 import com.blogify.blogapi.endpoint.mapper.UserMapper;
+import com.blogify.blogapi.endpoint.mapper.ViewMapper;
 import com.blogify.blogapi.endpoint.rest.model.User;
+import com.blogify.blogapi.endpoint.rest.model.UserViewOnePost;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
 import com.blogify.blogapi.repository.model.UserCategory;
+import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.UserService;
+import com.blogify.blogapi.service.ViewService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +30,9 @@ public class UserController {
 
   private final UserService userService;
   private final UserMapper userMapper;
+  private final ViewMapper viewMapper;
+  private final ViewService viewService;
+  private final PostReactionService postReactionService;
   private final UserCategoryMapper userCategoryMapper;
 
   @GetMapping(value = "/users")
@@ -51,5 +59,11 @@ public class UserController {
             toUpdate, userMapper.toDomain(toUpdate, new ArrayList<>()));
     return userMapper.toRest(
         userService.crupdateUser(userMapper.toDomain(toUpdate, userCategories), userId));
+  }
+
+  @PostMapping(value = "/users/{uid}/view/posts/{pid}")
+  public UserViewOnePost userViewPost(@PathVariable String uid, @PathVariable String pid) {
+    return viewMapper.toRest(
+        viewService.userViewPost(uid, pid), postReactionService.getReactionStat(pid));
   }
 }

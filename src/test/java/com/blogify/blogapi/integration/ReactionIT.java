@@ -80,7 +80,7 @@ public class ReactionIT {
 
     List<Post> allPosts2 = api.getPosts(1, 10, null);
 
-    assertEquals(2, allPostsBefore.size());
+    assertEquals(3, allPostsBefore.size());
     assertTrue(allPostsBefore.contains(post1()));
     assertTrue(allPostsBefore.contains(post2()));
     assertEquals(BigDecimal.valueOf(2), getLikeReactionPoint(allPostsBefore, POST1_ID));
@@ -88,13 +88,13 @@ public class ReactionIT {
     assertEquals(BigDecimal.valueOf(0), getLikeReactionPoint(allPostsBefore, POST2_ID));
     assertEquals(BigDecimal.valueOf(1), getDislikeReactionPoint(allPostsBefore, POST2_ID));
 
-    assertEquals(2, allPosts1.size());
+    assertEquals(3, allPosts1.size());
     assertEquals(BigDecimal.valueOf(1), getLikeReactionPoint(allPosts1, POST1_ID));
     assertEquals(BigDecimal.valueOf(1), getDislikeReactionPoint(allPosts1, POST1_ID));
     assertEquals(BigDecimal.valueOf(0), getLikeReactionPoint(allPosts1, POST2_ID));
     assertEquals(BigDecimal.valueOf(1), getDislikeReactionPoint(allPosts1, POST2_ID));
 
-    assertEquals(2, allPosts2.size());
+    assertEquals(3, allPosts2.size());
     assertEquals(BigDecimal.valueOf(1), getLikeReactionPoint(allPosts2, POST1_ID));
     assertEquals(BigDecimal.valueOf(1), getDislikeReactionPoint(allPosts2, POST1_ID));
     assertEquals(BigDecimal.valueOf(1), getLikeReactionPoint(allPosts2, POST2_ID));
