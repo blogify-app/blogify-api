@@ -3,6 +3,7 @@ package com.blogify.blogapi.unit.validator;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.model.validator.UserValidator;
 import com.blogify.blogapi.repository.model.User;
@@ -16,8 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 public class UserValidatorUnitTest {
 
-  @InjectMocks
-  private UserValidator userValidator;
+  @InjectMocks private UserValidator userValidator;
 
   @BeforeEach
   public void setUp() {

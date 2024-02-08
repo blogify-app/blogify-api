@@ -71,10 +71,8 @@ public class PostIFileT {
     ApiClient client = apiClient(CLIENT2_TOKEN);
     PostingApi api = new PostingApi((client));
 
-    ApiException exception = assertThrows(
-            ApiException.class,
-            () -> api.uploadPostPicture(POST1_ID, PICTURE1_ID, null)
-    );
+    ApiException exception =
+        assertThrows(ApiException.class, () -> api.uploadPostPicture(POST1_ID, PICTURE1_ID, null));
 
     assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
@@ -84,10 +82,8 @@ public class PostIFileT {
     ApiClient client = apiClient(CLIENT2_TOKEN);
     PostingApi api = new PostingApi((client));
 
-    ApiException exception = assertThrows(
-            ApiException.class,
-            () -> api.deletePostPictureById(POST1_ID, PICTURE1_ID)
-    );
+    ApiException exception =
+        assertThrows(ApiException.class, () -> api.deletePostPictureById(POST1_ID, PICTURE1_ID));
 
     assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }

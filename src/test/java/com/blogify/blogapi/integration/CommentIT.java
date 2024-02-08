@@ -10,7 +10,6 @@ import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.comm
 import static com.blogify.blogapi.integration.conf.MockData.CommentMockData.commentToCreate;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST1_ID;
 import static com.blogify.blogapi.integration.conf.MockData.PostMockData.POST2_ID;
-import static com.blogify.blogapi.integration.conf.MockData.PostMockData.post1;
 import static com.blogify.blogapi.integration.conf.TestUtils.BAD_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT1_TOKEN;
 import static com.blogify.blogapi.integration.conf.TestUtils.CLIENT2_TOKEN;
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.blogify.blogapi.endpoint.rest.api.CommentsApi;
-import com.blogify.blogapi.endpoint.rest.api.PostingApi;
 import com.blogify.blogapi.endpoint.rest.client.ApiClient;
 import com.blogify.blogapi.endpoint.rest.client.ApiException;
 import com.blogify.blogapi.endpoint.rest.model.Comment;
@@ -125,7 +123,7 @@ public class CommentIT {
   }
 
   @Test
-  void client_write_ko() throws ApiException {
+  void client_write_ko() {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
 
@@ -176,7 +174,7 @@ public class CommentIT {
   }
 
   @Test
-  void read_comment_by_postId_ko() throws ApiException {
+  void read_comment_by_postId_ko() {
     ApiClient client1Client = apiClient(CLIENT1_TOKEN);
     CommentsApi api = new CommentsApi(client1Client);
     String postId = POST1_ID;
@@ -195,9 +193,8 @@ public class CommentIT {
     CommentsApi api = new CommentsApi(client1Client);
 
     assertThrowsApiException(
-            "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
-            () -> api.reactToCommentById(POST1_ID, COMMENT3_ID, ReactionType.DISLIKE)
-    );
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.reactToCommentById(POST1_ID, COMMENT3_ID, ReactionType.DISLIKE));
   }
 
   @Test
@@ -206,8 +203,8 @@ public class CommentIT {
     CommentsApi api = new CommentsApi(client1Client);
 
     assertThrowsApiException(
-            "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
-            () -> api.deleteCommentById(POST1_ID, COMMENT2_ID));
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.deleteCommentById(POST1_ID, COMMENT2_ID));
   }
 
   @Test
@@ -216,9 +213,7 @@ public class CommentIT {
     CommentsApi api = new CommentsApi(client2Client);
 
     ApiException exception =
-            assertThrows(
-                    ApiException.class,
-                    () -> api.deleteCommentById(POST1_ID, COMMENT2_ID));
+        assertThrows(ApiException.class, () -> api.deleteCommentById(POST1_ID, COMMENT2_ID));
 
     assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }

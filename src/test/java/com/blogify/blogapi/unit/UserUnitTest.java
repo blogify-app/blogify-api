@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import com.blogify.blogapi.conf.FacadeIT;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
@@ -35,16 +36,12 @@ import org.springframework.data.domain.Pageable;
 @SpringBootTest
 public class UserUnitTest extends FacadeIT {
 
-  @Mock
-  private UserRepository userRepository;
-  @Mock
-  private PostRepository postRepository;
+  @Mock private UserRepository userRepository;
+  @Mock private PostRepository postRepository;
 
-  @Mock
-  private UserValidator userValidator;
+  @Mock private UserValidator userValidator;
 
-  @InjectMocks
-  private UserService userService;
+  @InjectMocks private UserService userService;
 
   @Test
   void testGetterSetter() {
@@ -148,7 +145,6 @@ public class UserUnitTest extends FacadeIT {
     assertEquals(UserStatus.ENABLED, user.getStatus());
   }
 
-
   @Test
   public void testCrupdateUser() {
     User user = new User();
@@ -237,24 +233,25 @@ public class UserUnitTest extends FacadeIT {
             .about("About John Doe")
             .status(UserStatus.ENABLED)
             .build();
-    User user2 = User.builder()
-        .id("2")
-        .firstname("Henri")
-        .lastname("HisLastname")
-        .mail("henri@example.com")
-        .birthdate(LocalDate.of(1985, 5, 15))
-        .firebaseId("newFirebaseId")
-        .role(Role.CLIENT)
-        .sex(Sex.M)
-        .creationDatetime(Instant.now())
-        .lastUpdateDatetime(Instant.now())
-        .photoKey("http://example.com/new_photo.jpg")
-        .bio("Henri bio")
-        .profileBannerKey("http://example.com/new_banner.jpg")
-        .username("henri_username")
-        .about("Henri about")
-        .status(UserStatus.ENABLED)
-        .build();
+    User user2 =
+        User.builder()
+            .id("2")
+            .firstname("Henri")
+            .lastname("HisLastname")
+            .mail("henri@example.com")
+            .birthdate(LocalDate.of(1985, 5, 15))
+            .firebaseId("newFirebaseId")
+            .role(Role.CLIENT)
+            .sex(Sex.M)
+            .creationDatetime(Instant.now())
+            .lastUpdateDatetime(Instant.now())
+            .photoKey("http://example.com/new_photo.jpg")
+            .bio("Henri bio")
+            .profileBannerKey("http://example.com/new_banner.jpg")
+            .username("henri_username")
+            .about("Henri about")
+            .status(UserStatus.ENABLED)
+            .build();
 
     PageFromOne page = new PageFromOne(1);
     BoundedPageSize pageSize = new BoundedPageSize(5);

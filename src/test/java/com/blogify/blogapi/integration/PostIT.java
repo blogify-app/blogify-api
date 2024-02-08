@@ -214,27 +214,22 @@ public class PostIT {
   }
 
   @Test
-  void other_client_delete_ko(){
+  void other_client_delete_ko() {
     ApiClient client2 = apiClient(CLIENT2_TOKEN);
     PostingApi api = new PostingApi(client2);
 
-    ApiException exception =
-            assertThrows(
-                    ApiException.class,
-                    () -> api.deletePostById(POST1_ID)
-            );
+    ApiException exception = assertThrows(ApiException.class, () -> api.deletePostById(POST1_ID));
     assertTrue(exception.getMessage().contains("status\":403,\"error\":\"Forbidden"));
   }
 
   @Test
-  void not_authenticate_create_reaction_ko(){
+  void not_authenticate_create_reaction_ko() {
     ApiClient client = apiClient(BAD_TOKEN);
     PostingApi api = new PostingApi(client);
 
     assertThrowsApiException(
-            "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
-            () -> api.reactToPostById(POST1_ID,ReactionType.LIKE)
-    );
+        "{\"type\":\"403 FORBIDDEN\",\"message\":\"Bearer token is expired or invalid\"}",
+        () -> api.reactToPostById(POST1_ID, ReactionType.LIKE));
   }
 
   static class ContextInitializer extends AbstractContextInitializer {
