@@ -61,6 +61,7 @@ public class UserService {
       user.setRole(userFromDomain.getRole());
       user.setPhotoKey(userFromDomain.getPhotoKey());
       user.setProfileBannerKey(userFromDomain.getProfileBannerKey());
+      user.setFirebaseId(userFromDomain.getFirebaseId());
     }
     return repository.save(user);
   }
