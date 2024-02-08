@@ -18,6 +18,10 @@ public class CategoryService {
     return categoryRepository.findAllByNameContainingIgnoreCase(label);
   }
 
+  public List<Category> findAll() {
+    return categoryRepository.findAll();
+  }
+
   @Transactional
   public Category save(Category toSave) {
     return categoryRepository.save(toSave);

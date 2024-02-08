@@ -70,15 +70,15 @@ public class PostIT {
     List<Post> allPostsWithCategory2 = api.getPosts(1, 10, CATEGORY2_LABEL);
 
     assertEquals(post1(), actualPost);
-    assertEquals(2, allPosts.size());
+    assertEquals(3, allPosts.size());
     assertTrue(allPosts.contains(post1()));
     assertTrue(allPosts.contains(post2()));
 
-    assertEquals(2, allPostsWithCategory1Or2.size());
+    assertEquals(3, allPostsWithCategory1Or2.size());
     assertTrue(allPostsWithCategory1Or2.contains(post1()));
     assertTrue(allPostsWithCategory1Or2.contains(post2()));
 
-    assertEquals(1, allPostsWithCategory2.size());
+    assertEquals(2, allPostsWithCategory2.size());
     assertTrue(allPostsWithCategory2.contains(post1()));
   }
 
@@ -117,11 +117,11 @@ public class PostIT {
 
     List<Post> allPostsAfterDelete = api.getPosts(1, 10, null);
 
-    assertEquals(2, allPosts.size());
+    assertEquals(3, allPosts.size());
     assertTrue(allPosts.contains(post1()));
     assertTrue(allPosts.contains(post2()));
 
-    assertEquals(1, allPostsAfterDelete.size());
+    assertEquals(2, allPostsAfterDelete.size());
     assertFalse(allPostsAfterDelete.contains(post1()));
     assertTrue(allPostsAfterDelete.contains(post2()));
   }
@@ -144,20 +144,20 @@ public class PostIT {
 
     List<Post> allPostsAfterCreate = api.getPosts(1, 10, null);
 
-    assertEquals(2, allPostsBeforeUpdate.size());
+    assertEquals(3, allPostsBeforeUpdate.size());
     assertTrue(allPostsBeforeUpdate.contains(post1()));
     assertTrue(allPostsBeforeUpdate.contains(post2()));
 
     assertEquals(post1().content(newContent).updatedAt(updatePost1.getUpdatedAt()), updatePost1);
 
-    assertEquals(2, allPostsAfterUpdate.size());
+    assertEquals(3, allPostsAfterUpdate.size());
     assertFalse(allPostsAfterUpdate.contains(post1()));
     assertFalse(allPostsAfterUpdate.contains(post1().content(newContent)));
     assertTrue(allPostsAfterUpdate.contains(post2()));
 
     assertEquals(CREATE_POST1_ID, createdPost1.getId());
 
-    assertEquals(3, allPostsAfterCreate.size());
+    assertEquals(4, allPostsAfterCreate.size());
   }
 
   @Test

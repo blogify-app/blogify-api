@@ -15,6 +15,7 @@ import com.blogify.blogapi.model.Whoami;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.service.PostReactionService;
 import com.blogify.blogapi.service.PostService;
+import com.blogify.blogapi.service.PostSuggestionService;
 import com.blogify.blogapi.service.WhoamiService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class PostController {
   private final PostRestValidator postRestValidator;
   private final WhoamiService whoamiService;
   private final RequestInputValidator requestInputValidator;
+  private final PostSuggestionService postSuggestionService;
 
   @GetMapping("/posts")
   public List<Post> getPosts(
@@ -91,5 +93,18 @@ public class PostController {
         postMapper.toRest(postService.getById(postId), postReactionService.getReactionStat(postId));
     postService.deletePostById(postId);
     return post;
+  }
+
+  @GetMapping("/suggestions/posts")
+  public List<Post> getSuggestedPosts(
+      @RequestParam(required = false) Integer page,
+      @RequestParam(value = "page_size", required = false) Integer pageSize) {
+    List<com.blogify.blogapi.repository.model.Post> posts =
+        postService.findAllWithPagination(new PageFromOne(1), new BoundedPageSize(200));
+    // todo: from token wen fix
+    User user = posts.get(0).getUser();
+    return postSuggestionService.getSuggestionPost(user, posts, page, pageSize).stream()
+        .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
+        .toList();
   }
 }
