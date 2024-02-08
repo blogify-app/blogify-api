@@ -222,6 +222,41 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
+  "/users/{uid}/view/posts/{pid}":
+    post:
+      tags:
+        - User
+      summary: Save a user viewing a post.
+      operationId: userViewPost
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The viewing post.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserViewOnePost"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+
   "/users/{uid}/pictures":
     put:
       tags:
@@ -870,6 +905,50 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  ## Posting resources
+  "/suggestions/posts":
+    get:
+      tags:
+        - Posting
+      summary: Return a list of posts suggested by an AI.
+      operationId: getSuggestedPosts
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Page"
+        - name: page_size
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/PageSize"
+        - name: categories
+          in: query
+          required: false
+          description: Filters by coma-separated categories.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Suggested post list.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+        "400":
+          $ref: "#/components/responses/400"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+  
   "/posts/{pid}/thumbnail":
     put:
       tags:
@@ -1216,6 +1295,17 @@ components:
         - DRAFT
         - DISABLED
         ## resource model
+    UserViewOnePost:
+      properties:
+        id:
+          type: string
+        creation_datetime:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/User"
+        post:
+          $ref: "#/components/schemas/Post"
     Category:
       properties:
         id:
