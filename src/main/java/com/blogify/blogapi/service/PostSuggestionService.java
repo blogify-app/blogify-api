@@ -7,6 +7,7 @@ import com.blogify.blogapi.repository.model.PostCategory;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.repository.model.UserCategory;
 import com.blogify.blogapi.repository.model.UserCategoryPoint;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,31 @@ public class PostSuggestionService {
   private final UserCategoryPointRepository userCategoryPointRepository;
   private final PostReactionService postReactionService;
 
-  public List<Post> getSuggestionPost(User user, List<Post> posts, Integer page, Integer pageSase) {
+  public List<Post> getSuggestionPost(
+      User user, List<Post> posts, Integer page, Integer pageSase, String categories) {
     List<UserCategoryPoint> userCategoryPoints =
         userCategoryPointRepository.findByUser_Id(user.getId());
     System.out.println("userCategoryPoints = " + userCategoryPoints);
+    List<Post> filterPost = posts;
+    if (categories != null && !categories.isEmpty()) {
+      List<String> categoreisList = Arrays.stream(categories.split(",")).toList();
+      filterPost =
+          posts.stream()
+              .filter(
+                  post -> {
+                    for (String categoryName : categoreisList) {
+                      if (post.getPostCategories().stream()
+                          .map(postCategory -> postCategory.getCategory().getName())
+                          .anyMatch(string -> string.equals(categoryName))) {
+                        return true;
+                      }
+                    }
+                    return false;
+                  })
+              .toList();
+    }
     List<Post> sortedPost =
-        posts.stream()
+        filterPost.stream()
             .sorted(
                 Comparator.comparingDouble(
                     post -> {
@@ -54,7 +74,9 @@ public class PostSuggestionService {
             .toList();
     System.out.println(
         "*******************************************************************************************");
-    return sortedPost; // .subList((page - 1) * (pageSase), page * (pageSase) - 1);
+    return sortedPost.subList(
+        Math.min(sortedPost.size(), (page - 1) * pageSase),
+        Math.min(sortedPost.size(), page * pageSase));
   }
 
   public Double getPostSuggestionPoint(

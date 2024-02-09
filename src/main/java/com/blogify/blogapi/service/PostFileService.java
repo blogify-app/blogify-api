@@ -92,7 +92,7 @@ public class PostFileService {
   }
 
   private void checkIfPostPictureExist(
-          com.blogify.blogapi.repository.model.PostPicture postPicture, String id) {
+      com.blogify.blogapi.repository.model.PostPicture postPicture, String id) {
     if (postPicture == null) {
       throw new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME, id));
     }
