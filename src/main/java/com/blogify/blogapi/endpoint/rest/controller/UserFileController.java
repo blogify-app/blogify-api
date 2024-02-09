@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @AllArgsConstructor
@@ -31,21 +30,11 @@ public class UserFileController {
   public UserPicture putUserPicture(
       @PathVariable String uid,
       @RequestParam(value = "type", required = false) UserPictureType type,
-      @RequestPart(value = "file", required = false) MultipartFile file)
+      @RequestBody byte[] pictureData)
       throws IOException {
     requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
-    imageValidator.accept(file);
-    return service.uploadUserPicture(uid, type, file);
-  }
-
-  @PutMapping(value = "/users/{uid}/pictures/profile")
-  public UserPicture putUserProfilePicture(
-      @PathVariable String uid, @RequestPart(value = "file", required = false) MultipartFile file)
-      throws IOException {
-    UserPictureType type = UserPictureType.PROFILE;
-    requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
-    imageValidator.accept(file);
-    return service.uploadUserPicture(uid, type, file);
+    //imageValidator.accept(file);
+    return service.uploadUserPicture(uid, type, pictureData);
   }
 
   @GetMapping(value = "/users/{uid}/pictures")
