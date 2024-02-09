@@ -19,7 +19,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Builder
 public class PostPicture extends Picture implements Serializable {
   @ManyToOne(fetch = FetchType.EAGER)
