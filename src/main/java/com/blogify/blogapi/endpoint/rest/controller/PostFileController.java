@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @AllArgsConstructor
@@ -42,12 +41,12 @@ public class PostFileController {
 
   @PutMapping(value = "/posts/{pid}/thumbnail")
   public Post putPostThumbnail(
-      @PathVariable String pid, @RequestPart(value = "file", required = false) MultipartFile file)
+      @PathVariable String pid, @RequestBody byte[] file)
       throws IOException {
     com.blogify.blogapi.repository.model.Post post = service.uploadPostThumbnail(pid, file);
     ReactionStat reactionStat = postReactionService.getReactionStat(pid);
     String fullContent = service.getPostFullContent(post);
-    imageValidator.accept(file);
+    //imageValidator.accept(file);
     return postMapper.toRest(fullContent, post, reactionStat);
   }
 
@@ -55,11 +54,11 @@ public class PostFileController {
   public PostPicture uploadPostPicture(
       @PathVariable("pid") String pid,
       @PathVariable("picId") String picId,
-      @RequestPart(value = "file", required = false) MultipartFile file)
+      @RequestBody byte[] pictureData)
       throws IOException {
 
-    imageValidator.accept(file);
-    return service.uploadPicture(pid, picId, file);
+    //imageValidator.accept(file);
+    return service.uploadPicture(pid, picId, pictureData);
   }
 
   @DeleteMapping(value = "/posts/{pid}/pictures/{picId}")

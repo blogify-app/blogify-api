@@ -5,7 +5,6 @@ import com.blogify.blogapi.file.validator.utils.ImageExtensionValidator;
 import com.blogify.blogapi.file.validator.utils.MultipartFileValidator;
 import com.blogify.blogapi.model.exception.BadRequestException;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,7 +26,12 @@ public class ImageValidator implements Consumer<MultipartFile> {
       throw new BadRequestException("Fife type not supported, when change to byte.");
     }
     multipartFileValidator.accept(file);
-    imageExtensionValidator.accept(Objects.requireNonNull(file.getOriginalFilename()));
     byteArrayTypeValidator.accept(imageBytes, file.getContentType());
+  }
+
+  public void accept(byte[] file) {
+    byte[] imageBytes;
+    imageBytes = file;
+    byteArrayTypeValidator.accept(imageBytes, "image");
   }
 }
