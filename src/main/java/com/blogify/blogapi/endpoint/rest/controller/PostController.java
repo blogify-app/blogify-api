@@ -98,12 +98,13 @@ public class PostController {
   @GetMapping("/suggestions/posts")
   public List<Post> getSuggestedPosts(
       @RequestParam(required = false) Integer page,
-      @RequestParam(value = "page_size", required = false) Integer pageSize) {
+      @RequestParam(value = "page_size", required = false) Integer pageSize,
+      @RequestParam(value = "categories", required = false) String categories) {
     List<com.blogify.blogapi.repository.model.Post> posts =
         postService.findAllWithPagination(new PageFromOne(1), new BoundedPageSize(200));
     // todo: from token wen fix
     User user = posts.get(0).getUser();
-    return postSuggestionService.getSuggestionPost(user, posts, page, pageSize).stream()
+    return postSuggestionService.getSuggestionPost(user, posts, page, pageSize, categories).stream()
         .map(post -> postMapper.toRest(post, postReactionService.getReactionStat(post.getId())))
         .toList();
   }
