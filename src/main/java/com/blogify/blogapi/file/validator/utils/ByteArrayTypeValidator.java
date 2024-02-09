@@ -16,8 +16,7 @@ public class ByteArrayTypeValidator {
       Metadata metadata = new Metadata();
       ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
       MediaType mediaType = detector.detect(inputStream, metadata);
-      return contentType.startsWith(mediaType.getType())
-          && contentType.endsWith(mediaType.getSubtype());
+      return mediaType.getType().equals(contentType);
     } catch (IOException ignored) {
     }
     return false;
