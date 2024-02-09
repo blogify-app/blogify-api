@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,17 +23,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-@EqualsAndHashCode
-@ToString
 @Entity
 @Builder(toBuilder = true)
 @NoArgsConstructor
@@ -80,4 +77,52 @@ public class User implements Serializable {
   private List<UserCategory> userCategories;
 
   private boolean deleted = Boolean.FALSE;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    User user = (User) o;
+    return deleted == user.deleted
+        && Objects.equals(id, user.id)
+        && Objects.equals(firstname, user.firstname)
+        && Objects.equals(lastname, user.lastname)
+        && Objects.equals(mail, user.mail)
+        && Objects.equals(birthdate, user.birthdate)
+        && Objects.equals(firebaseId, user.firebaseId)
+        && role == user.role
+        && sex == user.sex
+        && Objects.equals(creationDatetime, user.creationDatetime)
+        && Objects.equals(lastUpdateDatetime, user.lastUpdateDatetime)
+        && Objects.equals(photoKey, user.photoKey)
+        && Objects.equals(bio, user.bio)
+        && Objects.equals(profileBannerKey, user.profileBannerKey)
+        && Objects.equals(username, user.username)
+        && Objects.equals(about, user.about)
+        && status == user.status
+        && Objects.equals(userCategories, user.userCategories);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        id,
+        firstname,
+        lastname,
+        mail,
+        birthdate,
+        firebaseId,
+        role,
+        sex,
+        creationDatetime,
+        lastUpdateDatetime,
+        photoKey,
+        bio,
+        profileBannerKey,
+        username,
+        about,
+        status,
+        userCategories,
+        deleted);
+  }
 }
