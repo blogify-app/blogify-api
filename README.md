@@ -20,6 +20,15 @@ The Definitions Of Done (DoD) for our project are aligned with the professor's r
 3. **Recommendation System:**
    - Develop a recommendation system to enhance the user experience.
 
+### AI Features
+
+The AI feature enhances user experience by providing personalized topic suggestions. Here's how it works:
+
+- Only authenticated users have access to the AI feature.
+- The AI suggests topics based on two criteria:
+  1. **Personal Preferences:** This aspect is tailored to the individual user, considering their posts, visited posts, and the categories of topics they've chosen during their subscription.
+  2. **Community Preferences:** This aspect considers the overall community's preferences, analyzing existing categories, as well as the engagement metrics like likes and dislikes on posts.
+
 ### About the App
 
 Uses the [Java](https://phoenixnap.com/kb/install-java-windows) [Spring Boot](https://spring.io/projects/spring-boot/) framework and [Postgresql](https://www.postgresql.org/) with [POJA](https://github.com/hei-school/poja-cli).
