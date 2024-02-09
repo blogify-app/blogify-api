@@ -49,7 +49,7 @@ public class PostFileService {
   public PostPicture getPictureById(String pid, String picId) {
     com.blogify.blogapi.repository.model.PostPicture postPicture =
         repository.findByIdAndPostId(picId, pid);
-    checkIfPostPictureExist(postPicture, RESOURCE_NAME, picId);
+    checkIfPostPictureExist(postPicture, picId);
     return getPictureWithBucketKey(postPicture);
   }
 
@@ -63,7 +63,7 @@ public class PostFileService {
   public PostPicture deletePictureById(String pid, String picId) {
     com.blogify.blogapi.repository.model.PostPicture postPicture =
         repository.findByIdAndPostId(picId, pid);
-    checkIfPostPictureExist(postPicture, RESOURCE_NAME, picId);
+    checkIfPostPictureExist(postPicture, picId);
     PostPicture picture = deletePictureWithBucketKey(postPicture);
     repository.delete(postPicture);
     return picture;
@@ -92,9 +92,9 @@ public class PostFileService {
   }
 
   private void checkIfPostPictureExist(
-      com.blogify.blogapi.repository.model.PostPicture postPicture, String resource, String id) {
+          com.blogify.blogapi.repository.model.PostPicture postPicture, String id) {
     if (postPicture == null) {
-      throw new NotFoundException(notFoundByIdMessageException(resource, id));
+      throw new NotFoundException(notFoundByIdMessageException(RESOURCE_NAME, id));
     }
   }
 
@@ -127,6 +127,6 @@ public class PostFileService {
     if (post.getThumbnailKey() == null) {
       post.setThumbnailKey("post/" + pid + "/" + "thumbnail");
     }
-    return postService.savePost(post, pid).getThumbnailKey();
+    return postService.savePostThumbnail(post).getThumbnailKey();
   }
 }
