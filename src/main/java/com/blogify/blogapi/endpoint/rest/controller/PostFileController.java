@@ -55,8 +55,7 @@ public class PostFileController {
       @PathVariable("picId") String picId,
       @RequestBody byte[] pictureData)
       throws IOException {
-
-    // imageValidator.accept(file);
+    imageValidator.accept(pictureData);
     return service.uploadPicture(pid, picId, pictureData);
   }
 
