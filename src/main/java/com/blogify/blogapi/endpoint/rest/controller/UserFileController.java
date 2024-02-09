@@ -30,10 +30,10 @@ public class UserFileController {
   public UserPicture putUserPicture(
       @PathVariable String uid,
       @RequestParam(value = "type", required = false) UserPictureType type,
-      @RequestBody byte[] pictureData)
+      @RequestBody(required = false) byte[] pictureData)
       throws IOException {
     requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
-    // imageValidator.accept(file);
+    imageValidator.accept(pictureData);
     return service.uploadUserPicture(uid, type, pictureData);
   }
 

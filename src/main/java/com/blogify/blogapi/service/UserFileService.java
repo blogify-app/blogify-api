@@ -6,7 +6,6 @@ import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.file.S3Service;
 import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.repository.model.User;
-import java.io.IOException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +15,7 @@ public class UserFileService {
   private final UserService userService;
   private final S3Service s3Service;
 
-  public UserPicture uploadUserPicture(String uid, UserPictureType type, byte[] file)
-      throws IOException {
+  public UserPicture uploadUserPicture(String uid, UserPictureType type, byte[] file) {
     String fileBucketKey = setBucketKeyByPictureType(uid, type);
     s3Service.uploadObjectToS3Bucket(fileBucketKey, file);
     return getUserPictureWithBucketKey(uid, type, fileBucketKey);
