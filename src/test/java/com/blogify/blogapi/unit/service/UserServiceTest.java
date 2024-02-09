@@ -63,7 +63,7 @@ class UserServiceTest {
     when(userRepository.save(client1)).thenReturn(client1Updated); // Mock userRepository.save()
 
 // When
-    User result = userService.updateUserPhotoKey(client1);
+    User result = userService.updateUserBannerKey(client1);
 
 // Then
     assertEquals(client1Updated.getProfileBannerKey(), result.getProfileBannerKey()); // Check if the returned user is updated as expected
