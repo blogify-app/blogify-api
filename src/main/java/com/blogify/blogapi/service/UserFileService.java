@@ -31,9 +31,9 @@ public class UserFileService {
   private UserPicture getUserPictureWithBucketKey(
       String uid, UserPictureType type, String bucketKey) {
     String fileURL = null;
-    if (bucketKey != null){
+    if (bucketKey != null) {
       fileURL =
-              String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
+          String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
     }
     UserPicture userPicture = new UserPicture();
     userPicture.setUserId(uid);
@@ -49,20 +49,20 @@ public class UserFileService {
 
   private String setBucketKeyByPictureType(String uid, UserPictureType type) {
     User user = userService.findById(uid);
-    switch (type){
+    switch (type) {
       case PROFILE -> {
-        if(user.getPhotoKey() == null){
+        if (user.getPhotoKey() == null) {
           user.setPhotoKey("user/" + uid + "/" + type.getValue());
         }
         return userService.updateUserPhotoKey(user).getPhotoKey();
       }
       case BANNER -> {
-        if(user.getProfileBannerKey() == null){
+        if (user.getProfileBannerKey() == null) {
           user.setProfileBannerKey("user/" + uid + "/" + type.getValue());
         }
         return userService.updateUserBannerKey(user).getProfileBannerKey();
       }
       default -> throw new BadRequestException("User picture type invalid");
-      }
+    }
   }
 }
