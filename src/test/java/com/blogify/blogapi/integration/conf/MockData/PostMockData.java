@@ -20,8 +20,8 @@ public class PostMockData {
 
   public static final String POST1_ID = "post1_id";
   public static final String POST2_ID = "post2_id";
-  public static final String PICTURE1_URL = "picture1_id";
-  public static final String PICTURE2_URL = "picture1_id";
+
+  public static final String POST3_ID = "post3_id";
   public static final String CREATE_POST1_ID = "creat_post1_id";
   public static final String PICTURE1_ID = "picture1_id";
   public static final String PICTURE2_ID = "picture2_id";
@@ -54,6 +54,21 @@ public class PostMockData {
         .reactions(new ReactionStat().dislikes(BigDecimal.valueOf(1)).likes(BigDecimal.ZERO))
         .creationDatetime(Instant.parse("2000-09-01T08:12:20.00z"))
         .updatedAt(Instant.parse("2000-09-01T08:12:20.00z"));
+  }
+
+  public static Post post3() {
+    return new Post()
+        .id(POST3_ID)
+        .author(client2())
+        .thumbnailUrl(null)
+        .description("Description détaillée du Troisième Post")
+        .content("Contenu du 3e post. Il peut contenir des détails intéressants.")
+        .title("Titre du Troisième Post")
+        .status(PostStatus.DRAFT)
+        .categories(List.of(category1()))
+        .reactions(new ReactionStat().dislikes(BigDecimal.valueOf(1)).likes(BigDecimal.ZERO))
+        .creationDatetime(Instant.parse("2000-09-01T08:12:20.00Z"))
+        .updatedAt(Instant.parse("2000-09-01T08:12:20.00Z"));
   }
 
   public static Post postToCreate() {
