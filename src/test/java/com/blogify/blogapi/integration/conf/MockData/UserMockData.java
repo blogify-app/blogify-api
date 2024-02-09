@@ -149,4 +149,24 @@ public class UserMockData {
         .type(UserPictureType.BANNER)
         .url(CLIENT2_BANNER_URL);
   }
+
+  public static com.blogify.blogapi.repository.model.User clientEntity1() {
+    return com.blogify.blogapi.repository.model.User.builder()
+        .id("CLIENT1_ID")
+        .firstname("Ryan")
+        .lastname("Andria")
+        .username("username_client1")
+        .about("about_client1")
+        .mail("test@gmail.com")
+        .birthdate(LocalDate.parse("1995-01-01"))
+        .sex(com.blogify.blogapi.model.enums.Sex.M)
+        .status(com.blogify.blogapi.model.enums.UserStatus.ENABLED)
+        .photoKey(CLIENT1_PROFILE_URL) // Assuming CLIENT1_PROFILE_URL is defined somewhere
+        .bio("bio_client1")
+        .profileBannerKey(null)
+        .creationDatetime(Instant.parse("2000-01-01T08:12:20.00Z"))
+        .userCategories(List.of())
+        .deleted(false)
+        .build();
+  }
 }
