@@ -21,30 +21,6 @@ public class PostMapper {
   private final S3Service s3Service;
   private final ToDomainMapperUtils toDomainMapperUtils;
 
-  public Post toRest(com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
-    String thumbnailKey = domain.getThumbnailKey();
-    return new Post()
-        .id(domain.getId())
-        .author(userMapper.toRest(domain.getUser()))
-        .thumbnailUrl(
-            thumbnailKey == null
-                ? null
-                : s3Service
-                    .generatePresignedUrl(domain.getThumbnailKey(), FileConstant.URL_DURATION)
-                    .toString())
-        .description(domain.getDescription())
-        .content(domain.getContent())
-        .title(domain.getTitle())
-        .creationDatetime(domain.getCreationDatetime())
-        .updatedAt(domain.getLastUpdateDatetime())
-        .status(toRest(domain.getStatus()))
-        .reactions(reactionMapper.toRest(reactionStat))
-        .categories(
-            toDomainMapperUtils.checkNullList(domain.getPostCategories()).stream()
-                .map(categoryMapper::toRest)
-                .toList());
-  }
-
   public Post toRest(
       String content, com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
     String thumbnailKey = domain.getThumbnailKey();
@@ -81,6 +57,34 @@ public class PostMapper {
                 .map(categoryMapper::toPostCategoryDomain)
                 .toList())
         .build();
+  }
+
+  public Post toRest(com.blogify.blogapi.repository.model.Post domain, ReactionStat reactionStat) {
+    String thumbnailKey = domain.getThumbnailKey();
+    String Id = com.blogify.blogapi.repository.model.Post.builder().id(domain.getId()).toString();
+    if (Id == null) {
+      return null;
+    }
+    return new Post()
+        .id(domain.getId())
+        .author(userMapper.toRest(domain.getUser()))
+        .thumbnailUrl(
+            thumbnailKey == null
+                ? null
+                : s3Service
+                    .generatePresignedUrl(domain.getThumbnailKey(), FileConstant.URL_DURATION)
+                    .toString())
+        .description(domain.getDescription())
+        .content(domain.getContent())
+        .title(domain.getTitle())
+        .creationDatetime(domain.getCreationDatetime())
+        .updatedAt(domain.getLastUpdateDatetime())
+        .status(toRest(domain.getStatus()))
+        .reactions(reactionMapper.toRest(reactionStat))
+        .categories(
+            toDomainMapperUtils.checkNullList(domain.getPostCategories()).stream()
+                .map(categoryMapper::toRest)
+                .toList());
   }
 
   private PostStatus toRest(com.blogify.blogapi.model.enums.PostStatus postStatus) {

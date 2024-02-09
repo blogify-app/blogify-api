@@ -2,12 +2,12 @@ package com.blogify.blogapi.service.firebase;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 
-@Data
 @ToString
 @Builder
+@Getter
 @AllArgsConstructor
 public class FirebaseUser {
   private String email;
