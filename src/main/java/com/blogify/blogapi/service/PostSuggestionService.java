@@ -7,6 +7,7 @@ import com.blogify.blogapi.repository.model.PostCategory;
 import com.blogify.blogapi.repository.model.User;
 import com.blogify.blogapi.repository.model.UserCategory;
 import com.blogify.blogapi.repository.model.UserCategoryPoint;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,21 @@ public class PostSuggestionService {
         userCategoryPointRepository.findByUser_Id(user.getId());
     System.out.println("userCategoryPoints = " + userCategoryPoints);
     List<Post> filterPost = posts;
+
+    for (Post p : filterPost) {
+      System.out.println(
+          "--- --- ---- ----Post wit id : "
+              + p.getId()
+              + " have value = "
+              + getPostSuggestionPoint(
+                  p,
+                  userCategoryPoints,
+                  postReactionService.getReactionStat(p.getId()).getLikes().longValue(),
+                  postReactionService.getReactionStat(p.getId()).getDislikes().longValue(),
+                  user.getUserCategories().stream().map(UserCategory::getCategory).toList(),
+                  (long) p.getPostCategories().size()));
+    }
+
     if (categories != null && !categories.isEmpty()) {
       List<String> categoreisList = Arrays.stream(categories.split(",")).toList();
       filterPost =
@@ -43,40 +59,46 @@ public class PostSuggestionService {
                   })
               .toList();
     }
-    List<Post> sortedPost =
-        filterPost.stream()
-            .sorted(
-                Comparator.comparingDouble(
-                    post -> {
-                      Double note =
-                          getPostSuggestionPoint(
-                              post,
-                              userCategoryPoints,
-                              postReactionService
-                                  .getReactionStat(post.getId())
-                                  .getLikes()
-                                  .longValue(),
-                              postReactionService
-                                  .getReactionStat(post.getId())
-                                  .getDislikes()
-                                  .longValue(),
-                              user.getUserCategories().stream()
-                                  .map(UserCategory::getCategory)
-                                  .toList(),
-                              (long) post.getPostCategories().size());
-                      System.out.println("The cathegory is : " + categoryService);
-                      System.out.println(post.getId() + " point = " + note);
-                      System.out.println("the user is: " + user.getId());
-                      System.out.println(
-                          "-----------------////////////////----------------------------------------");
-                      return note;
-                    }))
-            .toList();
+    List<Post> filterPostList = new ArrayList<>();
+    if (filterPost != null) {
+
+      filterPostList = new ArrayList<>(filterPost);
+      System.out.println(filterPost);
+      filterPostList.sort(
+          Comparator.comparingDouble(
+                  postToCheck -> {
+                    Post post = (Post) postToCheck;
+                    Double note =
+                        getPostSuggestionPoint(
+                            post,
+                            userCategoryPoints,
+                            postReactionService
+                                .getReactionStat(post.getId())
+                                .getLikes()
+                                .longValue(),
+                            postReactionService
+                                .getReactionStat(post.getId())
+                                .getDislikes()
+                                .longValue(),
+                            user.getUserCategories().stream()
+                                .map(UserCategory::getCategory)
+                                .toList(),
+                            (long) post.getPostCategories().size());
+                    System.out.println("The cathegory is : " + categoryService);
+                    System.out.println(post.getId() + " point = " + note);
+                    System.out.println("the user is: " + user.getId());
+                    System.out.println(
+                        "-----------------////////////////----------------------------------------");
+                    return note;
+                  })
+              .reversed());
+    }
+
     System.out.println(
         "*******************************************************************************************");
-    return sortedPost.subList(
-        Math.min(sortedPost.size(), (page - 1) * pageSase),
-        Math.min(sortedPost.size(), page * pageSase));
+    return filterPostList.subList(
+        Math.min(filterPostList.size(), (page - 1) * pageSase),
+        Math.min(filterPostList.size(), page * pageSase));
   }
 
   public Double getPostSuggestionPoint(
@@ -89,13 +111,19 @@ public class PostSuggestionService {
     List<Category> categories = categoryService.findAll();
     Double point = 0.0;
     for (Category category : categories) {
+      System.out.println("| fro catogory : " + category.getName() + "**********");
+
+      // ---------------- USER -----------------
+
       Long postViewNumber = 1L;
       if (post.getPostCategories().stream()
           .map(PostCategory::getCategory)
           .toList()
           .contains(category)) {
-        postViewNumber = post.getPointByView();
+        postViewNumber = Math.max(1L, post.getPointByView());
       }
+
+      // ---------------- POST -----------------
       Boolean isATarget = userCategoryTargets.contains(category);
       Long userCategoryViewNumber = 1L;
       Long userCategoryPostedNumber = 1L;
@@ -134,6 +162,17 @@ public class PostSuggestionService {
       Long dislikeNumber,
       Boolean isATarget,
       Long postCategoryNumber) {
+    System.out.println("_");
+    System.out.println("---delail---");
+    System.out.println("postViewNumber = " + postViewNumber);
+    System.out.println("userCategoryViewNumber = " + userCategoryViewNumber);
+    System.out.println("userCategoryPostedNumber = " + userCategoryPostedNumber);
+    System.out.println("likeNumber = " + likeNumber);
+    System.out.println("dislikeNumber = " + dislikeNumber);
+    System.out.println("isATarget = " + isATarget);
+    System.out.println("postCategoryNumber = " + postCategoryNumber);
+    System.out.println("---fnish delail---");
+    System.out.println("_");
     Double calculatingUserPoint =
         (passesThrough0WithFiniteLimit(1_00.0, 0.001, ((double) userCategoryViewNumber))
             + passesThrough0WithFiniteLimit(1_00.0, 0.004, ((double) userCategoryPostedNumber))
@@ -153,8 +192,7 @@ public class PostSuggestionService {
           ((double) postViewNumber)
               * Math.pow(1.2, (double) likeNumber)
               * Math.pow(0.8, (double) dislikeNumber)
-              * 5.0
-              / (double) postCategoryNumber;
+              / ((double) postCategoryNumber * 5.0);
     }
     System.out.println("calculatingPostPoint = " + calculatingPostPoint);
     System.out.println("calculatingUserPoint = " + calculatingUserPoint);
