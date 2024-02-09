@@ -6,7 +6,6 @@ import com.blogify.blogapi.endpoint.rest.model.UserPicture;
 import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.endpoint.validator.RequestInputValidator;
 import com.blogify.blogapi.file.validator.ImageValidator;
-import com.blogify.blogapi.model.exception.ApiException;
 import com.blogify.blogapi.service.UserFileService;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
@@ -41,9 +40,8 @@ public class UserFileController {
 
   @PutMapping(value = "/users/{uid}/pictures/profile")
   public UserPicture putUserProfilePicture(
-          @PathVariable String uid,
-          @RequestPart(value = "file", required = false) MultipartFile file)
-          throws IOException {
+      @PathVariable String uid, @RequestPart(value = "file", required = false) MultipartFile file)
+      throws IOException {
     UserPictureType type = UserPictureType.PROFILE;
     requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
     imageValidator.accept(file);

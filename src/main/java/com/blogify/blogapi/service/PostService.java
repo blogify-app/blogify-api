@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
   private final PostRepository postRepository;
   private final PostDao postDao;
-  private PostValidator postValidator;
+  private final PostValidator postValidator;
+  private final ViewService viewService;
   private final String RESOURCE_NAME = "Post";
 
   public Post getById(String id) {
@@ -64,6 +65,7 @@ public class PostService {
       post.setCreationDatetime(Instant.now());
       post.setPointByView(0L);
     }
+    viewService.updateUserCreatedPostPoint(post);
     return postRepository.save(post);
   }
 
