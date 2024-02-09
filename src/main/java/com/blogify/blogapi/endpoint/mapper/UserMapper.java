@@ -23,29 +23,6 @@ public class UserMapper {
   private final CategoryMapper categoryMapper;
   private final S3Service s3Service;
 
-  public User toRest(com.blogify.blogapi.repository.model.User domain) {
-    String photoKey = domain.getPhotoKey();
-
-    return new User()
-        .id(domain.getId())
-        .firstName(domain.getFirstname())
-        .lastName(domain.getLastname())
-        .email(domain.getMail())
-        .birthDate(domain.getBirthdate())
-        .photoUrl(
-            photoKey == null
-                ? null
-                : s3Service.generatePresignedUrl(photoKey, FileConstant.URL_DURATION).toString())
-        .bio(domain.getBio())
-        // .profileBannerUrl(domain.getProfileBannerUrl())
-        .username(domain.getUsername())
-        .about(domain.getAbout())
-        .status(convertToRest(domain.getStatus()))
-        .entranceDatetime(domain.getCreationDatetime())
-        .sex(convertToRest(domain.getSex()))
-        .categories(domain.getUserCategories().stream().map(categoryMapper::toRest).toList());
-  }
-
   public com.blogify.blogapi.repository.model.User toDomain(
       SignUp signUp, List<UserCategory> categories) {
     return com.blogify.blogapi.repository.model.User.builder()
@@ -82,6 +59,32 @@ public class UserMapper {
         .sex(toDomain(rest.getSex()))
         .userCategories(userCategories)
         .build();
+  }
+
+  public User toRest(com.blogify.blogapi.repository.model.User domain) {
+    String photoKey = domain.getPhotoKey();
+    String Id = com.blogify.blogapi.repository.model.User.builder().id(domain.getId()).toString();
+    if (Id == null) {
+      return null;
+    }
+    return new User()
+        .id(domain.getId())
+        .firstName(domain.getFirstname())
+        .lastName(domain.getLastname())
+        .email(domain.getMail())
+        .birthDate(domain.getBirthdate())
+        .photoUrl(
+            photoKey == null
+                ? null
+                : s3Service.generatePresignedUrl(photoKey, FileConstant.URL_DURATION).toString())
+        .bio(domain.getBio())
+        // .profileBannerUrl(domain.getProfileBannerUrl())
+        .username(domain.getUsername())
+        .about(domain.getAbout())
+        .status(convertToRest(domain.getStatus()))
+        .entranceDatetime(domain.getCreationDatetime())
+        .sex(convertToRest(domain.getSex()))
+        .categories(domain.getUserCategories().stream().map(categoryMapper::toRest).toList());
   }
 
   public static Sex convertToRest(com.blogify.blogapi.model.enums.Sex sex) {

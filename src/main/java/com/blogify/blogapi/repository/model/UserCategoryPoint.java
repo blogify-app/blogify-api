@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +18,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Builder(toBuilder = true)
-@EqualsAndHashCode
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "\"user_category_point\"")
