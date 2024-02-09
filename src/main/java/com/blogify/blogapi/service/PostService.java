@@ -56,7 +56,7 @@ public class PostService {
   public Post savePost(Post post, String postId) {
     postValidator.accept(post);
     Optional<Post> optionalPost = postRepository.findById(postId);
-    if (!optionalPost.isEmpty()) {
+    if (optionalPost.isPresent()) {
       Post postToUpdate = optionalPost.get();
       post.setCreationDatetime(postToUpdate.getCreationDatetime());
       post.setThumbnailKey(postToUpdate.getThumbnailKey());
@@ -66,6 +66,21 @@ public class PostService {
       post.setPointByView(0L);
     }
     viewService.updateUserCreatedPostPoint(post);
+    return postRepository.save(post);
+  }
+
+  @Transactional
+  public Post savePostThumbnail(Post post) {
+    postValidator.accept(post);
+    Optional<Post> optionalPost = postRepository.findById(post.getId());
+    if (optionalPost.isPresent()) {
+      Post postToUpdate = optionalPost.get();
+      post.setCreationDatetime(postToUpdate.getCreationDatetime());
+      post.setPointByView(postToUpdate.getPointByView());
+    } else {
+      post.setCreationDatetime(Instant.now());
+      post.setPointByView(0L);
+    }
     return postRepository.save(post);
   }
 

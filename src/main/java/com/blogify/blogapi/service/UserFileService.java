@@ -4,6 +4,7 @@ import com.blogify.blogapi.constant.FileConstant;
 import com.blogify.blogapi.endpoint.rest.model.UserPicture;
 import com.blogify.blogapi.endpoint.rest.model.UserPictureType;
 import com.blogify.blogapi.file.S3Service;
+import com.blogify.blogapi.model.exception.BadRequestException;
 import com.blogify.blogapi.repository.model.User;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
@@ -30,8 +31,11 @@ public class UserFileService {
 
   private UserPicture getUserPictureWithBucketKey(
       String uid, UserPictureType type, String bucketKey) {
-    String fileURL =
-        String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
+    String fileURL = null;
+    if (bucketKey != null){
+      fileURL =
+              String.valueOf(s3Service.generatePresignedUrl(bucketKey, FileConstant.URL_DURATION));
+    }
     UserPicture userPicture = new UserPicture();
     userPicture.setUserId(uid);
     userPicture.setType(type);
@@ -46,15 +50,20 @@ public class UserFileService {
 
   private String setBucketKeyByPictureType(String uid, UserPictureType type) {
     User user = userService.findById(uid);
-    if (type == UserPictureType.PROFILE) {
-      if (user.getPhotoKey() == null) {
-        user.setPhotoKey("user/" + uid + "/" + type.getValue());
+    switch (type){
+      case PROFILE -> {
+        if(user.getPhotoKey() == null){
+          user.setPhotoKey("user/" + uid + "/" + type.getValue());
+        }
+        return userService.updateUserPhotoKey(user).getPhotoKey();
       }
-      return userService.crupdateUser(user, uid).getPhotoKey();
-    }
-    if (user.getProfileBannerKey() == null) {
-      user.setProfileBannerKey("user/" + uid + "/" + type.getValue());
-    }
-    return userService.crupdateUser(user, uid).getProfileBannerKey();
+      case BANNER -> {
+        if(user.getProfileBannerKey() == null){
+          user.setProfileBannerKey("user/" + uid + "/" + type.getValue());
+        }
+        return userService.updateUserBannerKey(user).getProfileBannerKey();
+      }
+      default -> throw new BadRequestException("User picture type invalid");
+      }
   }
 }
