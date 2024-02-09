@@ -25,22 +25,7 @@ public class PostSuggestionService {
       User user, List<Post> posts, Integer page, Integer pageSase, String categories) {
     List<UserCategoryPoint> userCategoryPoints =
         userCategoryPointRepository.findByUser_Id(user.getId());
-    System.out.println("userCategoryPoints = " + userCategoryPoints);
     List<Post> filterPost = posts;
-
-    for (Post p : filterPost) {
-      System.out.println(
-          "--- --- ---- ----Post wit id : "
-              + p.getId()
-              + " have value = "
-              + getPostSuggestionPoint(
-                  p,
-                  userCategoryPoints,
-                  postReactionService.getReactionStat(p.getId()).getLikes().longValue(),
-                  postReactionService.getReactionStat(p.getId()).getDislikes().longValue(),
-                  user.getUserCategories().stream().map(UserCategory::getCategory).toList(),
-                  (long) p.getPostCategories().size()));
-    }
 
     if (categories != null && !categories.isEmpty()) {
       List<String> categoreisList = Arrays.stream(categories.split(",")).toList();
@@ -63,7 +48,6 @@ public class PostSuggestionService {
     if (filterPost != null) {
 
       filterPostList = new ArrayList<>(filterPost);
-      System.out.println(filterPost);
       filterPostList.sort(
           Comparator.comparingDouble(
                   postToCheck -> {
@@ -84,18 +68,11 @@ public class PostSuggestionService {
                                 .map(UserCategory::getCategory)
                                 .toList(),
                             (long) post.getPostCategories().size());
-                    System.out.println("The cathegory is : " + categoryService);
-                    System.out.println(post.getId() + " point = " + note);
-                    System.out.println("the user is: " + user.getId());
-                    System.out.println(
-                        "-----------------////////////////----------------------------------------");
                     return note;
                   })
               .reversed());
     }
 
-    System.out.println(
-        "*******************************************************************************************");
     return filterPostList.subList(
         Math.min(filterPostList.size(), (page - 1) * pageSase),
         Math.min(filterPostList.size(), page * pageSase));
@@ -111,8 +88,6 @@ public class PostSuggestionService {
     List<Category> categories = categoryService.findAll();
     Double point = 0.0;
     for (Category category : categories) {
-      System.out.println("| fro catogory : " + category.getName() + "**********");
-
       // ---------------- USER -----------------
 
       Long postViewNumber = 1L;
@@ -136,10 +111,8 @@ public class PostSuggestionService {
                 .filter(userCategoryPoint1 -> userCategoryPoint1.getCategory().equals(category))
                 .findFirst()
                 .get();
-        userCategoryViewNumber = userCategoryPoint.getViewNumber();
-        System.out.println("userCategoryViewNumber = " + userCategoryViewNumber);
-        userCategoryPostedNumber = userCategoryPoint.getPostedNumber();
-        System.out.println("userCategoryPostedNumber = " + userCategoryPostedNumber);
+        userCategoryViewNumber = Math.max(1L, userCategoryPoint.getViewNumber());
+        userCategoryPostedNumber = Math.max(1L, userCategoryPoint.getPostedNumber());
       }
       point +=
           getCategorySuggestionPoint(
@@ -162,40 +135,18 @@ public class PostSuggestionService {
       Long dislikeNumber,
       Boolean isATarget,
       Long postCategoryNumber) {
-    System.out.println("_");
-    System.out.println("---delail---");
-    System.out.println("postViewNumber = " + postViewNumber);
-    System.out.println("userCategoryViewNumber = " + userCategoryViewNumber);
-    System.out.println("userCategoryPostedNumber = " + userCategoryPostedNumber);
-    System.out.println("likeNumber = " + likeNumber);
-    System.out.println("dislikeNumber = " + dislikeNumber);
-    System.out.println("isATarget = " + isATarget);
-    System.out.println("postCategoryNumber = " + postCategoryNumber);
-    System.out.println("---fnish delail---");
-    System.out.println("_");
     Double calculatingUserPoint =
-        (passesThrough0WithFiniteLimit(1_00.0, 0.001, ((double) userCategoryViewNumber))
-            + passesThrough0WithFiniteLimit(1_00.0, 0.004, ((double) userCategoryPostedNumber))
-            + +1.0);
+        userCategoryViewNumberFunction((double) userCategoryViewNumber)
+            + userCategoryPostedNumberFunction((double) userCategoryPostedNumber)
+            + 1.0;
     if (!isATarget) {
       calculatingUserPoint = calculatingUserPoint / 4.0;
     }
 
-    Double calculatingPostPoint;
-    if (postCategoryNumber < 5L) {
-      calculatingPostPoint =
-          ((double) postViewNumber)
-              * Math.pow(1.2, (double) likeNumber)
-              * Math.pow(0.8, (double) dislikeNumber);
-    } else {
-      calculatingPostPoint =
-          ((double) postViewNumber)
-              * Math.pow(1.2, (double) likeNumber)
-              * Math.pow(0.8, (double) dislikeNumber)
-              / ((double) postCategoryNumber * 5.0);
-    }
-    System.out.println("calculatingPostPoint = " + calculatingPostPoint);
-    System.out.println("calculatingUserPoint = " + calculatingUserPoint);
+    Double calculatingPostPoint =
+        ((double) postViewNumber)
+            * likeAndDislikeCoefficient(likeNumber, dislikeNumber)
+            * postCategoryNumberCoefficient(postCategoryNumber);
 
     return calculatingPostPoint * calculatingUserPoint;
   }
@@ -205,95 +156,18 @@ public class PostSuggestionService {
   }
 
   private Double userCategoryViewNumberFunction(Double x) {
-    double limit = 1_00.0;
-    double speed = 0.001;
-    String name = "userCategoryViewNumber";
-    printFunctionWithFiniteLimitDetail(limit, speed, name);
-    return passesThrough0WithFiniteLimit(limit, speed, x);
+    return passesThrough0WithFiniteLimit(1_00.0, 0.001, x);
   }
 
   private Double userCategoryPostedNumberFunction(Double x) {
-    double limit = 1_00.0;
-    double speed = 0.004;
-    String name = "userCategoryPostedNumber";
-    printFunctionWithFiniteLimitDetail(limit, speed, name);
-    return passesThrough0WithFiniteLimit(limit, speed, x);
+    return passesThrough0WithFiniteLimit(1_00.0, 0.04, x);
   }
 
-  //  private Double userCategoryViewNumberFunction(Double x) {
-  //    double limit = 0.0;
-  //    double speed = 0.0;
-  //    String name = "userCategoryViewNumber";
-  //    printFunctionWithFiniteLimitDetail(limit, speed, name);
-  //    return passesThrough0WithFiniteLimit(limit, speed, x);
-  //  }
-  //
-  //  private Double userCategoryViewNumberFunction(Double x) {
-  //    double limit = 0.0;
-  //    double speed = 0.0;
-  //    String name = "userCategoryViewNumber";
-  //    printFunctionWithFiniteLimitDetail(limit, speed, name);
-  //    return passesThrough0WithFiniteLimit(limit, speed, x);
-  //  }
-  //
-  //  private Double userCategoryViewNumberFunction(Double x) {
-  //    double limit = 0.0;
-  //    double speed = 0.0;
-  //    String name = "userCategoryViewNumber";
-  //    printFunctionWithFiniteLimitDetail(limit, speed, name);
-  //    return passesThrough0WithFiniteLimit(limit, speed, x);
-  //  }
-  //
-  //  private Double userCategoryViewNumberFunction(Double x) {
-  //    double limit = 0.0;
-  //    double speed = 0.0;
-  //    String name = "userCategoryViewNumber";
-  //    printFunctionWithFiniteLimitDetail(limit, speed, name);
-  //    return passesThrough0WithFiniteLimit(limit, speed, x);
-  //  }
-  //
-  //  private Double userCategoryViewNumberFunction(Double x) {
-  //    double limit = 0.0;
-  //    double speed = 0.0;
-  //    String name = "userCategoryViewNumber";
-  //    printFunctionWithFiniteLimitDetail(limit, speed, name);
-  //    return passesThrough0WithFiniteLimit(limit, speed, x);
-  //  }
+  private Double likeAndDislikeCoefficient(Long likeNumber, Long dislikeNumber) {
+    return Math.pow(1.1, (double) likeNumber) * Math.pow(0.9, (double) dislikeNumber);
+  }
 
-  private void printFunctionWithFiniteLimitDetail(Double limit, Double speed, String name) {
-    System.out.println("---------Start----------------------");
-    System.out.println("//// " + name + " ////");
-
-    for (double i = 0.0; i < limit * 4 / speed; i += limit / 100.0) {
-      Double y = passesThrough0WithFiniteLimit(limit, speed, i);
-      if (y >= limit * 0.05) {
-        System.out.println("Value at 5% = " + y + " when x = " + i + "-");
-      }
-    }
-    for (double i = 0.0; i < limit * 4 / speed; i += limit / 100.0) {
-      Double y = passesThrough0WithFiniteLimit(limit, speed, i);
-      if (y >= limit * 0.20) {
-        System.out.println("Value at 20% = " + y + " when x = " + i + "++");
-      }
-    }
-    for (double i = 0.0; i < limit * 4 / speed; i += limit / 100.0) {
-      Double y = passesThrough0WithFiniteLimit(limit, speed, i);
-      if (y >= limit * 0.50) {
-        System.out.println("Value at 50% = " + y + " when x = " + i + "+++++");
-      }
-    }
-    for (double i = 0.0; i < limit * 4 / speed; i += limit / 100.0) {
-      Double y = passesThrough0WithFiniteLimit(limit, speed, i);
-      if (y >= limit * 0.70) {
-        System.out.println("Value at 70% = " + y + " when x = " + i + "+++++++");
-      }
-    }
-    for (double i = 0.0; i < limit * 4 / speed; i += limit / 100.0) {
-      Double y = passesThrough0WithFiniteLimit(limit, speed, i);
-      if (y >= limit * 0.80) {
-        System.out.println("Value at 80% = " + y + " when x = " + i + "++++++++");
-      }
-    }
-    System.out.println("---------end------------------------");
+  private Double postCategoryNumberCoefficient(Long postCategoryNumber) {
+    return postCategoryNumber < 5L ? 1.0 : (5.0 / (double) postCategoryNumber);
   }
 }
