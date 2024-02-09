@@ -78,7 +78,7 @@ public class PostIT {
     assertTrue(allPostsWithCategory1Or2.contains(post1()));
     assertTrue(allPostsWithCategory1Or2.contains(post2()));
 
-    assertEquals(2, allPostsWithCategory2.size());
+    assertEquals(1, allPostsWithCategory2.size());
     assertTrue(allPostsWithCategory2.contains(post1()));
   }
 

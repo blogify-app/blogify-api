@@ -4,4 +4,4 @@ values
     ('comment2_id', 'this in the content2', '2000-10-01T08:12:20.00z', 'client1_id', null, 'post1_id', 'ENABLED', false),
     ('comment3_id', 'this in the content3', '2000-11-01T08:12:20.00z', 'client2_id', null, 'post1_id', 'ENABLED', false);
 
-update comment set reply_to_id = 'comment1_id' where id = 'comment2_id';
+update "comment" set reply_to_id = 'comment1_id' where id = 'comment2_id';

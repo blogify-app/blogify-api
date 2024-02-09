@@ -18,14 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ViewService {
   private final UserService userService;
-  private final PostService postService;
   private final UserPostViewRepository userPostViewRepository;
   private final UserCategoryPointRepository userCategoryPointRepository;
 
   @Transactional
-  public UserPostView userViewPost(String userId, String postId) {
+  public UserPostView userViewPost(String userId, Post post) {
     User user = userService.findById(userId);
-    Post post = postService.getById(postId);
     UserPostView userPostView = UserPostView.builder().post(post).user(user).build();
     for (Category category :
         post.getPostCategories().stream().map(PostCategory::getCategory).toList()) {
@@ -50,6 +48,30 @@ public class ViewService {
     // todo: delete after scheduler
     updateAllPostPoint();
     return value;
+  }
+
+  @Transactional
+  public void updateUserCreatedPostPoint(Post post) {
+    for (Category category :
+        post.getPostCategories().stream().map(PostCategory::getCategory).toList()) {
+      Optional<UserCategoryPoint> userCategoryPointOptional =
+          userCategoryPointRepository.findByCategory_IdAndUser_Id(
+              category.getId(), post.getUser().getId());
+      if (userCategoryPointOptional.isPresent()) {
+        UserCategoryPoint userCategoryPoint = userCategoryPointOptional.get();
+        userCategoryPoint.setPostedNumber(userCategoryPoint.getPostedNumber() + 1L);
+        userCategoryPointRepository.save(userCategoryPoint);
+        continue;
+      }
+      UserCategoryPoint userCategoryPoint =
+          UserCategoryPoint.builder()
+              .viewNumber(1L)
+              .postedNumber(2L)
+              .category(category)
+              .user(post.getUser())
+              .build();
+      userCategoryPointRepository.save(userCategoryPoint);
+    }
   }
 
   @Transactional

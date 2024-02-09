@@ -7,8 +7,10 @@ import com.blogify.blogapi.endpoint.rest.model.User;
 import com.blogify.blogapi.endpoint.rest.model.UserViewOnePost;
 import com.blogify.blogapi.model.BoundedPageSize;
 import com.blogify.blogapi.model.PageFromOne;
+import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.repository.model.UserCategory;
 import com.blogify.blogapi.service.PostReactionService;
+import com.blogify.blogapi.service.PostService;
 import com.blogify.blogapi.service.UserService;
 import com.blogify.blogapi.service.ViewService;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class UserController {
   private final UserMapper userMapper;
   private final ViewMapper viewMapper;
   private final ViewService viewService;
+  private final PostService postService;
   private final PostReactionService postReactionService;
   private final UserCategoryMapper userCategoryMapper;
 
@@ -63,7 +66,8 @@ public class UserController {
 
   @PostMapping(value = "/users/{uid}/view/posts/{pid}")
   public UserViewOnePost userViewPost(@PathVariable String uid, @PathVariable String pid) {
+    Post post = postService.getById(pid);
     return viewMapper.toRest(
-        viewService.userViewPost(uid, pid), postReactionService.getReactionStat(pid));
+        viewService.userViewPost(uid, post), postReactionService.getReactionStat(pid));
   }
 }

@@ -14,6 +14,7 @@ import com.blogify.blogapi.repository.PostRepository;
 import com.blogify.blogapi.repository.dao.PostDao;
 import com.blogify.blogapi.repository.model.Post;
 import com.blogify.blogapi.service.PostService;
+import com.blogify.blogapi.service.ViewService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +22,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class PostUnitTest {
 
   @Mock private PostRepository postRepository;
+
+  @Mock private ViewService viewService;
 
   @Mock private PostDao postDao;
 
@@ -86,6 +90,7 @@ public class PostUnitTest {
     post.setId(postId);
     when(postRepository.findById(postId)).thenReturn(Optional.empty());
     when(postRepository.save(any())).thenReturn(post);
+    Mockito.doNothing().when(viewService).updateUserCreatedPostPoint(post);
 
     Post result = postService.savePost(post, postId);
 
