@@ -1,6 +1,5 @@
 package com.blogify.blogapi.service.firebase;
 
-
 import com.blogify.blogapi.model.exception.ApiException;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
