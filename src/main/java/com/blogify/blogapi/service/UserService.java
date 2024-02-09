@@ -66,6 +66,34 @@ public class UserService {
     return repository.save(user);
   }
 
+  @Transactional
+  public User updateUserPhotoKey(User user) {
+    userValidator.accept(user);
+    Optional<User> userOptional = repository.findById(user.getId());
+    if (userOptional.isPresent()) {
+      User userFromDomain = userOptional.get();
+      user.setCreationDatetime(userFromDomain.getCreationDatetime());
+      user.setRole(userFromDomain.getRole());
+      user.setProfileBannerKey(userFromDomain.getProfileBannerKey());
+      user.setFirebaseId(userFromDomain.getFirebaseId());
+    }
+    return repository.save(user);
+  }
+
+  @Transactional
+  public User updateUserBannerKey(User user) {
+    userValidator.accept(user);
+    Optional<User> userOptional = repository.findById(user.getId());
+    if (userOptional.isPresent()) {
+      User userFromDomain = userOptional.get();
+      user.setCreationDatetime(userFromDomain.getCreationDatetime());
+      user.setRole(userFromDomain.getRole());
+      user.setPhotoKey(userFromDomain.getPhotoKey());
+      user.setFirebaseId(userFromDomain.getFirebaseId());
+    }
+    return repository.save(user);
+  }
+
   public User findById(String id) {
     return repository
         .findById(id)
