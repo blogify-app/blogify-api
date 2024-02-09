@@ -46,7 +46,7 @@ public class PostFileController {
     com.blogify.blogapi.repository.model.Post post = service.uploadPostThumbnail(pid, file);
     ReactionStat reactionStat = postReactionService.getReactionStat(pid);
     String fullContent = service.getPostFullContent(post);
-    imageValidator.accept(file);
+    //imageValidator.accept(file);
     return postMapper.toRest(fullContent, post, reactionStat);
   }
 
