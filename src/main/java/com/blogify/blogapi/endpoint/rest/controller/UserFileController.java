@@ -33,7 +33,7 @@ public class UserFileController {
       @RequestBody byte[] pictureData)
       throws IOException {
     requestInputValidator.notNullValue(QUERY_PARAMS, "type", type);
-    //imageValidator.accept(file);
+    // imageValidator.accept(file);
     return service.uploadUserPicture(uid, type, pictureData);
   }
 

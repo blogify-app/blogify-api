@@ -40,13 +40,12 @@ public class PostFileController {
   }
 
   @PutMapping(value = "/posts/{pid}/thumbnail")
-  public Post putPostThumbnail(
-      @PathVariable String pid, @RequestBody byte[] file)
+  public Post putPostThumbnail(@PathVariable String pid, @RequestBody byte[] file)
       throws IOException {
     com.blogify.blogapi.repository.model.Post post = service.uploadPostThumbnail(pid, file);
     ReactionStat reactionStat = postReactionService.getReactionStat(pid);
     String fullContent = service.getPostFullContent(post);
-    //imageValidator.accept(file);
+    // imageValidator.accept(file);
     return postMapper.toRest(fullContent, post, reactionStat);
   }
 
@@ -57,7 +56,7 @@ public class PostFileController {
       @RequestBody byte[] pictureData)
       throws IOException {
 
-    //imageValidator.accept(file);
+    // imageValidator.accept(file);
     return service.uploadPicture(pid, picId, pictureData);
   }
 

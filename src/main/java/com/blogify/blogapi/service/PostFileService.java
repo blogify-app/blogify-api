@@ -25,14 +25,13 @@ public class PostFileService {
   private final String RESOURCE_NAME = "Post picture";
 
   @Transactional
-  public PostPicture uploadPicture(String pid, String picId, byte[] file)
-      throws IOException {
+  public PostPicture uploadPicture(String pid, String picId, byte[] file) throws IOException {
     if (repository.findById(picId).isPresent()) {
       throw new BadRequestException("Post picture with id " + picId + " already exists");
     }
     String extension = "jpg";
-        //Objects.requireNonNull(file.getContentType())
-        //   .substring(file.getContentType().lastIndexOf("/") + 1);
+    // Objects.requireNonNull(file.getContentType())
+    //   .substring(file.getContentType().lastIndexOf("/") + 1);
     Post post = postService.getById(pid);
     String bucketKey = picId + "." + extension;
     s3Service.uploadObjectToS3Bucket(bucketKey, file);
