@@ -12,11 +12,9 @@ import com.blogify.blogapi.repository.model.Post;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Objects;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @AllArgsConstructor
@@ -27,17 +25,17 @@ public class PostFileService {
   private final String RESOURCE_NAME = "Post picture";
 
   @Transactional
-  public PostPicture uploadPicture(String pid, String picId, MultipartFile file)
+  public PostPicture uploadPicture(String pid, String picId, byte[] file)
       throws IOException {
     if (repository.findById(picId).isPresent()) {
       throw new BadRequestException("Post picture with id " + picId + " already exists");
     }
-    String extension =
-        Objects.requireNonNull(file.getContentType())
-            .substring(file.getContentType().lastIndexOf("/") + 1);
+    String extension = "jpg";
+        //Objects.requireNonNull(file.getContentType())
+        //   .substring(file.getContentType().lastIndexOf("/") + 1);
     Post post = postService.getById(pid);
     String bucketKey = picId + "." + extension;
-    s3Service.uploadObjectToS3Bucket(bucketKey, file.getBytes());
+    s3Service.uploadObjectToS3Bucket(bucketKey, file);
     com.blogify.blogapi.repository.model.PostPicture postPicture =
         com.blogify.blogapi.repository.model.PostPicture.builder().post(post).build();
     postPicture.setId(picId);
@@ -113,9 +111,9 @@ public class PostFileService {
     return htmlContent;
   }
 
-  public Post uploadPostThumbnail(String pid, MultipartFile file) throws IOException {
+  public Post uploadPostThumbnail(String pid, byte[] file) throws IOException {
     String fileBucketKey = setBucketThumbnailKeyByPostId(pid);
-    s3Service.uploadObjectToS3Bucket(fileBucketKey, file.getBytes());
+    s3Service.uploadObjectToS3Bucket(fileBucketKey, file);
     URL url = s3Service.generatePresignedUrl(fileBucketKey, FileConstant.URL_DURATION);
     Post post = postService.getById(pid);
     post.setThumbnailKey(url.toString());
